@@ -1,0 +1,13 @@
+---
+layout: post
+title: "Private Notes"
+date: 2013-12-09 00:45:06 +0800
+comments: true
+categories: 
+published: false
+---
+Blogging Basics: ```http://octopress.org/docs/blogging/```
+
+Liquid for Designers: ```https://github.com/Shopify/liquid/wiki/Liquid-for-Designers```
+
+Plugins: ```http://octopress.org/docs/plugins/```
