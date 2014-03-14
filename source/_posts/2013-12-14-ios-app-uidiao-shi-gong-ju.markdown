@@ -3,7 +3,7 @@ layout: post
 title: "iOS App UI调试工具（一）· Symbiote In Frank"
 date: 2013-12-14 21:48:49 +0800
 comments: true
-categories: 
+categories: [iOS·调试]
 ---
 {% img http://blog.thepete.net/images/post_images/2012-06-24_A.png %}
 <h3>Frank简介</h3>
@@ -13,7 +13,7 @@ which verify the functionality of your native iOS app.
 
 Frank是一个iOS平台的自动化测试工具。它支持编写一些自动化验收测试用例来验收iOS App的功能。
 {% endblockquote %}
-
+<!--more-->
 <h3>Symbiote简介</h3>
 {% blockquote Symbiote http://blog.thepete.net/blog/2011/05/01/inspect-state-of-our-running-ios-apps/ Read on %}
 Frank comes with a useful little tool called Symbiote. It’s a little web app 
