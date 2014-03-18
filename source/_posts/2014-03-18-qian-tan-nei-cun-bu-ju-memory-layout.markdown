@@ -15,13 +15,13 @@ categories: [内存布局, 代码段, 数据段, 堆栈段, C函数调用]
    
 <h6>Text Segment</h6>
 	即代码段(Code Segment)，里面存放可执行的指令，可以理解为程序的实际逻辑代码(不考虑形参、局部变量)，不过在代码段里的指令应该已是汇编指令了。
-代码段在内存布局中处在堆栈下面(即低地址段)的位置，防止代码段被堆栈溢出覆盖。通常，代码段里的内容是被共享且只读的，防止程序意外的修改其在代码段里的指令。
+	代码段在内存布局中处在堆栈下面(即低地址段)的位置，防止代码段被堆栈溢出覆盖。通常，代码段里的内容是被共享且只读的，防止程序意外的修改其在代码段里的指令。
 
 <h6>Initialized Data Segment</h6>
 	即数据段(Data Segment)，这应该是一种狭义的叫法，也就是大家通常意义上认为的数据段。
-其实Initialized Data Segment和Uninitialized Data Segment合起来可以称为广义的数据段，因为它们都存数据。
-Initialized Data Segment存储被程序员显式初始化过的全局变量、静态变量、常量,由此可以看数据段(狭义)可以进一步的分为 只读区段 和 读写区段，
-数据段不是只读的，在程序运行的时候存储在此区段的变量值可以修改。
+	其实Initialized Data Segment和Uninitialized Data Segment合起来可以称为广义的数据段，因为它们都存数据。
+	Initialized Data Segment存储被程序员显式初始化过的全局变量、静态变量、常量,由此可以看数据段(狭义)可以进一步的分为 只读区段 和 读写区段，
+	数据段不是只读的，在程序运行的时候存储在此区段的变量值可以修改。
 
 <h6>Uninitialized Data Segment</h6>
 	最早在汇编程序中的名称是BSS，即Block Started by Symbol，这个名称来至汇编程序的历史原因，
@@ -36,6 +36,7 @@ Initialized Data Segment存储被程序员显式初始化过的全局变量、�
 	where the specified symbol corresponds to the end of the reserved block.]
 
 <h6>Heap</h6>
+
 <h6>Stack</h6>
 
 
@@ -45,6 +46,6 @@ http://www.cnblogs.com/dolphin0520/archive/2011/04/04/2005061.html
 其实，没有什么是“自动的”，这只是在搪塞做上层开发的程序员。
 
 <h3>参考</h3>
-http://www.geeksforgeeks.org/memory-layout-of-c-program/
-http://en.wikipedia.org/wiki/Data_segment
-http://en.wikipedia.org/wiki/Call_stack
+http://www.geeksforgeeks.org/memory-layout-of-c-program/<br/>
+http://en.wikipedia.org/wiki/Data_segment<br/>
+http://en.wikipedia.org/wiki/Call_stack<br/>
