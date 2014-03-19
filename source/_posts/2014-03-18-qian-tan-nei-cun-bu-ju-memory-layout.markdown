@@ -7,7 +7,7 @@ categories: [内存布局, 代码段, 数据段, 堆栈段, C函数调用]
 ---
 
 对于高级语言的程序员(Java、OC)来说，一定听过堆栈、数据段、代码段，但可能没有细细研究过。本文在此分享对它们的理解。
-
+<!--more-->
 <h3>C语言的内存布局</h3>
    这里从C语方入手,说说内存布局。<br/>
 {% img https://raw.github.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/Memory-Layout-300x255.gif 400 300 %}<br/>
@@ -67,6 +67,7 @@ categories: [内存布局, 代码段, 数据段, 堆栈段, C函数调用]
 究其细节，其实，没有什么过程是“自动的”，这只不过用来搪塞程序员自己的理由。
 
 <h3>参考</h3>
-http://www.geeksforgeeks.org/memory-layout-of-c-program/<br/>
-http://en.wikipedia.org/wiki/Data_segment<br/>
-http://en.wikipedia.org/wiki/Call_stack<br/>
+MemoryLayoutOut: http://www.geeksforgeeks.org/memory-layout-of-c-program/<br/>
+DataSegment(wikipedia): http://en.wikipedia.org/wiki/Data_segment<br/>
+CallStack(wikipedia): http://en.wikipedia.org/wiki/Call_stack<br/>
+C++内存分配、函数调用： http://www.cnblogs.com/dolphin0520/archive/2011/04/04/2005061.html<br/>

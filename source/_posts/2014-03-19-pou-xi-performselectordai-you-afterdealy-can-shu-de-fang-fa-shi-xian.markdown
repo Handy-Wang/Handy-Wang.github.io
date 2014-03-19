@@ -1,0 +1,75 @@
+---
+layout: post
+title: "剖析带有afterDealy参数的performSelector方法实现"
+date: 2014-03-19 15:46:02 +0800
+comments: true
+categories: [NSTimer,Runloop]
+---
+
+主要从performSelector:afterDealy:的实现原理来分析为什么在主线程中调用此方法后不会阻塞主线程里业务代码的顺序执行。
+<!--more-->
+示例代码如下：
+	- (void)doSomething {
+	    NSLog(@"Begin doSomething...");
+	    for (int i = 0; i < 10; i++) {
+	        if (i == 5) {
+	            NSLog(@"++++++++++%f", CFAbsoluteTimeGetCurrent());
+	            [self performSelector:@selector(printIData:) withObject:@(i) afterDelay:0.2];
+	        }
+	        else {
+	            [NSThread sleepForTimeInterval:0.2];
+	            [self printIData:@(i)];
+	        }
+	    }
+	    NSLog(@"Finish doSomething...");
+	}
+
+	- (void)printIData:(NSNumber *)i {
+	    int iv = [i intValue];
+   
+	    if (iv == 5) {
+	        NSLog(@"===================i is %d, %f", iv, CFAbsoluteTimeGetCurrent());
+	    }
+	    else {
+	        NSLog(@"i is %d, %f", iv, CFAbsoluteTimeGetCurrent());
+	    }
+	}
+
+[[AboutRunloop sharedInstance] doSomething];
+
+输出的结果是：<br/>
+2014-03-19 14:44:26.054 RuntimePractice[9750:60b] i is 0, 416904266.054601<br/>
+2014-03-19 14:44:26.256 RuntimePractice[9750:60b] i is 1, 416904266.256110<br/>
+2014-03-19 14:44:26.457 RuntimePractice[9750:60b] i is 2, 416904266.457738<br/>
+2014-03-19 14:44:26.659 RuntimePractice[9750:60b] i is 3, 416904266.659130<br/>
+2014-03-19 14:44:26.860 RuntimePractice[9750:60b] i is 4, 416904266.860487<br/>
+2014-03-19 14:44:26.861 RuntimePractice[9750:60b] ++++++++++416904266.861006<br/>
+2014-03-19 14:44:27.061 RuntimePractice[9750:60b] i is 6, 416904267.061459<br/>
+2014-03-19 14:44:27.263 RuntimePractice[9750:60b] i is 7, 416904267.263020<br/>
+2014-03-19 14:44:27.464 RuntimePractice[9750:60b] i is 8, 416904267.464554<br/>
+2014-03-19 14:44:27.666 RuntimePractice[9750:60b] i is 9, 416904267.666095<br/>
+2014-03-19 14:44:27.666 RuntimePractice[9750:60b] Finish doSomething...<br/>
+2014-03-19 14:44:27.672 RuntimePractice[9750:60b] =====i is 5, 416904267.672478<br/>
+
+通过示例代码充分说明了：
+在主线程中调用performSelector:afterDealy方法后不会阻塞主线程里业务代码的顺序执行。
+
+分析(主线程中调用)：带有afterDealy:参数的performSelector方法内部采用了timer实现，我们知道timer不放到runloop里的话timer是不会触发的，所以这个timer肯定会放到runloop里，又因为主线程的runloop默认是运行着的，所以这个timer一定会被触发即Selector会被runloop触发回调。
+
+回到示例程序上下文里面，当i==5时，执行了performSelector:afterDealy，所以此时一个timer源会被添加加到主线程的runloop里。又根据示例代码的日志输出可以看到doSomething 方法完全执行完后 runloop才触发i==5时的selector调用，这说明在线程中(包括主线程)是先执行线程的代码逻辑，最后才会检测Runloop里有没有注册的监听源，如果有则检测是不是应该触发源对应的外部处理方法，所以最后才会触发i==5的performSelector:afterDealy。
+
+另注：<br/>
+1) 示例代码中非i==5的情况下故意sleep了0.2秒(6/7/8/9 4个数x0.2 > delay的0.2)，这是为了充分证明[self performSelector:@selector(printIData:) withObject:@(i) afterDelay:0.2];一定是在doSomething 方法执行完返回后再运行的。<br/>
+2) [self performSelector:@selector(printIData:) withObject:@(i) afterDelay:0.2];中的0.2秒按timer的时间触发原理，它是Timer被加到runloop里后的0.2秒，但是在本示例代码环境下，线程里有长时任务正做着，所以这个触发的时间点是从timer被加到runloop里开始计时，等长时任务做完后的最近的0.2秒整数倍的时间点。
+
+综上，performSelector带有afterDealy:参数的方法，哪怕是delay为0，也在当前线程的runloop里注册一个timer源，等线程里的逻辑做完后，会去检测runloop并按runloop里源注册的条件触发对应的事件处理方法，所以这个方法簇不会阻塞原线程中的代码执行流程。
+
+参考：<br/>
+1）方法的说明:：NSObject Reference里performSelector:withObject:afterDelay:<br/>
+2）Runloop相关： http://www.hrchen.com/2013/06/multi-threading-programming-of-ios-part-1/<br/>
+3）Timer和Runloop相关： http://www.hrchen.com/2013/07/tricky-runloop-on-ios/<br/>
+4）Timer的触发: http://www.cnblogs.com/smileEvday/archive/2012/12/21/NSTimer.html<br/>
+
+
+
+
