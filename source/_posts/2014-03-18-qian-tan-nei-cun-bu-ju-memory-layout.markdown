@@ -44,9 +44,13 @@ categories: [内存布局, 代码段, 数据段, 堆栈段, C函数调用]
 	栈区紧挨着堆区，一般都处在内存的高地址区域，但是它的内存分配增长方向是从高地址向低地址，也就是说堆和栈的内存分配增长方向上是相对的，即从两头向中间方向。
 	此区段的内存分配是由编译器做的，当栈顶指针已经遇到堆指针的时候表明栈溢出了。
 	栈区是LIFO的结构，SP(Stack Pointer)寄存器始终记录着栈顶位置，当push或pop数据的时候，SP都会有相应的变化。
-	在栈区里主要是存放函数调用相关的内容，如：形参、函数调用的返回地址、局部变量等相关信息，我们称之为栈帧(Stack Frame)，
+	在栈区里主要是存放函数调用相关的内容，如：实参、函数调用的返回地址、局部变量等相关信息，我们称之为栈帧(Stack Frame)，
 	也就是说在栈区里有很多个栈帧，每进行一次函数调用，一个新的栈帧就会入栈，且向低地址区方向增长。
 	一个栈帧至少由一个函数调用的返回地址组成，所以普通的函数调用递归函数调用都是借助这个返回地址才得到让程序流程进行下去的。
+	The stack frame at the top of the stack is for the currently executing routine. The stack frame usually includes at least the following items (in push order):
+	the arguments (parameter values) passed to the routine (if any);
+	the return address back to the routine's caller (e.g. in the DrawLine stack frame, an address into DrawSquare's code); and
+	space for the local variables of the routine (if any).
 
 <h3>与C++语言的内存布局的差异</h3>
 	http://www.cnblogs.com/dolphin0520/archive/2011/04/04/2005061.html
