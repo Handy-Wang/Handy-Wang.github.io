@@ -6,7 +6,7 @@ comments: true
 categories: [内存布局, 代码段, 数据段, 堆栈段, C函数调用]
 ---
 
-对于高级语言的程序员(Java、OC)来说，一定听过堆栈、数据段、代码段。本文在此分享对它们的理解。
+对于高级语言的程序员(Java、OC)来说，一定听过堆栈、数据段、代码段，但可能没有细细研究过。本文在此分享对它们的理解。
 
 <h3>C语言的内存布局</h3>
    这里从C语方入手,说说内存布局。<br/>
@@ -24,9 +24,10 @@ categories: [内存布局, 代码段, 数据段, 堆栈段, C函数调用]
 	数据段不是只读的，在程序运行的时候存储在此区段的变量值可以修改。
 
 <h6>Uninitialized Data Segment</h6>
-	最早在汇编程序中的名称是BSS，即Block Started by Symbol，这个名称来至汇编程序的历史原因，
-	即，由于BSS定义了一个标签以及预留了一定量的未初始化的区域，所以BSS逐渐成为了未初始化数据段的代名词。
-	由此看出，BSS即Uninitialized Data Segment存放的是程序员没有初始化或初始化为0(我的理解是初始化为nil)的全局变量、静态变量，未初始化的在被编译器在内存中初始化为0(0x0)。
+	又名BSS，即Block Started by Symbol，最早是联合航空公司的联合航空符号汇编程序里的一个伪操作，后来BSS这个术语被合并到FORTRAN汇编程序里。
+	这伪操作定义了一个标签而且预留了一定量的未初始化的区域，所以BSS就成了“单独保留许多独立的小数据的位置“的简称。
+	由此看出，BSS这部分空间是预留出来的，存放的是程序员没有初始化或初始化为0(我的理解是初始化为nil)的全局变量、静态变量，未初始化的在被编译器在内存中初始化为0(0x0)，
+	这就是为什么它也叫Uninitialized Data Segment。
 	[Historically, BSS (from Block Started by Symbol) was a pseudo-operation in UA-SAP (United Aircraft Symbolic Assembly Program), 
 	the assembler developed in the mid-1950s for the IBM 704 by Roy Nutt, Walter Ramshaw, and others at United Aircraft Corporation.
 	The BSS keyword was later incorporated into FAP (FORTRAN Assembly Program), IBM's standard assembler for its 709 and 7090/94 computers. 
@@ -36,14 +37,26 @@ categories: [内存布局, 代码段, 数据段, 堆栈段, C函数调用]
 	where the specified symbol corresponds to the end of the reserved block.]
 
 <h6>Heap</h6>
+	堆区紧接着BSS段，它的内存分配增长方向是从低地址向高地址。所有动态的内存分配操作都是由 程序员 通过相关函数从堆区进行分配，如malloc, realloc, and free这些操作。
+	在一个进程里，堆区被所有的共享函数库和动态加载的模块所共享。
 
 <h6>Stack</h6>
+	栈区紧挨着堆区，一般都处在内存的高地址区域，但是它的内存分配增长方向是从高地址向低地址，也就是说堆和栈的内存分配增长方向上是相对的，即从两头向中间方向。
+	此区段的内存分配是由编译器做的，当栈顶指针已经遇到堆指针的时候表明栈溢出了。
+	栈区是LIFO的结构，SP(Stack Pointer)寄存器始终记录着栈顶位置，当push或pop数据的时候，SP都会有相应的变化。
+	在栈区里主要是存放函数调用相关的内容，如：形参、函数调用的返回地址、局部变量等相关信息，我们称之为栈帧(Stack Frame)，
+	也就是说在栈区里有很多个栈帧，每进行一次函数调用，一个新的栈帧就会入栈，且向低地址区方向增长。
+	一个栈帧至少由一个函数调用的返回地址组成，所以普通的函数调用递归函数调用都是借助这个返回地址才得到让程序流程进行下去的。
 
+<h3>与C++语言的内存布局的差异</h3>
+	http://www.cnblogs.com/dolphin0520/archive/2011/04/04/2005061.html
 
-<h3>C++语言的内存布局的差异</h3>
-http://www.cnblogs.com/dolphin0520/archive/2011/04/04/2005061.html
+<h3>与OC语言的内存布局的差异</h3>
+	减少内存垃圾碎片的优化
 
-其实，没有什么是“自动的”，这只是在搪塞做上层开发的程序员。
+<h3>C语言函数调用的内存机制</h3>
+
+究其细节，其实，没有什么过程是“自动的”，这只不过用来搪塞程序员自己的理由。
 
 <h3>参考</h3>
 http://www.geeksforgeeks.org/memory-layout-of-c-program/<br/>
