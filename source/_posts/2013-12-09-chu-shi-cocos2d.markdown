@@ -3,7 +3,7 @@ layout: post
 title: "初识Cocos2d"
 date: 2013-12-09 21:26:00 +0800
 comments: true
-categories: [事·人物·记, 王哲, Cocos2d, Cocos2d-iPhone, Cocos2d-X]
+categories: [王哲, Cocos2d, Cocos2d-iPhone, Cocos2d-X]
 ---
 俗话说『山不转水转，水不转人转，人不转需求转，需求不转代码转』，好扯，总之，各种机缘巧合已经让我无法逃离地要去了解一下这个该死的让人望而生畏的Cocos家族。
 <!--more-->

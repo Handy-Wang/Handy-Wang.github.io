@@ -3,7 +3,7 @@ layout: post
 title: "iOS App UI调试工具（二）· Realtime Debug Portal"
 date: 2013-12-17 05:30:58 +0800
 comments: true
-categories: [iOS·调试]
+categories: [调试]
 ---
 {% img https://github-camo.global.ssl.fastly.net/03548ab74978beee15b711ab26b5ed1bd71714f2/687474703a2f2f7777772e76696e716f6e2e636f6d2f636f6465626c6f672f66636b656469746f722f75706c6f61642f696d6167652f323031332d30362f325f322e706e67 %}
 <h3>Realtime Debug Portal简介</h3>

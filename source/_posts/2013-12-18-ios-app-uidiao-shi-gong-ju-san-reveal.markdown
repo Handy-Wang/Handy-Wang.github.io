@@ -3,7 +3,7 @@ layout: post
 title: "iOS App UI调试工具（三）· Reveal App"
 date: 2014-01-03 20:53:01 +0800
 comments: true
-categories:  [iOS·调试]
+categories:  [调试]
 ---
 昨天，经<a target="_blank" href="http://weibo.com/danc">@Dan</a>推荐又了解到一款UI调试神器```Reveal App```
 {% video http://revealapp.com/video/Reveal.mp4 640 320 http://revealapp.com/img/testimonial-flipboard.jpg %}

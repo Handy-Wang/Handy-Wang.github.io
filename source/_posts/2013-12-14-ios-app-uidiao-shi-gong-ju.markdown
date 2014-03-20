@@ -3,7 +3,7 @@ layout: post
 title: "iOS App UI调试工具（一）· Symbiote In Frank"
 date: 2013-12-14 21:48:49 +0800
 comments: true
-categories: [iOS·调试]
+categories: [调试]
 ---
 {% img http://blog.thepete.net/images/post_images/2012-06-24_A.png %}
 <h3>Frank简介</h3>
