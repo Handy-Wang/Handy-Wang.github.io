@@ -54,7 +54,13 @@ categories: [内存布局, 代码段, 数据段, 堆栈段, C函数调用]
 
 <h3>与C++语言的内存布局的差异</h3>
 	http://www.cnblogs.com/dolphin0520/archive/2011/04/04/2005061.html
-待续。。。
+	http://www.cnblogs.com/hanyonglu/archive/2011/04/12/2014212.html
+	1）注意常量的存放区域，通常情况下，常量存放在程序区(程序区是只读的，因此任何修改常量的行为都是非法的)，而不是数据区。
+	有的系统，也将部分常量分配到静态数据区，比如字符串常量(有的系统也将其分配在程序区)。但是要记住一点，常量所在的内存空间都是受系统保护的，不能修改。
+	对常量空间的修改将造成访问内存出错，一般系统都会提示。常量的生命周期一直到程序执行结束为止。
+	2）示例：
+		char s[]="123";    s在栈区，“123”在栈区，其值可以被修改
+		char *s="123";     s在栈区，“123”在常量区，其值不能被修改
 
 <h3>与OC语言的内存布局的差异</h3>
 	减少内存垃圾碎片的优化
@@ -67,7 +73,8 @@ categories: [内存布局, 代码段, 数据段, 堆栈段, C函数调用]
 究其细节，其实，没有什么过程是“自动的”，这只不过用来搪塞程序员自己的理由。
 
 <h3>参考</h3>
-MemoryLayoutOut: http://www.geeksforgeeks.org/memory-layout-of-c-program/<br/>
-DataSegment(wikipedia): http://en.wikipedia.org/wiki/Data_segment<br/>
-CallStack(wikipedia): http://en.wikipedia.org/wiki/Call_stack<br/>
+MemoryLayoutOut：http://www.geeksforgeeks.org/memory-layout-of-c-program/<br/>
+DataSegment(wikipedia)：http://en.wikipedia.org/wiki/Data_segment<br/>
+CallStack(wikipedia)：http://en.wikipedia.org/wiki/Call_stack<br/>
+C/C++堆、栈及静态数据区详解：http://www.cnblogs.com/hanyonglu/archive/2011/04/12/2014212.html
 C++内存分配、函数调用： http://www.cnblogs.com/dolphin0520/archive/2011/04/04/2005061.html<br/>
