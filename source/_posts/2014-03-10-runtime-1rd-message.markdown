@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Runtime（一）之 Message 浅析"
+title: "Runtime（一）之 Message转发浅析"
 date: 2014-03-10 15:52:57 +0800
 comments: true
 categories: [NSObject, Message, Runtime]
@@ -12,9 +12,9 @@ categories: [NSObject, Message, Runtime]
 {% img https://raw.github.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/class-diagram.jpg 350 450 %}
 
 
-<h3>主题</h3>
+<h3>消息转发两大流程</h3>
 <h6>一）方法的动态决议</h6>
-<h6>二）消息转发</h6>
+<h6>二）完整的消息转发机制</h6>
 <!--more-->
 	
 <h3>一）方法的动态决议</h3>
@@ -104,7 +104,7 @@ categories: [NSObject, Message, Runtime]
 	类的编译过程、对象的创建过程，编译时与运行时的关系
 2）类对象、元类对象的创建过程？
 
-<h3>二）消息转发</h3>
+<h3>二）完整的消息转发机制</h3>
 
 在运行时向消息接受者发送消息，消息接受者在收到消息请求后会从自己的类对象、父类对象中的method_list链表中查询消息实现的地址入口IMP。
 如果在这些地方都没有找到发送的消息实现的地址入口，则rumtime运行时环境会向消息接收者发送一个forwardInvocation:消息，
@@ -113,25 +113,7 @@ forwardInvocation:本身是在NSObject里面定义的，如果你需要重载这
 你都可以在forwardInvocation:里面捕捉到，并且把消息送到某一个安全的地方，从而避免了系统报错。
 
 注意：<br />
-1）被forward的消息会被 方法的动态决议 机制拦截，所以在拦截方法里应该返回YES，如下doJob方法被forward：
-	+ (BOOL)resolveInstanceMethod:(SEL)sel {
-	    NSLog(@"///////%@", NSStringFromSelector(_cmd));
-	    if (sel == @selector(setName:)) {
-	        IMP imp = class_getMethodImplementation([self class], @selector(setNameValue:));
-	        class_addMethod([self class], sel, imp, "v@:");
-	        return YES;
-	    }
-	    else if (sel == @selector(name)) {
-	        IMP imp = class_getMethodImplementation([self class], @selector(getNameValue));
-	        class_addMethod([self class], sel, imp, "v@:");
-	        return YES;
-	    }
-	    else if (sel == @selector(doJob)) {
-	        return YES;
-	    }
-	    return [super resolveInstanceMethod:sel];
-	}
-2）重载 - (void)forwardInvocation:(NSInvocation *)anInvocation;的同时需要重载方法 - (NSMethodSignature *)methodSignatureForSelector:(SEL)sel;
+1）重载 - (void)forwardInvocation:(NSInvocation *)anInvocation;的同时需要重载方法 - (NSMethodSignature *)methodSignatureForSelector:(SEL)sel;
 	- (NSMethodSignature *)methodSignatureForSelector:(SEL)sel {
 	    NSLog(@"///////%@", NSStringFromSelector(_cmd));
 	    NSMethodSignature *sig = [_sub methodSignatureForSelector:sel];
