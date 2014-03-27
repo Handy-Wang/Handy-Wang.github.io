@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "浅谈内存布局(Memory Layout)"
+title: "浅谈内存布局(Memory Layout)即虚拟地址空间"
 date: 2014-03-18 15:14:37 +0800
 comments: true
 categories: [内存布局, 代码段, 数据段, 堆栈段, C函数调用]
@@ -51,6 +51,9 @@ categories: [内存布局, 代码段, 数据段, 堆栈段, C函数调用]
 	the arguments (parameter values) passed to the routine (if any);
 	the return address back to the routine's caller (e.g. in the DrawLine stack frame, an address into DrawSquare's code); and
 	space for the local variables of the routine (if any).
+	
+<h6>C语言函数调用的内存机制</h6>
+	待续。。。
 
 <h3>C++语言的内存布局</h3>
 C++的内存布局大致分为：代码段、全局/静态存储区、常量区、自由存储区、堆、栈。	
@@ -60,21 +63,23 @@ C++的内存布局大致分为：代码段、全局/静态存储区、常量区�
 		在C++里面没有这个区分了，他们共同占用同一块内存区（未初始化的变量都被初始化成0或空串，C中也一样）。
 	2）常量存储区
 		这是一块比较特殊的存储区，他们里面存放的是常量，不允许修改。
+		注意常量的存放区域，通常情况下，常量存放在程序区(程序区是只读的，因此任何修改常量的行为都是非法的)，而不是数据区。
+        有的系统，也将部分常量分配到静态数据区，比如字符串常量(有的系统也将其分配在程序区)。但是要记住一点，常量所在的内存空间都是受系统保护的，不能修改。
+		对常量空间的修改将造成访问内存出错，一般系统都会提示。常量的生命周期一直到程序执行结束为止。
 	3）自由存储区
 		就是那些由malloc等分配的内存块，他和堆是十分相似的，不过它是用free来结束自己的生命的
-	4）注意常量的存放区域，通常情况下，常量存放在程序区(程序区是只读的，因此任何修改常量的行为都是非法的)，而不是数据区。
-	有的系统，也将部分常量分配到静态数据区，比如字符串常量(有的系统也将其分配在程序区)。但是要记住一点，常量所在的内存空间都是受系统保护的，不能修改。
-	对常量空间的修改将造成访问内存出错，一般系统都会提示。常量的生命周期一直到程序执行结束为止。
 	5）重要示例：
 		char s[]="123";    s在栈区，“123”在栈区，其值可以被修改
 		char *s="123";     s在栈区，“123”在常量区，其值不能被修改
 
-<h3>与OC语言的内存布局的差异</h3>
-	减少内存垃圾碎片的优化
+<h3>OC语言的内存布局</h3>
+	减少内存垃圾碎片的优化: 《Pro Multithreading and Memory Management for iOS and OS X》中The alloc Method小节1-7图
 待续。。。
 
-<h3>C语言函数调用的内存机制</h3>
-待续。。。
+http://reverse.put.as/wp-content/uploads/2011/06/objective-c-internals.pdf
+http://www.cnblogs.com/csutanyu/archive/2011/12/12/Objective-C_memory_layout.html
+http://www.easyfunstudy.com/books/Transfer/Learning_Objective_C_2_0__A_Hands_On_Guide_to_Objective_C_for_Mac_and_iOS_Developers__Developer__039_s_Library_.pdf
+<h6>差异</h6>
 
 结束语：
 究其细节，其实，没有什么过程是“自动的”，这只不过用来搪塞程序员自己的理由。
