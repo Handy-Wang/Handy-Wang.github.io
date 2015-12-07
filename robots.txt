@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: 
+
+Sitemap: http://Handy-Wang.github.io/sitemap.xml 

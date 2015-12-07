@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: 调试 | 我是小山 我是坏人]]></title>
+  <link href="http://Handy-Wang.github.io/blog/categories/diao-shi/atom.xml" rel="self"/>
+  <link href="http://Handy-Wang.github.io/"/>
+  <updated>2015-12-07T13:55:46+08:00</updated>
+  <id>http://Handy-Wang.github.io/</id>
+  <author>
+    <name><![CDATA[Your Name]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[iOS App UI调试工具（三）· Reveal App]]></title>
+    <link href="http://Handy-Wang.github.io/blog/2014/01/03/ios-app-uidiao-shi-gong-ju-san-reveal/"/>
+    <updated>2014-01-03T20:53:01+08:00</updated>
+    <id>http://Handy-Wang.github.io/blog/2014/01/03/ios-app-uidiao-shi-gong-ju-san-reveal</id>
+    <content type="html"><![CDATA[<p>昨天，经<a target="_blank" href="http://weibo.com/danc">@Dan</a>推荐又了解到一款UI调试神器<code>Reveal App</code>
+<video width='640' height='320' preload='none' controls poster=''><source src='http://revealapp.com/video/Reveal.mp4">http://revealapp.com/video/Reveal.mp4</a>' ></video></p>
+
+<!--more-->
+
+
+<p>官方地址在<a target="_blank" href="http://revealapp.com/">这里</a>
+<code>注意：我今天下的试用版试用总是提示已过期，一气之下就把系统日期改成2013年01月03日了，再启动，可以试用了。</code></p>
+
+<p>集成向导：
+Reveal App安装完成后，点开菜单Help->Getting Started，会出现一个界面，界面里有三个步骤，点界面左下角的“View Integration Guide”会打开一个本地的网页，这个网页里详细的描述了
+集成静态库和动态库的步骤。</p>
+
+<p>OK，大家可以试用一下。截止目前介绍的三款中，感觉这款的UE最NB，绝对产品级的。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[iOS App UI调试工具（二）· Realtime Debug Portal]]></title>
+    <link href="http://Handy-Wang.github.io/blog/2013/12/17/ios-app-uidiao-shi-gong-ju2/"/>
+    <updated>2013-12-17T05:30:58+08:00</updated>
+    <id>http://Handy-Wang.github.io/blog/2013/12/17/ios-app-uidiao-shi-gong-ju2</id>
+    <content type="html"><![CDATA[<p><img class="<a" src="href="https://github-camo.global.ssl.fastly.net/03548ab74978beee15b711ab26b5ed1bd71714f2/687474703a2f2f7777772e76696e716f6e2e636f6d2f636f6465626c6f672f66636b656469746f722f75706c6f61642f696d6167652f323031332d30362f325f322e706e67">https://github-camo.global.ssl.fastly.net/03548ab74978beee15b711ab26b5ed1bd71714f2/687474703a2f2f7777772e76696e716f6e2e636f6d2f636f6465626c6f672f66636b656469746f722f75706c6f61642f696d6167652f323031332d30362f325f322e706e67</a>"></p>
+
+<h3>Realtime Debug Portal简介</h3>
+
+
+<p><blockquote><p>RDP是一个类似Web Inspector的工具，把这个工具引入我们的项目工程，并做一些简单的配置，然后启动应用，<br/>在浏览器输入手机的IP地址，就可以看到UIView的树状结构和Log信息，还可以在浏览器中对View进行移动，<br/>隐藏，选中高亮等操作。</p><footer><strong>Realtime Debug Portal <a href="https://github.com/vinqon/Realtime-Debug-Portal">https://github.com/vinqon/Realtime-Debug-Portal</a> Read on</strong></footer></blockquote></p>
+
+<!--more-->
+
+
+
+
+<h3>配置步骤</h3>
+
+
+<p>```
+把库文件、头文件以及资源文件(bundle)引入项目即可，有两点需要注意一下：</p>
+
+<p>把工程中的Build Settings中的Other Linker Flags设置为-ObjC;
+使用iOS5或以上SDK;
+然后在合适位置调用以下代码：</p>
+
+<h1>import &ldquo;libRDP.h&rdquo;</h1>
+
+<p>[RDP startServer];
+启动应用之后，状态栏会显示出你需要访问的地址，模拟器一般会显示<a href="http://127.0.0.1:8080">http://127.0.0.1:8080</a> ，
+请使用Chrome或者Safari打开。</p>
+
+<p>当选中某个view之后，RDP会在这个view上面盖一层蓝色透明遮罩以便开发者区别。
+用户可以通过按下方向键来移动view，每次会移动1个逻辑像素；按住shift加方向键可以移动10个逻辑像素；
+按住w字母键，加方向键可以调整大小；
+点击h可以切换hidden状态；
+```
+也可参考github上<a target="_blank" href="https://github.com/vinqon/Realtime-Debug-Portal">这里</a></p>
+
+<h3>试用体会</h3>
+
+
+<div>
+    1）目前，支持视图的Inspect、position和size调整、隐藏或显示
+</div>
+
+
+<div>
+    2）方便集成到项目，UE简单明了很容易上手，基本能满足界面布局调试需求
+</div>
+
+
+
+
+<h3>参考</h3>
+
+
+<ol style="margin-top:-18px; padding-left:28px;">
+    <li style="padding-bottom:10px;">
+        <a target="_blank" href="http://www.vinqon.com/codeblog/?detail/11109">Redesign Your App for iOS 7 之 页面布局</a><br/>
+    </li>
+    <li>
+        <a target="_blank" href="https://github.com/vinqon/Realtime-Debug-Portal">Realtime Debug Portal的github</a><br/>
+    </li>
+</ol>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[iOS App UI调试工具（一）· Symbiote in Frank]]></title>
+    <link href="http://Handy-Wang.github.io/blog/2013/12/14/ios-app-uidiao-shi-gong-ju/"/>
+    <updated>2013-12-14T21:48:49+08:00</updated>
+    <id>http://Handy-Wang.github.io/blog/2013/12/14/ios-app-uidiao-shi-gong-ju</id>
+    <content type="html"><![CDATA[<p><img class="<a" src="href="http://blog.thepete.net/images/post_images/2012-06-24_A.png">http://blog.thepete.net/images/post_images/2012-06-24_A.png</a>"></p>
+
+<h3>Frank简介</h3>
+
+
+<p><blockquote><p>Frank is &lsquo;Selenium for native iOS apps&rsquo;. It allows you to write automated acceptance tests<br/>which verify the functionality of your native iOS app.</p></p><p><p>Frank是一个iOS平台的自动化测试工具。它支持编写一些自动化验收测试用例来验收iOS App的功能。</p><footer><strong>Frank <a href="http://www.testingwithfrank.com/">http://www.testingwithfrank.com/</a> Read on</strong></footer></blockquote></p>
+
+<!--more-->
+
+
+<h3>Symbiote简介</h3>
+
+
+<p><blockquote><p>Frank comes with a useful little tool called Symbiote. It’s a little web app<br/>which is embedded inside your native iOS application. Its purpose is to<br/>let you inspect the current state of your app’s UI, and to test the<br/>UIQuery selectors which Frank uses to help it automate your app.<br/>Essentially Symbiote is Firebug for your native iOS app.</p></p><p><p>Frank中包含了一个非常有用的小工具，它叫叫Symbiote。它是一个嵌入到iOS App中的一个Web应用程序。<br/>它的功能是可以让开发者能够调试运行时的iOS App UI的当前状态(层次结构、大小、位置等信息)，<br/>同时它也是为了测试Frank内部的一个用于自动化App的功能UIQuery选择器(UIQuery selector可以理解<br/>为通过某些名称或ID值找到App的UI元素，和JQuery一个设计思路)。<br/>从其功能本质上讲，Symbiote就是一个用于iOS App的FireBug。</p><footer><strong>Symbiote <a href="http://blog.thepete.net/blog/2011/05/01/inspect-state-of-our-running-ios-apps/">http://blog.thepete.net/blog/2011/05/01/inspect-state-of-our-running-ios-apps/</a> Read on</strong></footer></blockquote></p>
+
+<h3>Frank以及Symbiote的环境搭建</h3>
+
+
+<p>完全按照<a href="http://blog.thepete.net/blog/2012/06/24/writing-your-first-frank-test/">Writing Your First Frank Test</a>操作即可。
+请注意：这个HowTo中会有Ruby环境和插件的安装，做好心理准备。
+Touble shoot：<a href="&#109;&#97;&#105;&#x6c;&#x74;&#111;&#x3a;&#x6e;&#110;&#110;&#x77;&#106;&#115;&#64;&#x31;&#x32;&#54;&#x2e;&#x63;&#x6f;&#109;">&#110;&#x6e;&#x6e;&#119;&#x6a;&#115;&#64;&#49;&#50;&#x36;&#46;&#x63;&#x6f;&#109;</a></p>
+
+<h3>试用体会</h3>
+
+
+<div>
+    1）通过Web GUI界面动态展示程序运行时可视UI的层次结构和相关属性(宽、高等)
+</div>
+
+
+<div>
+    2）操作App时，Web GUI界面和相关信息是同步变化的
+</div>
+
+
+<div>
+    3）在Web GUI界面中点UI层次结构里某节点时，右侧的Web Simulator中会高亮出点击区域
+</div>
+
+
+<div>
+    4）在Web GUI界面里可以通过选择节点或编写UIQuery selector来控制App
+</div>
+
+
+<div>
+    5）Web GUI界面的UI/UE实再是太差劲了
+</div>
+
+
+<div>
+    6）更多功能有待进一步试用...
+</div>
+
+
+
+
+<h3>参考</h3>
+
+
+<ol style="margin-top:-18px; padding-left:28px;">
+<li style="padding-bottom:10px;">
+    <a target="_blank" href="http://www.cocoachina.com/applenews/devnews/2013/1111/7332.html">你用哪种工具进行iOS app自动化功能测试？</a><br/>
+</li>
+<li>
+    <a target="_blank" href="http://moredip.github.io/frank_at_selenium_slides.html">Frank presentation slides</a><br/>
+</li>
+<li>
+    <a target="_blank" href="http://www.testingwithfrank.com/">Testing With Frank(Frank网站)</a><br/>
+</li>
+<li style="padding-bottom:10px;">
+    <a target="_blank" href="https://github.com/TestingWithFrank/Frank">Frank github</a><br/>
+</li>
+<li>
+    <a target="_blank" href="http://blog.thepete.net/blog/2011/05/01/inspect-state-of-our-running-ios-apps/">Inspect the State of Your Running iOS App's UI With Symbiote(Symbiote介绍)</a><br/>
+</li>
+<li>
+    <a target="_blank" href="https://github.com/TestingWithFrank/symbiote">Symbiote github(介绍、Mockup static Symbiote web app)</a><br/>
+</li>
+<li>
+    <a target="_blank" href="http://blog.thepete.net/blog/2012/06/24/writing-your-first-frank-test/">Writing Your First Frank Test(搭建Frank和Symbiote)</a>
+</li>
+</ol>
+
+
+
+
+<h5>iOS App UI调试工具（二）里介绍另一神器：RDP</h5>
+
+]]></content>
+  </entry>
+  
+</feed>

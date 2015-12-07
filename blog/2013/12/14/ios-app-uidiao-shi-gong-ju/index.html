@@ -1,0 +1,311 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>iOS App UI调试工具（一）· Symbiote in Frank - 我是小山 我是坏人</title>
+  <meta name="author" content="Your Name">
+
+  
+  <meta name="description" content="Frank简介 Frank is &#8216;Selenium for native iOS apps&#8217;. It allows you to write automated acceptance tests which verify the functionality of &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://Handy-Wang.github.io/blog/2013/12/14/ios-app-uidiao-shi-gong-ju">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="我是小山 我是坏人" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">我是小山 我是坏人</a></h1>
+  
+    <h2>分享比懂了更快乐，如果这里也有你不懂的......</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:Handy-Wang.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">iOS App UI调试工具（一）· Symbiote in Frank</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-12-14T21:48:49+08:00" pubdate data-updated="true">Dec 14<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><img src="http://blog.thepete.net/images/post_images/2012-06-24_A.png"></p>
+
+<h3>Frank简介</h3>
+
+
+<blockquote><p>Frank is &#8216;Selenium for native iOS apps&#8217;. It allows you to write automated acceptance tests <br/>which verify the functionality of your native iOS app.</p><p>Frank是一个iOS平台的自动化测试工具。它支持编写一些自动化验收测试用例来验收iOS App的功能。</p><footer><strong>Frank</strong> <cite><a href='http://www.testingwithfrank.com/'>Read On</a></cite></footer></blockquote>
+
+
+<!--more-->
+
+
+<h3>Symbiote简介</h3>
+
+
+<blockquote><p>Frank comes with a useful little tool called Symbiote. It’s a little web app <br/>which is embedded inside your native iOS application. Its purpose is to <br/>let you inspect the current state of your app’s UI, and to test the <br/>UIQuery selectors which Frank uses to help it automate your app. <br/>Essentially Symbiote is Firebug for your native iOS app.</p><p>Frank中包含了一个非常有用的小工具，它叫叫Symbiote。它是一个嵌入到iOS App中的一个Web应用程序。<br/>它的功能是可以让开发者能够调试运行时的iOS App UI的当前状态(层次结构、大小、位置等信息)，<br/>同时它也是为了测试Frank内部的一个用于自动化App的功能UIQuery选择器(UIQuery selector可以理解<br/>为通过某些名称或ID值找到App的UI元素，和JQuery一个设计思路)。<br/>从其功能本质上讲，Symbiote就是一个用于iOS App的FireBug。</p><footer><strong>Symbiote</strong> <cite><a href='http://blog.thepete.net/blog/2011/05/01/inspect-state-of-our-running-ios-apps/'>Read On</a></cite></footer></blockquote>
+
+
+
+
+<h3>Frank以及Symbiote的环境搭建</h3>
+
+
+<p>完全按照<a href="http://blog.thepete.net/blog/2012/06/24/writing-your-first-frank-test/">Writing Your First Frank Test</a>操作即可。
+请注意：这个HowTo中会有Ruby环境和插件的安装，做好心理准备。
+Touble shoot：<a href="&#109;&#97;&#x69;&#108;&#116;&#x6f;&#x3a;&#x6e;&#x6e;&#x6e;&#119;&#106;&#x73;&#64;&#x31;&#x32;&#54;&#x2e;&#99;&#x6f;&#109;">&#110;&#x6e;&#110;&#119;&#x6a;&#x73;&#64;&#49;&#x32;&#54;&#x2e;&#x63;&#x6f;&#x6d;</a></p>
+
+<h3>试用体会</h3>
+
+
+<div>
+    1）通过Web GUI界面动态展示程序运行时可视UI的层次结构和相关属性(宽、高等)
+</div>
+
+
+<div>
+    2）操作App时，Web GUI界面和相关信息是同步变化的
+</div>
+
+
+<div>
+    3）在Web GUI界面中点UI层次结构里某节点时，右侧的Web Simulator中会高亮出点击区域
+</div>
+
+
+<div>
+    4）在Web GUI界面里可以通过选择节点或编写UIQuery selector来控制App
+</div>
+
+
+<div>
+    5）Web GUI界面的UI/UE实再是太差劲了
+</div>
+
+
+<div>
+    6）更多功能有待进一步试用&#8230;
+</div>
+
+
+
+
+<h3>参考</h3>
+
+
+<ol style="margin-top:-18px; padding-left:28px;">
+<li style="padding-bottom:10px;">
+    <a target="_blank" href="http://www.cocoachina.com/applenews/devnews/2013/1111/7332.html">你用哪种工具进行iOS app自动化功能测试？</a><br/>
+</li>
+<li>
+    <a target="_blank" href="http://moredip.github.io/frank_at_selenium_slides.html">Frank presentation slides</a><br/>
+</li>
+<li>
+    <a target="_blank" href="http://www.testingwithfrank.com/">Testing With Frank(Frank网站)</a><br/>
+</li>
+<li style="padding-bottom:10px;">
+    <a target="_blank" href="https://github.com/TestingWithFrank/Frank">Frank github</a><br/>
+</li>
+<li>
+    <a target="_blank" href="http://blog.thepete.net/blog/2011/05/01/inspect-state-of-our-running-ios-apps/">Inspect the State of Your Running iOS App&#8217;s UI With Symbiote(Symbiote介绍)</a><br/>
+</li>
+<li>
+    <a target="_blank" href="https://github.com/TestingWithFrank/symbiote">Symbiote github(介绍、Mockup static Symbiote web app)</a><br/>
+</li>
+<li>
+    <a target="_blank" href="http://blog.thepete.net/blog/2012/06/24/writing-your-first-frank-test/">Writing Your First Frank Test(搭建Frank和Symbiote)</a>
+</li>
+</ol>
+
+
+
+
+<h5>iOS App UI调试工具（二）里介绍另一神器：RDP</h5>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Your Name</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-12-14T21:48:49+08:00" pubdate data-updated="true">Dec 14<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/diao-shi/'>调试</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://Handy-Wang.github.io/blog/2013/12/14/ios-app-uidiao-shi-gong-ju/" data-via="" data-counturl="http://Handy-Wang.github.io/blog/2013/12/14/ios-app-uidiao-shi-gong-ju/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/12/09/chu-shi-cocos2d/" title="Previous Post: 初识Cocos2d">&laquo; 初识Cocos2d</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/12/17/ios-app-uidiao-shi-gong-ju2/" title="Next Post: iOS App UI调试工具（二）· Realtime Debug Portal">iOS App UI调试工具（二）· Realtime Debug Portal &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/12/06/2015nian-wo-du-gan-ma-liao/">2015年我都干嘛了</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/03/27/ru-he-zhong-zhi-tui-song-she-zhi-ti-xing/">如何重置推送设置提醒(转)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/03/19/pou-xi-performselectordai-you-afterdealy-can-shu-de-fang-fa-shi-xian/">剖析带有afterDealy参数的performSelector方法实现</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/03/18/qian-tan-nei-cun-bu-ju-memory-layout/">浅谈内存布局(Memory Layout)即虚拟地址空间</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/03/14/uinavigationcontrollerfen-xi/">UINavigationController分析</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Your Name -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
