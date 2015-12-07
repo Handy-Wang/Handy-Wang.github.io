@@ -4,7 +4,7 @@
   <title><![CDATA[Handy's]]></title>
   <link href="http://Handy-Wang.github.io/atom.xml" rel="self"/>
   <link href="http://Handy-Wang.github.io/"/>
-  <updated>2015-12-07T22:51:01+08:00</updated>
+  <updated>2015-12-07T22:55:58+08:00</updated>
   <id>http://Handy-Wang.github.io/</id>
   <author>
     <name><![CDATA[Your Name]]></name>
@@ -52,7 +52,7 @@
 
 <ol>
 <li>第三方库难免有Bug，所以我也经常修改这些源码里Bug，修改地方多了后也就忘了修改过哪些地方了。然后有一天我pod update了一下，如果本地的源码修改没有了，我得从项目的SVN上对比着再被回来，当时非常恼怒。。。</li>
-<li>由于天国的各种墙，安装cocoapods时我修改了gem源为<a href="https://rubygems.org/%E3%80%82%E4%BD%86%E6%98%AF%EF%BC%8C%E6%B2%A1%E6%9C%89%E6%83%B3%E5%88%B0%E5%9C%A8%E6%9F%90%E5%87%A0%E5%A4%A9pod">https://rubygems.org/%E3%80%82%E4%BD%86%E6%98%AF%EF%BC%8C%E6%B2%A1%E6%9C%89%E6%83%B3%E5%88%B0%E5%9C%A8%E6%9F%90%E5%87%A0%E5%A4%A9pod</a> update和pod install根本用不了，导致严重影响了我预期的开发进度。</li>
+<li>由于天国的各种墙，安装cocoapods时我修改了gem源为<a href="https://rubygems.org/">https://rubygems.org/</a> . 但是，没有想到在某几天pod update和pod install根本用不了，导致严重影响了我预期的开发进度。</li>
 </ol>
 
 
@@ -1499,7 +1499,7 @@ iOS6的这种设计高明在两个地方：1）视图结构和视图数据的分
 
 <p>完全按照<a href="http://blog.thepete.net/blog/2012/06/24/writing-your-first-frank-test/">Writing Your First Frank Test</a>操作即可。
 请注意：这个HowTo中会有Ruby环境和插件的安装，做好心理准备。
-Touble shoot：<a href="&#x6d;&#x61;&#x69;&#x6c;&#116;&#111;&#x3a;&#110;&#x6e;&#110;&#119;&#106;&#x73;&#64;&#x31;&#50;&#54;&#46;&#x63;&#x6f;&#x6d;">&#x6e;&#x6e;&#x6e;&#x77;&#x6a;&#x73;&#64;&#49;&#x32;&#54;&#46;&#99;&#x6f;&#x6d;</a></p>
+Touble shoot：<a href="&#109;&#x61;&#105;&#108;&#116;&#x6f;&#58;&#x6e;&#110;&#110;&#x77;&#x6a;&#115;&#64;&#x31;&#x32;&#54;&#46;&#x63;&#111;&#x6d;">&#110;&#x6e;&#110;&#119;&#106;&#115;&#x40;&#x31;&#50;&#x36;&#x2e;&#x63;&#x6f;&#x6d;</a></p>
 
 <h3>试用体会</h3>
 
