@@ -10,7 +10,7 @@
 
   
   <meta name="description" content="2015年即将结束，那这一年我到底都干嘛了？ 从去年(2014)的12月份就开始暗无天日的加班忙碌，直到今天下半年才好了很多，眼看这就要要2016了，
-也该回顾一下2015年的工作了。 AutoLayout 2015年12月，加入了一个新团队，仍然是负责iOS项目开发，人员上加上我两人，版本处于0 &hellip;">
+也该回顾一下2015年的工作了。 AutoLayout 2015年12月，加入了一个新团队－嗨购，仍然是负责iOS项目开发，人员上加上我两人， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -101,17 +101,79 @@
 <!--more-->
 
 
-<h3>AutoLayout</h3>
+<h2>AutoLayout</h2>
 
-<p>2015年12月，加入了一个新团队，仍然是负责iOS项目开发，人员上加上我两人，版本处于0.0.1版本。</p>
+<p>2015年12月，加入了一个新团队－嗨购，仍然是负责iOS项目开发，人员上加上我两人，版本处于0.0.1版本。</p>
 
 <p>当时接收项目后，发现这个项目的界面采用storyboard+autolayout开发，另外那个哥们去AutoLayout的使用也处于学习阶段，所以遇到的主要问题就是修改界面的Bug。由于我之前没有使用过storyboard和autolayout，再加上UI设计师对界面的细节控制要求很高，所以有些应付不了了。在另一个哥们儿的辅助下，将就着开发了0.1.0版本(仍采用storyboard+autolayout)，其实这个过程非常苦恼，“是好好学习一下AutoLayout，然后在项目里继续使用AutoLayout呢？” 还是 “采用自己熟悉的纯代码方式来编写？”</p>
 
 <p>最后，综合考虑项目的进度压力、质量的可控性、学习的时间成本后，决定还是暂时放弃Storyboard+AutoLayout，转而使用保守的纯代码方式开发。</p>
 
-<p>在0.1.0版本后，恰逢元旦，另外那个哥们儿休假半个月左右，回家结婚去了。我就逮着这个时机把项目界面实现方式、网络层等项目结构相关的代码重构90％左右。</p>
+<p>在0.1.0版本后，恰逢元旦，另外那个哥们儿休假半个月左右，回家结婚去了。我就逮着这个时机，在项目0.2.0时把项目界面实现方式、网络层、数据库等进行了大重构。</p>
 
-<p>现在相对不忙碌了，计划补补<a href="https://developer.apple.com/library/mac/documentation/UserExperience/Conceptual/AutolayoutPG/index.html">AutoLayout</a>以及<a href="https://github.com/SnapKit/Masonry">Masonry</a>.</p>
+<p>现在相对不忙碌了，计划补补 Todo: <a href="https://developer.apple.com/library/mac/documentation/UserExperience/Conceptual/AutolayoutPG/index.html">AutoLayout</a>以及 Todo: <a href="https://github.com/SnapKit/Masonry">Masonry</a>.</p>
+
+<h2>CocoaPods</h2>
+
+<p>其实，上面提到AutoLayout被我弃用后，就感觉比较反人类了，然后我仍然还要反人类一次。</p>
+
+<p>嗨购项目在0.2.0及之前，对第三方库的依赖方式是通过CocoaPods来管理的，但是为什么这之后我把CocoaPods去掉了呢？这就不得不提到Jenkins(我会在后面聊聊Jenkins)和CocoaPods的代码管理。</p>
+
+<p>本来采用Jenkins对iOS项目打包发布是一件很NB的事情，但是对通过CocoaPods管理第三库的iOS项目打包是一件非常痛苦的事情。说起痛苦，主要是集中在Jenkins上的配置以及项目本身的一些配置，如：Jenkins里build目录的指定、项目中schema的share等问题。这一系列问题我都有记录，这里就不细说了。虽然痛若，但是经过两三天的努力，可以通过Jenkins打包CocoaPods管理的项目。</p>
+
+<p>感觉这一点还好，但是，没有想到最后让我放弃CocoaPods的原因尽是它的优点：无感知管理项目的第三方库依赖。
+因为，</p>
+
+<ol>
+<li>第三方库难免有Bug，所以我也经常修改这些源码里Bug，修改地方多了后也就忘了修改过哪些地方了。然后有一天我pod update了一下，如果本地的源码修改没有了，我得从项目的SVN上对比着再被回来，当时非常恼怒。。。</li>
+<li>由于天国的各种墙，所以我修改了cocoapods的源为淘宝的源。但是，仍然在某几天无论如何都pod update和pod install不了，导致严重影响了我预期的开发进度。</li>
+</ol>
+
+
+<p>所以，我又选择了保守的方案，删除cocoapods，转而采用源代码依赖的方式，这样一来Jenkins打包也简化了。</p>
+
+<pre><code>现在回想，关于那段配置Jenkins打包CocoaPods项目的经历非常可贵，那是对意志的磨砺。
+</code></pre>
+
+<p><strong>Todo: <a href="">Jenkins打包CocoaPods项目</a></strong></p>
+
+<h2>CI-Jenkins</h2>
+
+<p>刚到嗨购的时候，发布安装包的方式是archive ipa文件并上传到fir.im进行发布，以供其它人员进行安装试用或测试。随着项目的推进，期望把这种Inhouse Release的方式自动化，所以引入之前在搜狐时就一直采用的Jenkins进行自动打包发布。</p>
+
+<p>关于Jenkins的安装我简要提一下，主要还是回顾一下使用过程中遇到的问题</p>
+
+<p><strong>Jenkins环境</strong></p>
+
+<p>Todo:</p>
+
+<p><strong>Jenkins+CocoaPods项目</strong></p>
+
+<p>Todo:</p>
+
+<p><strong>Jenkins+普通项目</strong></p>
+
+<p>Todo:</p>
+
+<p><strong>七牛空间</strong></p>
+
+<p>Todo:</p>
+
+<p><strong>打包状态邮件通知</strong></p>
+
+<p>Todo:</p>
+
+<h2>Redmine</h2>
+
+<p>Todo:</p>
+
+<h2>Crashlytics</h2>
+
+<p>Todo:</p>
+
+<h2>嗨购项目架构演进概要</h2>
+
+<p>Todo:</p>
 </div>
 
 
