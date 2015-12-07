@@ -32,7 +32,7 @@ categories:
 因为，
 
 1. 第三方库难免有Bug，所以我也经常修改这些源码里Bug，修改地方多了后也就忘了修改过哪些地方了。然后有一天我pod update了一下，如果本地的源码修改没有了，我得从项目的SVN上对比着再被回来，当时非常恼怒。。。
-2. 由于天国的各种墙，安装cocoapods时我修改了gem源为https://rubygems.org/。但是，没有想到在某几天pod update和pod install根本用不了，导致严重影响了我预期的开发进度。
+2. 由于天国的各种墙，安装cocoapods时我修改了gem源为https://rubygems.org/ . 但是，没有想到在某几天pod update和pod install根本用不了，导致严重影响了我预期的开发进度。
 
 所以，我又选择了保守的方案，删除cocoapods，转而采用源代码依赖的方式，这样一来Jenkins打包也简化了。
 
