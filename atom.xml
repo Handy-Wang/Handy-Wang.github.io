@@ -4,7 +4,7 @@
   <title><![CDATA[我是小山 我是坏人]]></title>
   <link href="http://Handy-Wang.github.io/atom.xml" rel="self"/>
   <link href="http://Handy-Wang.github.io/"/>
-  <updated>2015-12-07T22:30:51+08:00</updated>
+  <updated>2015-12-07T22:47:34+08:00</updated>
   <id>http://Handy-Wang.github.io/</id>
   <author>
     <name><![CDATA[Your Name]]></name>
@@ -24,7 +24,7 @@
 也该回顾一下2015年的工作了。
 </code></pre>
 
-<h2>AutoLayout</h2>
+<h4>AutoLayout</h4>
 
 <p>2015年12月，加入了一个新团队－嗨购，仍然是负责iOS项目开发，人员上加上我两人，版本处于0.0.1版本。</p>
 
@@ -39,7 +39,7 @@
 
 <p>现在相对不忙碌了，计划补补 Todo: <a href="https://developer.apple.com/library/mac/documentation/UserExperience/Conceptual/AutolayoutPG/index.html">AutoLayout</a>以及 Todo: <a href="https://github.com/SnapKit/Masonry">Masonry</a>.</p>
 
-<h2>CocoaPods</h2>
+<h4>CocoaPods</h4>
 
 <p>其实，上面提到AutoLayout被我弃用后，就感觉比较反人类了，然后我仍然还要反人类一次。</p>
 
@@ -68,7 +68,7 @@
 </ul>
 
 
-<h2>Jenkins</h2>
+<h4>Jenkins</h4>
 
 <p>刚到嗨购的时候，发布安装包的方式是archive ipa文件并上传到fir.im进行发布，以供其它人员进行安装试用或测试。随着项目的推进，期望把这种Inhouse Release的方式自动化，所以引入之前在搜狐时就一直采用的Jenkins进行自动打包发布。</p>
 
@@ -115,7 +115,7 @@
 </ul>
 
 
-<h2>Redmine</h2>
+<h4>Redmine</h4>
 
 <p>在2008年刚参加工作的时候，老东家就有搭建Redmine用于项目管理、issue跟踪、Wiki书写。在搜狐的时候，是由服务器同学搭建的trac来写wiki。由于刚到嗨购团队的时候，接口文件都是服务器同学通过word文档来记录并分发给相关开发人员。我觉得这样非常的不方便，不但不方便更改，也不便于分发。所以，我偷摸地在公司内网搭建了Redmine，给相关技术人员分发了账号和权限，从而以后<strong>“妈妈再也不用担心我们的接口文档了”</strong>。</p>
 
@@ -154,15 +154,15 @@
 </ol>
 
 
-<h2>Push Notification Simulator</h2>
+<h4>Push Notification Simulator</h4>
 
 <p>Todo:</p>
 
-<h2>Crashlytics</h2>
+<h4>Crashlytics</h4>
 
 <p>Todo:</p>
 
-<h2>嗨购项目架构演进概要</h2>
+<h4>嗨购项目架构演进概要</h4>
 
 <p>Todo:</p>
 ]]></content>
@@ -1471,7 +1471,7 @@ iOS6的这种设计高明在两个地方：1）视图结构和视图数据的分
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[iOS App UI调试工具（一）· Symbiote in Frank]]></title>
+    <title type="html"><![CDATA[iOS App UI调试工具（一）· Symbiote In Frank]]></title>
     <link href="http://Handy-Wang.github.io/blog/2013/12/14/ios-app-uidiao-shi-gong-ju/"/>
     <updated>2013-12-14T21:48:49+08:00</updated>
     <id>http://Handy-Wang.github.io/blog/2013/12/14/ios-app-uidiao-shi-gong-ju</id>
@@ -1499,7 +1499,7 @@ iOS6的这种设计高明在两个地方：1）视图结构和视图数据的分
 
 <p>完全按照<a href="http://blog.thepete.net/blog/2012/06/24/writing-your-first-frank-test/">Writing Your First Frank Test</a>操作即可。
 请注意：这个HowTo中会有Ruby环境和插件的安装，做好心理准备。
-Touble shoot：<a href="&#x6d;&#97;&#105;&#108;&#116;&#111;&#58;&#110;&#x6e;&#110;&#119;&#x6a;&#x73;&#64;&#x31;&#50;&#x36;&#46;&#99;&#x6f;&#x6d;">&#110;&#x6e;&#x6e;&#119;&#106;&#x73;&#64;&#x31;&#x32;&#54;&#46;&#99;&#111;&#109;</a></p>
+Touble shoot：<a href="&#x6d;&#97;&#x69;&#108;&#x74;&#111;&#58;&#x6e;&#110;&#x6e;&#119;&#106;&#115;&#64;&#49;&#x32;&#x36;&#46;&#x63;&#x6f;&#109;">&#x6e;&#x6e;&#x6e;&#x77;&#106;&#x73;&#64;&#x31;&#x32;&#54;&#46;&#x63;&#111;&#x6d;</a></p>
 
 <h3>试用体会</h3>
 

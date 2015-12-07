@@ -2,78 +2,67 @@
 <!DOCTYPE html>
 <!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
 <!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!-->
+<html class="no-js" lang="zh-CN"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
   <title>iOS App UI调试工具（三）· Reveal App - 我是小山 我是坏人</title>
   <meta name="author" content="Your Name">
-
+  <!--[if lt IE 9]>
+    <script src="http://x.papaapp.com/farm1/a571d2/8dda131d/html5shiv.js"></script>
+    <![endif]-->
   
-  <meta name="description" content="昨天，经@Dan推荐又了解到一款UI调试神器Reveal App 官方地址在这里
-注意：我今天下的试用版试用总是提示已过期，一气之下就把系统日期改成2013年01月03日了，再启动，可以试用了。 集成向导：
-Reveal App安装完成后，点开菜单Help->Getting Started， &hellip;">
+  <meta name="description" content="iOS App UI调试工具（三）· Reveal App Jan 3rd, 2014 昨天，经@Dan推荐又了解到一款UI调试神器Reveal App 官方地址在这里
+注意：我今天下的试用版试用总是提示已过期，一气之下就把系统日期改成2013年01月03日了，再启动，可以试用了。 集成向导： &hellip;">
   
 
-  <!-- http://t.co/dKP3o1e -->
   <meta name="HandheldFriendly" content="True">
   <meta name="MobileOptimized" content="320">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://Handy-Wang.github.io/blog/2014/01/03/ios-app-uidiao-shi-gong-ju-san-reveal">
+  <link rel="canonical" href="http://Handy-Wang.github.io/blog/2014/01/03/ios-app-uidiao-shi-gong-ju-san-reveal/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script type="text/javascript" src="http://t.papaapp.com/js/libs/jquery/1.7.2/jquery.js"></script>
   <link href="/atom.xml" rel="alternate" title="我是小山 我是坏人" type="application/atom+xml">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 
   
 
 </head>
-
 <body   >
-  <header role="banner"><hgroup>
-  <h1><a href="/">我是小山 我是坏人</a></h1>
-  
-    <h2>分享比懂了更快乐，如果这里也有你不懂的......</h2>
-  
-</hgroup>
-
+  <header id="header" class="clearfix">    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                <a id="logo" href="/">
+                   我是小山 我是坏人
+                </a>
+                <p class="description">分享比懂了更快乐，如果这里也有你不懂的......</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="index-nav current" href="/">Blog</a>
+<a class="archives-nav" href="/blog/archives">Archives</a>
+                </nav>
+            </div>
+        </div>
+    </div>
 </header>
-  <nav role="navigation"><ul class="subscription" data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
-  
-</ul>
-  
-<form action="https://www.google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:Handy-Wang.github.io" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
-<ul class="main-navigation">
-  <li><a href="/">Blog</a></li>
-  <li><a href="/blog/archives">Archives</a></li>
-</ul>
-
-</nav>
-  <div id="main">
-    <div id="content">
-      <div>
-<article class="hentry" role="article">
+  <div id="body">
+    <div class="container">
+    	<div class="col-group">
+			<div class="col-8" id="main">
+  <div class="res-cons">
+  <article class="post clearfix">
   
   <header>
     
-      <h1 class="entry-title">iOS App UI调试工具（三）· Reveal App</h1>
+      <h1 class="post-title">iOS App UI调试工具（三）· Reveal App</h1>
     
     
-      <p class="meta">
+      <p class="post-meta">
         
 
 
@@ -93,7 +82,7 @@ Reveal App安装完成后，点开菜单Help->Getting Started， &hellip;">
   </header>
 
 
-<div class="entry-content"><p>昨天，经<a target="_blank" href="http://weibo.com/danc">@Dan</a>推荐又了解到一款UI调试神器<code>Reveal App</code>
+<div class="post-content"><p>昨天，经<a target="_blank" href="http://weibo.com/danc">@Dan</a>推荐又了解到一款UI调试神器<code>Reveal App</code>
 <video width='640' height='320' preload='none' controls poster='http://revealapp.com/img/testimonial-flipboard.jpg'><source src='http://revealapp.com/video/Reveal.mp4' type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'></video></p>
 
 <!--more-->
@@ -110,27 +99,14 @@ Reveal App安装完成后，点开菜单Help->Getting Started，会出现一个�
 </div>
 
 
-  <footer>
-    <p class="meta">
+  <footer class="post-footer">
+    <div class="meta">
       
   
 
 <span class="byline author vcard">Posted by <span class="fn">Your Name</span></span>
-
-      
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-03T20:53:01+08:00" pubdate data-updated="true">Jan 3<span>rd</span>, 2014</time>
-      
+ and 
+      File under 
 
 <span class="categories">
   
@@ -139,59 +115,66 @@ Reveal App安装完成后，点开菜单Help->Getting Started，会出现一个�
 </span>
 
 
-    </p>
+    </div>
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://Handy-Wang.github.io/blog/2014/01/03/ios-app-uidiao-shi-gong-ju-san-reveal/" data-via="" data-counturl="http://Handy-Wang.github.io/blog/2014/01/03/ios-app-uidiao-shi-gong-ju-san-reveal/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://Handy-Wang.github.io/blog/2014/01/03/ios-app-uidiao-shi-gong-ju-san-reveal/" data-via="" data-counturl="http://Handy-Wang.github.io/blog/2014/01/03/ios-app-uidiao-shi-gong-ju-san-reveal/" >Tweet</a>
   
   
   
 </div>
 
     
-    <p class="meta">
+    <div class="meta">
       
         <a class="basic-alignment left" href="/blog/2013/12/26/you-kios6memorywarningyin-fa-de-si-kao/" title="Previous Post: 由kIOS6MEMORYWARNING引发的思考">&laquo; 由kIOS6MEMORYWARNING引发的思考</a>
       
       
         <a class="basic-alignment right" href="/blog/2014/03/10/runtime-1rd-message/" title="Next Post: Runtime（一）之 Message转发浅析">Runtime（一）之 Message转发浅析 &raquo;</a>
       
-    </p>
+    </div>
   </footer>
 </article>
 
+  </div>
 </div>
 
-<aside class="sidebar">
+  <aside id="secondary">
   
-    <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2015/12/06/2015nian-wo-du-gan-ma-liao/">2015年我都干嘛了</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/03/27/ru-he-zhong-zhi-tui-song-she-zhi-ti-xing/">如何重置推送设置提醒(转)</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/03/19/pou-xi-performselectordai-you-afterdealy-can-shu-de-fang-fa-shi-xian/">剖析带有afterDealy参数的performSelector方法实现</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/03/18/qian-tan-nei-cun-bu-ju-memory-layout/">浅谈内存布局(Memory Layout)即虚拟地址空间</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/03/14/uinavigationcontrollerfen-xi/">UINavigationController分析</a>
-      </li>
-    
-  </ul>
+    <section class="widget">
+    <form id="search" action="https://www.google.com/search" method="get">
+    	<input type="hidden" name="q" value="site:Handy-Wang.github.io"/>
+    	<input type="text" name="q" results="0" class="text" placeholder="Google搜索"/>
+    </form>
 </section>
 
+<section class="widget">
+	<h3 class="widget-title">最新文章</h3>
+	<ul class="widget-list">
+		
+     	<li>
+      	  <a href="/blog/2015/12/06/2015nian-wo-du-gan-ma-liao/">2015年我都干嘛了</a>
+      	</li>
+    	
+     	<li>
+      	  <a href="/blog/2014/03/27/ru-he-zhong-zhi-tui-song-she-zhi-ti-xing/">如何重置推送设置提醒(转)</a>
+      	</li>
+    	
+     	<li>
+      	  <a href="/blog/2014/03/19/pou-xi-performselectordai-you-afterdealy-can-shu-de-fang-fa-shi-xian/">剖析带有afterDealy参数的performSelector方法实现</a>
+      	</li>
+    	
+     	<li>
+      	  <a href="/blog/2014/03/18/qian-tan-nei-cun-bu-ju-memory-layout/">浅谈内存布局(Memory Layout)即虚拟地址空间</a>
+      	</li>
+    	
+     	<li>
+      	  <a href="/blog/2014/03/14/uinavigationcontrollerfen-xi/">UINavigationController分析</a>
+      	</li>
+    	
+	</ul>
+</section>
 
 
 
@@ -200,14 +183,20 @@ Reveal App安装完成后，点开菜单Help->Getting Started，会出现一个�
 </aside>
 
 
+      	</div>
     </div>
   </div>
-  <footer role="contentinfo"><p>
-  Copyright &copy; 2015 - Your Name -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-</p>
+  <footer id="footer">
+  	<div class="container">
+	Copyright &copy; 2015 - Your Name -
+  <span class="credit">Powered by <a rel="nofollow" href="http://octopress.org">Octopress</a> on <a rel="nofollow" href="http://pages.github.com/">GitHubPages</a>
+  </span>
+  - <span class="credit">Theme by <a rel="nofollow" href="http://pagecho.com">Cho</a></span>
 
-</footer>
+
+</div>
+
+  </footer>
   
 
 
@@ -221,7 +210,7 @@ Reveal App安装完成后，点开菜单Help->Getting Started，会出现一个�
       var twitterWidgets = document.createElement('script');
       twitterWidgets.type = 'text/javascript';
       twitterWidgets.async = true;
-      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
       document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
     })();
   </script>
