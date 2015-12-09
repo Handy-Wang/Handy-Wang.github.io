@@ -223,7 +223,7 @@
 <li>为了安装一个Redmine，把操作系统里本身配置的一些环境变量给搞乱，不好不好。</li>
 </ul>
 </li>
-<li>通过Redmine项目源码布署
+<li>布署Redmine项目源码
 
 <ul>
 <li>Redmine本身是一个ROR项目，再加上09年左右的时候做过一个ROR项目，所以此法可试。</li>
@@ -239,11 +239,85 @@
 
 <h4>Push Notification Simulator</h4>
 
-<p>Todo:</p>
+<p>早在搜狐的时候，就遇到推送调试非常不方便的问题。试用了一些方案，但最终于我还是搭建了一套更好的方案，并运用到了搜狐新闻和嗨购项目中。</p>
 
-<h4>Crashlytics</h4>
+<p>最开始的方案是采用PushMeBaby，这是一个Mac版的源代码项目，把项目需要收到推送的Dev或Release的push certification导入项目，并设置好相应的宏就可以运行一个Mac App，然后输入相应手机的Token就可以发推送了。</p>
 
-<p>Todo:</p>
+<p>随着我对PushMeBaby的使用，非常想把推送模拟发送机制进行改进，因为我发现它有几个弊端：</p>
+
+<ul>
+<li>PushMeBaby的环境建立不方便，因为它是一个Mac环境，需要在开发人员自己的电脑各位持有一位源码并运行。完全没有必要。</li>
+<li>PushMeBaby需要配置Push Certificate，这一点估计会难倒不少对iOS开发的PrivateKey、Certificate、Provisioning Profile等授权概念比较混淆的人。门槛有点高。</li>
+<li>PushMeBaby只能给某一个PushCertificate发推送。非常不灵活。</li>
+<li>PushMeBaby只能输入Token。非常不灵活。</li>
+<li>PushMeBaby的推送内容修改只能修改源码。非常不方便。</li>
+</ul>
+
+
+<p>终于，在开发搜狐新闻的<strong>推送打开Navtive页面</strong>这一功能时，由于要反复调试推送内容，所以我决定自己搭一个即保留PushMeBaby已有功能，也可以解决以上问题的推送环境，我给它起了个名字－Push Notification Simulator。</p>
+
+<p><strong>Push Notification Simulator</strong></p>
+
+<ul>
+<li>找一台做CI的服务器(肯定是Mac嘛)</li>
+<li>Mac自带Apache+PHP环境。大环境就这么轻松的满足了。</li>
+<li>开发一个简单的H5页面作为首页
+
+<ul>
+<li>具备推送内容的配置功能</li>
+<li>具备Push Certificate的选择功能，只需要由一人来上传各Push Certificate即可。</li>
+<li>具备Token的选择和手动输入功能</li>
+</ul>
+</li>
+<li>开发一个可以把H5页可编辑内容作为参数来发送推送的PHP文件</li>
+<li>运行，测试，好使。</li>
+</ul>
+
+
+<p>在一个团队里，这是一个非常省心的方案。</p>
+
+<h4>Crashlytics &amp; App Log</h4>
+
+<p>App crash给人一种非常重大的事件的感觉，所以早期遇到App crash总是有些菊花一紧的感觉。倒不是说害怕App crash，而是因为环境的限制或者低概念crash而查不到App crash的原因，尤其是在线上版本crash的时候。</p>
+
+<p>目前，友盟、TalkingData等第三方统计平台也都可以借助其SDK上报Crash Log了，但毕竟它们的核心是做统计，其实Crash Log分析远远比不上Crashlytics.</p>
+
+<p><strong>Crashlytics</strong></p>
+
+<p>最开始，Crashlytics作为一个独立项目存在，后被Twitter收购作为Fabric下的一个子项目了。</p>
+
+<p>现在，集成Crashlytics挺方便的：</p>
+
+<ul>
+<li>注册 Fabric 账号</li>
+<li>安装 Fabric 客户端</li>
+<li>按 Fabric 客户端的指引导入 Fabric 和 Crashlitics Framework</li>
+<li>在 AppDelegate 中 import Crashlytics，并初始化 SDK</li>
+<li>添加 RunScript。我会判断不是 Debug Configuration 时才上报 Crash Log。Debug Configuration 下的crash 一般都好解决，因为这时还处于开发环境；而 Release 或 Release-Inhouse 已处于 Distribution 环境了。</li>
+</ul>
+
+
+<p>在 Crashlytics 网站后台可以很方便的分App、分版本的查看不同时间段的 Crash Log，并且还可以在 App 内使用Crashlytics 来输出特定的日志或标记，以便在Crashlytics 网站后台查看 Crash Log 时可以更好的跟踪 Crash 原因。</p>
+
+<p><strong>App Log</strong></p>
+
+<p>Crashlytics偏技术，重点在于解决Crash。</p>
+
+<p>但是，App发版以后，可能仍存在一些逻辑漏洞没有被测试出来，比如页面上的数据展现效果很奇怪、页面间某些衔接逻辑有些混乱了，类似的这一类问题属于业务问题。当在App发版后，发生业务Bug且开发人员很难通过Review自己的代码来查找Bug时，就需要借助服务器日志或App日志。</p>
+
+<p>我在嗨购项目里尝试写一个上传代码日志的逻辑，原理很简单：</p>
+
+<ul>
+<li>把App内的NSLog输出的日志重定向输出到一个文件并保存起来</li>
+<li>每次App EnterBackground时，启动一个BackgroundTask线程检查日志文件是否大于1M了，如果大于1M则上传到服务器，上传成功则删除日志文件</li>
+<li>此日志文件不纳入App缓存管理的范畴</li>
+</ul>
+
+
+<p>另看，这一小小的机制，在后来辅助修改业务Bug起到了在作用。</p>
+
+<pre><code>Crashlytics &amp; App Log已作为我经手的项目的常规架构支持。
+</code></pre>
 
 <h4>嗨购项目架构演进概要</h4>
 
