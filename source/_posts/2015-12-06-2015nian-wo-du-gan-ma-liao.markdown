@@ -158,7 +158,7 @@ Crashlytics偏技术，重点在于解决Crash。
 * 每次App EnterBackground时，启动一个BackgroundTask线程检查日志文件是否大于1M了，如果大于1M则上传到服务器，上传成功则删除日志文件
 * 此日志文件不纳入App缓存管理的范畴
 
-另看，这一小小的机制，在后来辅助修改业务Bug起到了在作用。
+另看，这一小小的机制，在后来辅助修改业务Bug起到了大作用。
 
 
 	Crashlytics & App Log已作为我经手的项目的常规架构支持。
