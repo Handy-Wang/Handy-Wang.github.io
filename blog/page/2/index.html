@@ -9,25 +9,7 @@
   <meta name="author" content="Your Name">
 
   
-  <meta name="description" content="配置Apache+PHP Mac OS自带Apache服务器和PHP，所以只需少许配置便可将它派上用场 1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-1）启动Apache服务器
-打开“终端（terminal）”，然后（注意， &hellip;">
+  <meta name="description" content="Realtime Debug Portal简介 RDP是一个类似Web Inspector的工具，把这个工具引入我们的项目工程，并做一些简单的配置，然后启动应用，在浏览器输入手机的IP地址，就可以看到UIView的树状结构和Log信息，还可以在浏览器中对View进行移动，隐藏，选中高亮等操作。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -96,80 +78,6 @@
     <div id="content">
       <div class="blog-index">
   
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/12/19/mac-osxia-da-jian-apnstui-song-fu-wu-qi/">Mac OS下搭建APNS推送服务器(Apache+PHP)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-        
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>配置Apache+PHP</h3>
-
-
-<p>Mac OS自带Apache服务器和PHP，所以只需少许配置便可将它派上用场</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>1）启动Apache服务器
-</span><span class='line'>打开“终端（terminal）”，然后（注意，sudo需要的密码就是系统的root帐号密码）运行“sudo apachectl start”
-</span><span class='line'>再输入帐号密码这样Apache就运行了。如此在浏览器中输入“http://localhost”就可以看到一个内容为“It works!”
-</span><span class='line'>的页面。其位于“/Library/WebServer/Documents/”下，这就是Apache的默认根目录
-</span><span class='line'>
-</span><span class='line'>2）配置Apache支持PHP
-</span><span class='line'>在终端中运行“sudo vi /etc/apache2/httpd.conf”，打开Apache的配置文件。
-</span><span class='line'>找到“#LoadModule php5_module libexec/apache2/libphp5.so”，把前面的#号去掉，
-</span><span class='line'>保存（在命令行输入:w）并退出vi（在命令行输入:q）。运行“sudo apachectl restart”，
-</span><span class='line'>重启Apache，这样PHP就可以用了。
-</span><span class='line'>
-</span><span class='line'>3）测试PHP在Apache中运行是否正常
-</span><span class='line'>运行“sudo cp /Library/WebServer/Documents/index.html.en /Library/WebServer/Documents/info.php”
-</span><span class='line'>即在Apache的根目录下复制index.html.en文件并重命名为info.php。
-</span><span class='line'>在终端中运行“sudo vi /Library/WebServer/Document/info.php”，这样就可以在vi中编辑info.php文件了。
-</span><span class='line'>在“It’s works!”后面加上“&lt;?php phpinfo(); ?&gt;”，然后保存之。如此就可以在http://localhost/info.php中看到
-</span><span class='line'>有关PHP的信息，比如10.8中内置PHP版本号是5.3.13。</span></code></pre></td></tr></table></div></figure>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/12/19/mac-osxia-da-jian-apnstui-song-fu-wu-qi/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
   
   
     <article>

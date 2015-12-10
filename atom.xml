@@ -4,7 +4,7 @@
   <title><![CDATA[Handy's]]></title>
   <link href="http://Handy-Wang.github.io/atom.xml" rel="self"/>
   <link href="http://Handy-Wang.github.io/"/>
-  <updated>2015-12-10T15:57:58+08:00</updated>
+  <updated>2015-12-10T16:08:25+08:00</updated>
   <id>http://Handy-Wang.github.io/</id>
   <author>
     <name><![CDATA[Your Name]]></name>
@@ -12,31 +12,6 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
-  
-  <entry>
-    <title type="html"><![CDATA[软件架构模式(译)]]></title>
-    <link href="http://Handy-Wang.github.io/blog/2015/12/10/ruan-jian-jia-gou-mo-shi/"/>
-    <updated>2015-12-10T13:31:32+08:00</updated>
-    <id>http://Handy-Wang.github.io/blog/2015/12/10/ruan-jian-jia-gou-mo-shi</id>
-    <content type="html"><![CDATA[<p>原文：<a href="http://www.oreilly.com/programming/free/files/software-architecture-patterns.pdf">《Software Architecture Patterns》</a></p>
-
-<h1>前言</h1>
-
-<p>对于很多开发人员来说，在着手开发时并没有一套有条理的架构体系来指导他们，这简直是一件太正常的事情了。在没有一套清晰的、经过推敲过的架构体系时，许多开发人员和架构师都遵守所谓的行业标准－分层架构模式（也称之为多层架构），即创建隐式的多层结构，即把只是从源代码角度，把模块的源代码都放在不同的源代码路径下，看似像分层了。但，实际上这种层次架构有诸多问题：模块角色没有清晰地划分，模块职责不明确，模块间的关系不清楚。这种架构通常称之为：<a href="http://www.cin.ufpe.br/~sugarloafplop/mud.pdf">大泥球</a>-架构反模式</p>
-
-<p>缺少有条理的架构的应用通常都是紧耦合的、不健壮的、难以维护的，而且没有清晰的视野感和方向感。所以，非常难以确定这个应用的架构特点，以至于不能全面地理解这个应该系统中各模块的内部逻辑。很难找到与开发和维护相关的诸多基本问题的答案：这个应用具有伸缩性吗？这个应用有什么性能特点？这个应用是否很容易维护？这个应用有什么技术特性？</p>
-
-<p>诸多架构模式可以辅助我们定义应用程序的基本特性和行为。例如，某些架构模式偏向于高可伸缩性，某些架构模式偏向于高度敏捷性。所以，在选择一种适合于某个项目的架构之前，了解不同架构模式的特点、优点和缺点是非常有必要的。</p>
-
-<p>作为一名架构师，你需要经常检验你的架构决策，尤其是在选择某种特别的架构或方案的时候。</p>
-
-<p><!--more--]></p>
-
-<h1>第一章 分层架构模式</h1>
-
-<p>待续&hellip;</p>
-]]></content>
-  </entry>
   
   <entry>
     <title type="html"><![CDATA[2015年我都干嘛了]]></title>
@@ -1663,7 +1638,7 @@ iOS6的这种设计高明在两个地方：1）视图结构和视图数据的分
 
 <p>完全按照<a href="http://blog.thepete.net/blog/2012/06/24/writing-your-first-frank-test/">Writing Your First Frank Test</a>操作即可。
 请注意：这个HowTo中会有Ruby环境和插件的安装，做好心理准备。
-Touble shoot：<a href="&#109;&#97;&#x69;&#x6c;&#116;&#x6f;&#58;&#x6e;&#110;&#110;&#x77;&#x6a;&#x73;&#64;&#49;&#x32;&#x36;&#46;&#x63;&#x6f;&#109;">&#x6e;&#110;&#110;&#x77;&#x6a;&#115;&#x40;&#49;&#50;&#54;&#x2e;&#x63;&#x6f;&#109;</a></p>
+Touble shoot：<a href="&#109;&#97;&#x69;&#x6c;&#x74;&#111;&#x3a;&#x6e;&#x6e;&#110;&#x77;&#x6a;&#115;&#x40;&#49;&#x32;&#54;&#x2e;&#x63;&#111;&#x6d;">&#110;&#x6e;&#x6e;&#x77;&#106;&#x73;&#64;&#x31;&#x32;&#54;&#46;&#x63;&#x6f;&#x6d;</a></p>
 
 <h3>试用体会</h3>
 
