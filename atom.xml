@@ -4,7 +4,7 @@
   <title><![CDATA[Handy's]]></title>
   <link href="http://Handy-Wang.github.io/atom.xml" rel="self"/>
   <link href="http://Handy-Wang.github.io/"/>
-  <updated>2015-12-10T15:47:36+08:00</updated>
+  <updated>2015-12-10T15:53:04+08:00</updated>
   <id>http://Handy-Wang.github.io/</id>
   <author>
     <name><![CDATA[Your Name]]></name>
@@ -18,7 +18,7 @@
     <link href="http://Handy-Wang.github.io/blog/2015/12/10/ruan-jian-jia-gou-mo-shi/"/>
     <updated>2015-12-10T13:31:32+08:00</updated>
     <id>http://Handy-Wang.github.io/blog/2015/12/10/ruan-jian-jia-gou-mo-shi</id>
-    <content type="html"><![CDATA[<p>原文：《Software Architecture Patterns》</p>
+    <content type="html"><![CDATA[<p>原文：<a href="http://www.oreilly.com/programming/free/files/software-architecture-patterns.pdf">《Software Architecture Patterns》</a></p>
 
 <h1>前言</h1>
 
@@ -30,8 +30,7 @@
 
 <p>作为一名架构师，你需要经常检验你的架构决策，尤其是在选择某种特别的架构或方案的时候。</p>
 
-<!--more-->
-
+<p><!--more--]></p>
 
 <h1>第一章 分层架构模式</h1>
 
@@ -1664,7 +1663,7 @@ iOS6的这种设计高明在两个地方：1）视图结构和视图数据的分
 
 <p>完全按照<a href="http://blog.thepete.net/blog/2012/06/24/writing-your-first-frank-test/">Writing Your First Frank Test</a>操作即可。
 请注意：这个HowTo中会有Ruby环境和插件的安装，做好心理准备。
-Touble shoot：<a href="&#109;&#97;&#x69;&#x6c;&#x74;&#x6f;&#x3a;&#x6e;&#x6e;&#110;&#119;&#106;&#x73;&#64;&#49;&#50;&#x36;&#x2e;&#99;&#111;&#x6d;">&#110;&#110;&#110;&#119;&#106;&#x73;&#x40;&#49;&#x32;&#x36;&#x2e;&#x63;&#111;&#109;</a></p>
+Touble shoot：<a href="&#x6d;&#97;&#x69;&#108;&#116;&#x6f;&#x3a;&#x6e;&#110;&#x6e;&#119;&#x6a;&#x73;&#x40;&#x31;&#x32;&#54;&#x2e;&#x63;&#111;&#109;">&#x6e;&#x6e;&#x6e;&#119;&#106;&#x73;&#64;&#x31;&#x32;&#x36;&#x2e;&#x63;&#111;&#x6d;</a></p>
 
 <h3>试用体会</h3>
 
