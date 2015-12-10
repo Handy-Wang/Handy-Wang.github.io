@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "软件架构模式(译)"
+title: "软件架构模式（译）"
 date: 2015-12-10 16:10:37 +0800
 comments: true
 categories: 
