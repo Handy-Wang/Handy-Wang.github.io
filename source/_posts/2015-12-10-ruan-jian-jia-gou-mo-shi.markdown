@@ -6,7 +6,7 @@ comments: true
 categories: 
 ---
 
-原文：《Software Architecture Patterns》
+原文：[《Software Architecture Patterns》](http://www.oreilly.com/programming/free/files/software-architecture-patterns.pdf)
 
 #前言
 
@@ -17,7 +17,7 @@ categories:
 诸多架构模式可以辅助我们定义应用程序的基本特性和行为。例如，某些架构模式偏向于高可伸缩性，某些架构模式偏向于高度敏捷性。所以，在选择一种适合于某个项目的架构之前，了解不同架构模式的特点、优点和缺点是非常有必要的。
 
 作为一名架构师，你需要经常检验你的架构决策，尤其是在选择某种特别的架构或方案的时候。
-<!--more-->
+<!--more--]>
 
 #第一章 分层架构模式
 待续...
