@@ -9,8 +9,7 @@
   <meta name="author" content="Your Name">
 
   
-  <meta name="description" content="2015年即将结束，那这一年我到底都干嘛了？ 从去年(2014)的12月份就开始暗无天日的加班忙碌，直到今天下半年才好了很多，眼看这就要要2016了，
-也该回顾一下2015年的工作了。 AutoLayout 2015年12月，加入了一个新团队－嗨购，仍然是负责iOS项目开发，人员上加上我两人， &hellip;">
+  <meta name="description" content="原文：《Software Architecture Patterns》 前言 对于很多开发人员来说，在着手开发时并没有一套有条理的架构体系来指导他们，这简直是一件太正常的事情了。在没有一套清晰的、经过推敲过的架构体系时，许多开发人员和架构师都遵守所谓的行业标准－分层架构模式（也称之为多层架构）， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +78,50 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/12/10/ruan-jian-jia-gou-mo-shi/">软件架构模式(译)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+        
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>原文：《Software Architecture Patterns》</p>
+
+<h1>前言</h1>
+
+<p>对于很多开发人员来说，在着手开发时并没有一套有条理的架构体系来指导他们，这简直是一件太正常的事情了。在没有一套清晰的、经过推敲过的架构体系时，许多开发人员和架构师都遵守所谓的行业标准－分层架构模式（也称之为多层架构），即创建隐式的多层结构，即把只是从源代码角度，把模块的源代码都放在不同的源代码路径下，看似像分层了。但，实际上这种层次架构有诸多问题：模块角色没有清晰地划分，模块职责不明确，模块间的关系不清楚。这种架构通常称之为：<a href="http://www.cin.ufpe.br/~sugarloafplop/mud.pdf">大泥球</a>-架构反模式</p>
+
+<p>缺少有条理的架构的应用通常都是紧耦合的、不健壮的、难以维护的，而且没有清晰的视野感和方向感。所以，非常难以确定这个应用的架构特点，以至于不能全面地理解这个应该系统中各模块的内部逻辑。很难找到与开发和维护相关的诸多基本问题的答案：这个应用具有伸缩性吗？这个应用有什么性能特点？这个应用是否很容易维护？这个应用有什么技术特性？</p>
+
+<p>诸多架构模式可以辅助我们定义应用程序的基本特性和行为。例如，某些架构模式偏向于高可伸缩性，某些架构模式偏向于高度敏捷性。所以，在选择一种适合于某个项目的架构之前，了解不同架构模式的特点、优点和缺点是非常有必要的。</p>
+
+<p>作为一名架构师，你需要经常检验你的架构决策，尤其是在选择某种特别的架构或方案的时候。</p>
+
+<h1>第一章 分层架构模式</h1>
+
+<p>待续&hellip;</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -495,80 +538,6 @@ UINavigationBar用于显示的model数据。</p>
   
     <footer>
       <a rel="full-article" href="/blog/2013/12/26/you-kios6memorywarningyin-fa-de-si-kao/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/12/19/mac-osxia-da-jian-apnstui-song-fu-wu-qi/">Mac OS下搭建APNS推送服务器(Apache+PHP)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-        
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>配置Apache+PHP</h3>
-
-
-<p>Mac OS自带Apache服务器和PHP，所以只需少许配置便可将它派上用场</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>1）启动Apache服务器
-</span><span class='line'>打开“终端（terminal）”，然后（注意，sudo需要的密码就是系统的root帐号密码）运行“sudo apachectl start”
-</span><span class='line'>再输入帐号密码这样Apache就运行了。如此在浏览器中输入“http://localhost”就可以看到一个内容为“It works!”
-</span><span class='line'>的页面。其位于“/Library/WebServer/Documents/”下，这就是Apache的默认根目录
-</span><span class='line'>
-</span><span class='line'>2）配置Apache支持PHP
-</span><span class='line'>在终端中运行“sudo vi /etc/apache2/httpd.conf”，打开Apache的配置文件。
-</span><span class='line'>找到“#LoadModule php5_module libexec/apache2/libphp5.so”，把前面的#号去掉，
-</span><span class='line'>保存（在命令行输入:w）并退出vi（在命令行输入:q）。运行“sudo apachectl restart”，
-</span><span class='line'>重启Apache，这样PHP就可以用了。
-</span><span class='line'>
-</span><span class='line'>3）测试PHP在Apache中运行是否正常
-</span><span class='line'>运行“sudo cp /Library/WebServer/Documents/index.html.en /Library/WebServer/Documents/info.php”
-</span><span class='line'>即在Apache的根目录下复制index.html.en文件并重命名为info.php。
-</span><span class='line'>在终端中运行“sudo vi /Library/WebServer/Document/info.php”，这样就可以在vi中编辑info.php文件了。
-</span><span class='line'>在“It’s works!”后面加上“&lt;?php phpinfo(); ?&gt;”，然后保存之。如此就可以在http://localhost/info.php中看到
-</span><span class='line'>有关PHP的信息，比如10.8中内置PHP版本号是5.3.13。</span></code></pre></td></tr></table></div></figure>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/12/19/mac-osxia-da-jian-apnstui-song-fu-wu-qi/">Read on &rarr;</a>
     </footer>
   
 
