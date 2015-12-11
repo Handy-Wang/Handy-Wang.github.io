@@ -34,6 +34,7 @@ categories:
 
 ##一些关键性概念
 
+![Figure 1-2](https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/software_architecture_patterns_figure1_2.png "Figure 1-2")
 
 
 待续。。。
