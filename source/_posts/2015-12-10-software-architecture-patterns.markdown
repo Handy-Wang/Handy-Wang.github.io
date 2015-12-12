@@ -32,7 +32,7 @@ categories:
 
 其中，分层架构的重要特性之一是各层架构中的组件分工明确。即，每个组件只会处理它所属那层架构的工作。例如，展现层中的组件只会处理展示逻辑，业务层中的组件只会处理业务逻辑。这种对组件的分门别类就构建成了角色明确、职责分明的分层架构，以及易于开发、测试、管理和维护的应用。所以，各层架构中各个组件的接口功能和作用域的良好定义就显示尤其重要了。
 
-##一些架构的关键理念
+##此类架构的关键理念
 
 **`封闭性`**－注意`图Figure 1-2`中，每层架构的右侧都有一个“CLOSED”标签。这是分层架构中其中一个非常重要的理念－封闭。封闭的分层表示：当请求在多层间传递时，它要经过多层传递才会传递到目标层。例如，从展现层发起一个请求，这个请求首先需要经过业务层，再经过持久化层，才能最终到达数据库层。
 
@@ -51,8 +51,19 @@ categories:
 
 在上面这个为业务层开放了一个共享服务层的例子中，新的服务层应该处于业务层的下面以表明展现层是不能直接访问共享层的。但是，这样的层次结构有一个问题，即：业务层必须要经过共享服务层才能访问到持久化层，如果真是这样的话，就不合理了。这是分层架构一直存在的一个老问题，不过已经通过创建**具有开放特性的架构层**的方式解决了。
 
-如`图Figure 1-3`所示，图中的服务层
+如`图Figure 1-3`所示，图中的服务层右侧有一个“开放”的绿色标签，说明这一层是具有有开放性的，即上层来的请求可以绕开它，从而请求可以直接被传递到开放层的下一层。参考下图示意，就可以解决刚才的那个问题了，即：业务层专属的共享层可以设计为开放层，然后业务层在需要访问持久化层时可以绕开共享，这样就相当合理了吧，嘿嘿。
+
+![Figure 1-3](https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/software_architecture_patterns_figure1_3.png "Figure 1-3")
+
+基于具有开、闭特性的分层架构很好地诠释了各个层与请求流程的关系，同时也为架构师、工程师很好地理解各层间的访问约束提供了必要的信息。要是不能与架构中具有开、闭特性的各层合理对接，那么肯定会使得整个架构内部是紧耦合的、不健壮的，而且非常难以测试、维护和开发。
+
+##实例分析
+
+图`Figure 1-4`说明了分层架构的工作原理，一个业务员查询客户资料的流程。
+
+![Figure 1-4](https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/software_architecture_patterns_figure1_4.png "Figure 1-4")
+
+To illustrate how the layered architecture works, consider a request from a business user to retrieve customer information for a particu‐ lar individual as illustrated in Figure 1-4. The black arrows show the request flowing down to the database to retrieve the customer data, and the red arrows show the response flowing back up to the screen to display the data. In this example, the customer informa‐ tion consists of both customer data and order data (orders placed by the customer).
 
 待续。。。
 
-As illustrated in Figure 1-3, the services layer in this case is marked as open, meaning requests are allowed to bypass this open layer and go directly to the layer below it. In the following example, since the services layer is open, the business layer is now allowed to bypass it and go directly to the persistence layer, which makes perfect sense.
