@@ -4,7 +4,7 @@
   <title><![CDATA[Handy's]]></title>
   <link href="http://Handy-Wang.github.io/atom.xml" rel="self"/>
   <link href="http://Handy-Wang.github.io/"/>
-  <updated>2015-12-12T13:56:42+08:00</updated>
+  <updated>2015-12-12T13:58:02+08:00</updated>
   <id>http://Handy-Wang.github.io/</id>
   <author>
     <name><![CDATA[Handy.Wang]]></name>
@@ -94,12 +94,12 @@
 
 <p>比如，</p>
 
-<pre><code>在Java平台，`Customer Screen`可以采用JSF(Java Server Faces)方案，并由`Customer Delegate`来管理JSF的数据对象。
-业务层的`Customer Object`可以采用Spring[^]管理的数据对象或EJB3的数据对象来实现。
+<pre><code>在Java平台，Customer Screen可以采用JSF(Java Server Faces)方案，并由Customer Delegate来管理JSF的数据对象。
+业务层的Customer Object可以采用Spring[^]管理的数据对象或EJB3的数据对象来实现。
 持久化层的DAO层(Data Access Objects)可以采用POJO（Plain Old Java Objects）与MyBatis
 或JDBC或Hibernate组合实现。
 
-从微软平台的角度来制定技术实现方案时，`Customer Screen`模块可以使用.NET框架中的ASP(Active Server Pages)
+从微软平台的角度来制定技术实现方案时，Customer Screen模块可以使用.NET框架中的ASP(Active Server Pages)
 来访问业务层里以C#语言开发的子模块，而持久化层的子模块则采用ADO方案（ActiveX Data Objects）。
 </code></pre>
 
@@ -1755,7 +1755,7 @@ iOS6的这种设计高明在两个地方：1）视图结构和视图数据的分
 
 <p>完全按照<a href="http://blog.thepete.net/blog/2012/06/24/writing-your-first-frank-test/">Writing Your First Frank Test</a>操作即可。
 请注意：这个HowTo中会有Ruby环境和插件的安装，做好心理准备。
-Touble shoot：<a href="&#x6d;&#97;&#x69;&#x6c;&#x74;&#111;&#58;&#x6e;&#x6e;&#110;&#119;&#x6a;&#x73;&#64;&#49;&#x32;&#54;&#x2e;&#99;&#111;&#109;">&#110;&#110;&#110;&#x77;&#106;&#x73;&#64;&#49;&#50;&#x36;&#x2e;&#x63;&#111;&#109;</a></p>
+Touble shoot：<a href="&#x6d;&#97;&#105;&#108;&#x74;&#x6f;&#x3a;&#110;&#110;&#x6e;&#x77;&#106;&#x73;&#x40;&#x31;&#x32;&#54;&#46;&#x63;&#x6f;&#109;">&#110;&#x6e;&#x6e;&#x77;&#106;&#x73;&#x40;&#49;&#x32;&#x36;&#x2e;&#x63;&#x6f;&#x6d;</a></p>
 
 <h3>试用体会</h3>
 
