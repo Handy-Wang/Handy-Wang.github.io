@@ -47,6 +47,10 @@ categories:
 	在花九牛二虎之力把展现层的技术方案由JSP重构为JSF时，只要展示层与业务层之间的对接协议保持不变(例如，使用某个Model数据结构),
 	那么业务层是不会受展现层技术方案重构影响的，而且其它层更是完全独立于展现层的界面技术方案的。
 
+****相关知识点：****JSP[^1]、JSF[^2]<br/><br/>
+[^1]: [JSP详细资料](https://docs.oracle.com/javaee/5/tutorial/doc/bnagx.html)
+[^2]: [JSF详细资料](http://docs.oracle.com/javaee/6/tutorial/doc/bnaph.html)
+
 按以上介绍，当具备封闭性的架构层促成了隔离性的架构层以及层与层之间的修改能达到隔离时，那么是时候可以合理地使一些架构层开放了。例如：你可以给业务层增加一个其内部组件可以访问的且包含了很多通用组件的共享服务层（其内包含了数据、字符串工具类或辅助类和日志类）。其实，创建一个服务层一直是一个非常好的设计，因为这个设计从架构上限定：业务层可以访问共享层，而不是展现层可以访问共享层。如果没有这种分层的架构设计，那么将完全不能从架构上来阻止展现层对共享服务层的访问，而且很难管理这种访问受限的情况。
 
 在上面这个为业务层开放了一个共享服务层的例子中，新的服务层应该处于业务层的下面以表明展现层是不能直接访问共享层的。但是，这样的层次结构有一个问题，即：业务层必须要经过共享服务层才能访问到持久化层，如果真是这样的话，就不合理了。这是分层架构一直存在的一个老问题，不过已经通过创建**具有开放特性的架构层**的方式解决了。
@@ -59,11 +63,28 @@ categories:
 
 ##实例分析
 
-图`Figure 1-4`说明了分层架构的工作原理，一个业务员查询客户资料的流程。
+图`Figure 1-4`呈现了分层架构的工作原理，即，一个业务员查询客户数据的流程。图中的黑色箭头指示了由上至下获取客户数据的过程，红色箭头指示了数据返回并最终展示的过程。其中，客户数据除了包含客户资料还包含了客户自己产生的订单数据。
 
-![Figure 1-4](https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/software_architecture_patterns_figure1_4.png "Figure 1-4")
+**详细分析**
 
-To illustrate how the layered architecture works, consider a request from a business user to retrieve customer information for a particu‐ lar individual as illustrated in Figure 1-4. The black arrows show the request flowing down to the database to retrieve the customer data, and the red arrows show the response flowing back up to the screen to display the data. In this example, the customer informa‐ tion consists of both customer data and order data (orders placed by the customer).
+* `Customer Screen`模块负责接收业务员的请求以及显示查询到的客户数据。它并不感知需要查询几个数据库才能最终获取到客户数据，而是只需要负责接收业务员的查询请求，并把请求传递给`Customer Delegate`模块。
+* `Customer Delegate`模块负责感知业务层中哪些模块可以处理来自于`Customer Screen`的请求，以及如何与业务层中的相应模块(`Customer Object`)对接（接口协议）。
+* `Customer Object`模块负责整合展现层需要的客户数据。它不但要请求持久层里客户资料对应的模块(`Customer DAO`)，还要请求订单数据对应的模块(`Order DAO`)。
+* `Customer DAO`模块和`Order DAO`依次执行SQL语句来对数据库进行查询，获取到相应数据后回传给业务层的`Customer Object`模块。一旦`Customer Object`把客户资料和订单数据都获取到，就会整合两部分数据并把整合后的数据回传给`Customer Object`，从而进一步回传给`Customer Screen`模块，最终把查询到的数据展现给业务员。
+
+![Figure 1-4](https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/software_architecture_patterns_figure1__4.png "Figure 1-4")
+
+从技术实现的角度来看，这些模块有很多不同的技术实现方案。
+
+比如，
+	
+	在Java平台，`Customer Screen`可以采用JSF(Java Server Faces)方案，并由`Customer Delegate`来管理JSF的数据对象。业务层的`Customer Object`可以采用Spring[^]管理的数据对象或EJB3的数据对象来实现。持久化层的DAO层(Data Access Objects)可以采用POJO（Plain Old Java Objects）与MyBatis或JDBC或Hibernate组合实现。
+	从微软平台的角度来制定技术实现方案时，`Customer Screen`模块可以使用.NET框架中的ASP(Active Server Pages)来访问业务层里以C#语言开发的子模块，而持久化层的子模块则采用ADO方案（ActiveX Data Objects）。
+	
+****相关知识点：****Spring[^3]、EJB[^4]<br/><br/>
+[^3]: [Spring详细资料](http://www.oracle.com/technetwork/developer-tools/eclipse/springtutorial-087561.html)
+[^4]: [EJB详细资料](https://docs.oracle.com/cd/E24329_01/web.1211/e24446/ejbs.htm#INTRO255)
+
+##注意事项
 
 待续。。。
-
