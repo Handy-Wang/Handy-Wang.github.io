@@ -4,7 +4,7 @@
   <title><![CDATA[Handy's]]></title>
   <link href="http://Handy-Wang.github.io/atom.xml" rel="self"/>
   <link href="http://Handy-Wang.github.io/"/>
-  <updated>2015-12-12T13:58:02+08:00</updated>
+  <updated>2015-12-13T03:33:37+08:00</updated>
   <id>http://Handy-Wang.github.io/</id>
   <author>
     <name><![CDATA[Handy.Wang]]></name>
@@ -105,7 +105,17 @@
 
 <p><strong><strong>相关知识点：</strong></strong>Spring<sup id="fnref:3"><a href="#fn:3" rel="footnote">3</a></sup>、EJB<sup id="fnref:4"><a href="#fn:4" rel="footnote">4</a></sup><br/><br/></p>
 
-<h2>注意事项</h2>
+<h2>架构考量</h2>
+
+<p>分层架构是一个很稳定的通用架构模式，它可以作为很多应用的一个初始加构，尤其是在你不确定什么的加构适合你的项目的时候。尽管如此，当你在选择此架构模式时，仍然需要注意几点：</p>
+
+<p><strong>首先</strong>，需要注意的是<code>污水池模式</code>。它描述了这样一种场景，即一个请求经过多层传却没有执行任何逻辑操作。例如，展现层接受了用户查询客户数据的请求，然后传递给业务层，再传递到持久化层，持久层组装相应的查询SQL并传递到数据库层去获取数据。最后，从数据库查询到的数据没有经过任何处理（如整合、运算、数据转换）就一层一层地回传到了展现层。</p>
+
+<p>每个分层架构的应用至少会有一些场景沦陷为<code>污水池模式</code>。但是，重要的还是分析应用中沦陷为<code>污水池模式</code>的请求的占比。<code>28原则</code><sup id="fnref:5"><a href="#fn:5" rel="footnote">5</a></sup>一直是一个用于检验你的项目是否遭遇了<code>污水池模式</code>的很好的实践。20%的请求只是在层与层之间简单传递，80%的请求不但在层与层传递，同时还有一些相应的逻辑处理。但是，如果你发现这个比率分配反过来了，即20%的请求在层间传递时有逻辑处理，80%的请求只是在层间传递，这时，你就应该考虑开放某些层了，这个工作比管理有隔离缺陷的层更难。</p>
+
+<p><strong>其次</strong>，需要考虑的是分层架构模式有把自己大一统的趋势。尽管你已把展现层和业务层拆分成了不同的模块。分层架构的各层代码都归类到了不同的项目开发目录。对于某些应用来说，它并不关注这点，但是这个问题确实会导致开发阶段的很多潜在的问题、健壮性问题、可靠性问题、性能问题以及扩展性问题。</p>
+
+<h2>模式分析</h2>
 
 <p>待续。。。</p>
 <div class="footnotes">
@@ -119,6 +129,8 @@
 <p><a href="http://www.oracle.com/technetwork/developer-tools/eclipse/springtutorial-087561.html">Spring详细资料</a><a href="#fnref:3" rev="footnote">&#8617;</a></p></li>
 <li id="fn:4">
 <p><a href="https://docs.oracle.com/cd/E24329_01/web.1211/e24446/ejbs.htm#INTRO255">EJB详细资料</a><a href="#fnref:4" rev="footnote">&#8617;</a></p></li>
+<li id="fn:5">
+<p><a href="http://baike.baidu.com/view/40591.htm?fromtitle=%E4%BA%8C%E5%85%AB%E5%8E%9F%E5%88%99&amp;fromid=3689905&amp;type=syn">28原则资料</a><a href="#fnref:5" rev="footnote">&#8617;</a></p></li>
 </ol>
 </div>
 
@@ -1755,7 +1767,7 @@ iOS6的这种设计高明在两个地方：1）视图结构和视图数据的分
 
 <p>完全按照<a href="http://blog.thepete.net/blog/2012/06/24/writing-your-first-frank-test/">Writing Your First Frank Test</a>操作即可。
 请注意：这个HowTo中会有Ruby环境和插件的安装，做好心理准备。
-Touble shoot：<a href="&#x6d;&#97;&#105;&#108;&#x74;&#x6f;&#x3a;&#110;&#110;&#x6e;&#x77;&#106;&#x73;&#x40;&#x31;&#x32;&#54;&#46;&#x63;&#x6f;&#109;">&#110;&#x6e;&#x6e;&#x77;&#106;&#x73;&#x40;&#49;&#x32;&#x36;&#x2e;&#x63;&#x6f;&#x6d;</a></p>
+Touble shoot：<a href="&#x6d;&#97;&#x69;&#x6c;&#116;&#x6f;&#x3a;&#x6e;&#x6e;&#110;&#x77;&#106;&#115;&#x40;&#49;&#x32;&#x36;&#46;&#99;&#x6f;&#x6d;">&#x6e;&#110;&#x6e;&#x77;&#106;&#115;&#x40;&#x31;&#50;&#54;&#46;&#99;&#x6f;&#x6d;</a></p>
 
 <h3>试用体会</h3>
 
