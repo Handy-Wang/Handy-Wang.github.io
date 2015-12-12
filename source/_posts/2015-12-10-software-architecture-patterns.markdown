@@ -49,6 +49,10 @@ categories:
 
 按以上介绍，当具备封闭性的架构层促成了隔离性的架构层以及层与层之间的修改能达到隔离时，那么是时候可以合理地使一些架构层开放了。例如：你可以给业务层增加一个其内部组件可以访问的且包含了很多通用组件的共享服务层（其内包含了数据、字符串工具类或辅助类和日志类）。其实，创建一个服务层一直是一个非常好的设计，因为这个设计从架构上限定：业务层可以访问共享层，而不是展现层可以访问共享层。如果没有这种分层的架构设计，那么将完全不能从架构上来阻止展现层对共享服务层的访问，而且很难管理这种访问受限的情况。
 
+在上面这个为业务层开放了一个共享服务层的例子中，新的服务层应该处于业务层的下面以表明展现层是不能直接访问共享层的。但是，这样的层次结构有一个问题，即：业务层必须要经过共享服务层才能访问到持久化层，如果真是这样的话，就不合理了。这是分层架构一直存在的一个老问题，不过已经通过创建**具有开放特性的架构层**的方式解决了。
+
+如`图Figure 1-3`所示，图中的服务层
+
 待续。。。
 
-In this example, the new services layer would likely reside below the business layer to indicate that components in this services layer are not accessible from the presentation layer. However, this presents a problem in that the business layer is now required to go through the services layer to get to the persistence layer, which makes no sense at all. This is an age-old problem with the layered architecture, and is solved by creating open layers within the architecture.
+As illustrated in Figure 1-3, the services layer in this case is marked as open, meaning requests are allowed to bypass this open layer and go directly to the layer below it. In the following example, since the services layer is open, the business layer is now allowed to bypass it and go directly to the persistence layer, which makes perfect sense.
