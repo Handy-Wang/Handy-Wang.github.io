@@ -4,7 +4,7 @@
   <title><![CDATA[Handy's]]></title>
   <link href="http://Handy-Wang.github.io/atom.xml" rel="self"/>
   <link href="http://Handy-Wang.github.io/"/>
-  <updated>2015-12-12T01:29:27+08:00</updated>
+  <updated>2015-12-12T13:49:15+08:00</updated>
   <id>http://Handy-Wang.github.io/</id>
   <author>
     <name><![CDATA[Handy.Wang]]></name>
@@ -47,7 +47,7 @@
 
 <p>其中，分层架构的重要特性之一是各层架构中的组件分工明确。即，每个组件只会处理它所属那层架构的工作。例如，展现层中的组件只会处理展示逻辑，业务层中的组件只会处理业务逻辑。这种对组件的分门别类就构建成了角色明确、职责分明的分层架构，以及易于开发、测试、管理和维护的应用。所以，各层架构中各个组件的接口功能和作用域的良好定义就显示尤其重要了。</p>
 
-<h2>一些架构的关键理念</h2>
+<h2>此类架构的关键理念</h2>
 
 <p><strong><code>封闭性</code></strong>－注意<code>图Figure 1-2</code>中，每层架构的右侧都有一个“CLOSED”标签。这是分层架构中其中一个非常重要的理念－封闭。封闭的分层表示：当请求在多层间传递时，它要经过多层传递才会传递到目标层。例如，从展现层发起一个请求，这个请求首先需要经过业务层，再经过持久化层，才能最终到达数据库层。</p>
 
@@ -63,11 +63,60 @@
 那么业务层是不会受展现层技术方案重构影响的，而且其它层更是完全独立于展现层的界面技术方案的。
 </code></pre>
 
-<p>按以上介绍，当具备封闭性的架构层促成了隔离性的架构层以及层与层之间的修改能达到隔离时，那么是时候可以合理地使一些架构层开放了。例如：你可以给业务层增加一个其内部组件可以访问的且包含了很多通用组件的共享服务层（其内包含了数据、字符串工具类或辅助类和日志类）。其实，创建一个服务层一直是一个非常好的设计，因为这个设计从架构上限定：业务层可以访问共享层，而不是展现层可以访问共享层。如果没有这种分层的架构设计，那么将完全不能从架构上来阻止展现层对共享服务层的访问，而且很难管理这种访问受限的情况。</p>
+<p><strong><strong>相关知识点：</strong></strong>JSP<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup>、JSF<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup><br/><br/>
+按以上介绍，当具备封闭性的架构层促成了隔离性的架构层以及层与层之间的修改能达到隔离时，那么是时候可以合理地使一些架构层开放了。例如：你可以给业务层增加一个其内部组件可以访问的且包含了很多通用组件的共享服务层（其内包含了数据、字符串工具类或辅助类和日志类）。其实，创建一个服务层一直是一个非常好的设计，因为这个设计从架构上限定：业务层可以访问共享层，而不是展现层可以访问共享层。如果没有这种分层的架构设计，那么将完全不能从架构上来阻止展现层对共享服务层的访问，而且很难管理这种访问受限的情况。</p>
+
+<p>在上面这个为业务层开放了一个共享服务层的例子中，新的服务层应该处于业务层的下面以表明展现层是不能直接访问共享层的。但是，这样的层次结构有一个问题，即：业务层必须要经过共享服务层才能访问到持久化层，如果真是这样的话，就不合理了。这是分层架构一直存在的一个老问题，不过已经通过创建<strong>具有开放特性的架构层</strong>的方式解决了。</p>
+
+<p>如<code>图Figure 1-3</code>所示，图中的服务层右侧有一个“开放”的绿色标签，说明这一层是具有有开放性的，即上层来的请求可以绕开它，从而请求可以直接被传递到开放层的下一层。参考下图示意，就可以解决刚才的那个问题了，即：业务层专属的共享层可以设计为开放层，然后业务层在需要访问持久化层时可以绕开共享，这样就相当合理了吧，嘿嘿。</p>
+
+<p><img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/software_architecture_patterns_figure1_3.png" title="Figure 1-3" alt="Figure 1-3" /></p>
+
+<p>基于具有开、闭特性的分层架构很好地诠释了各个层与请求流程的关系，同时也为架构师、工程师很好地理解各层间的访问约束提供了必要的信息。要是不能与架构中具有开、闭特性的各层合理对接，那么肯定会使得整个架构内部是紧耦合的、不健壮的，而且非常难以测试、维护和开发。</p>
+
+<h2>实例分析</h2>
+
+<p>图<code>Figure 1-4</code>呈现了分层架构的工作原理，即，一个业务员查询客户数据的流程。图中的黑色箭头指示了由上至下获取客户数据的过程，红色箭头指示了数据返回并最终展示的过程。其中，客户数据除了包含客户资料还包含了客户自己产生的订单数据。</p>
+
+<p><strong>详细分析</strong></p>
+
+<ul>
+<li><code>Customer Screen</code>模块负责接收业务员的请求以及显示查询到的客户数据。它并不感知需要查询几个数据库才能最终获取到客户数据，而是只需要负责接收业务员的查询请求，并把请求传递给<code>Customer Delegate</code>模块。</li>
+<li><code>Customer Delegate</code>模块负责感知业务层中哪些模块可以处理来自于<code>Customer Screen</code>的请求，以及如何与业务层中的相应模块(<code>Customer Object</code>)对接（接口协议）。</li>
+<li><code>Customer Object</code>模块负责整合展现层需要的客户数据。它不但要请求持久层里客户资料对应的模块(<code>Customer DAO</code>)，还要请求订单数据对应的模块(<code>Order DAO</code>)。</li>
+<li><code>Customer DAO</code>模块和<code>Order DAO</code>依次执行SQL语句来对数据库进行查询，获取到相应数据后回传给业务层的<code>Customer Object</code>模块。一旦<code>Customer Object</code>把客户资料和订单数据都获取到，就会整合两部分数据并把整合后的数据回传给<code>Customer Object</code>，从而进一步回传给<code>Customer Screen</code>模块，最终把查询到的数据展现给业务员。</li>
+</ul>
+
+
+<p><img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/software_architecture_patterns_figure1__4.png" title="Figure 1-4" alt="Figure 1-4" /></p>
+
+<p>从技术实现的角度来看，这些模块有很多不同的技术实现方案。</p>
+
+<p>比如，</p>
+
+<pre><code>在Java平台，`Customer Screen`可以采用JSF(Java Server Faces)方案，并由`Customer Delegate`来管理JSF的数据对象。业务层的`Customer Object`可以采用Spring[^]管理的数据对象或EJB3的数据对象来实现。持久化层的DAO层(Data Access Objects)可以采用POJO（Plain Old Java Objects）与MyBatis或JDBC或Hibernate组合实现。
+从微软平台的角度来制定技术实现方案时，`Customer Screen`模块可以使用.NET框架中的ASP(Active Server Pages)来访问业务层里以C#语言开发的子模块，而持久化层的子模块则采用ADO方案（ActiveX Data Objects）。
+</code></pre>
+
+<p><strong><strong>相关知识点：</strong></strong>Spring<sup id="fnref:3"><a href="#fn:3" rel="footnote">3</a></sup>、EJB<sup id="fnref:4"><a href="#fn:4" rel="footnote">4</a></sup><br/><br/></p>
+
+<h2>注意事项</h2>
 
 <p>待续。。。</p>
+<div class="footnotes">
+<hr/>
+<ol>
+<li id="fn:1">
+<p><a href="https://docs.oracle.com/javaee/5/tutorial/doc/bnagx.html">JSP详细资料</a><a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
+<li id="fn:2">
+<p><a href="http://docs.oracle.com/javaee/6/tutorial/doc/bnaph.html">JSF详细资料</a><a href="#fnref:2" rev="footnote">&#8617;</a></p></li>
+<li id="fn:3">
+<p><a href="http://www.oracle.com/technetwork/developer-tools/eclipse/springtutorial-087561.html">Spring详细资料</a><a href="#fnref:3" rev="footnote">&#8617;</a></p></li>
+<li id="fn:4">
+<p><a href="https://docs.oracle.com/cd/E24329_01/web.1211/e24446/ejbs.htm#INTRO255">EJB详细资料</a><a href="#fnref:4" rev="footnote">&#8617;</a></p></li>
+</ol>
+</div>
 
-<p>In this example, the new services layer would likely reside below the business layer to indicate that components in this services layer are not accessible from the presentation layer. However, this presents a problem in that the business layer is now required to go through the services layer to get to the persistence layer, which makes no sense at all. This is an age-old problem with the layered architecture, and is solved by creating open layers within the architecture.</p>
 ]]></content>
   </entry>
   
@@ -1701,7 +1750,7 @@ iOS6的这种设计高明在两个地方：1）视图结构和视图数据的分
 
 <p>完全按照<a href="http://blog.thepete.net/blog/2012/06/24/writing-your-first-frank-test/">Writing Your First Frank Test</a>操作即可。
 请注意：这个HowTo中会有Ruby环境和插件的安装，做好心理准备。
-Touble shoot：<a href="&#109;&#x61;&#x69;&#x6c;&#116;&#x6f;&#58;&#x6e;&#110;&#110;&#x77;&#106;&#115;&#x40;&#49;&#50;&#54;&#46;&#99;&#111;&#109;">&#110;&#110;&#x6e;&#x77;&#x6a;&#115;&#x40;&#x31;&#x32;&#54;&#x2e;&#99;&#x6f;&#x6d;</a></p>
+Touble shoot：<a href="&#x6d;&#x61;&#x69;&#x6c;&#x74;&#x6f;&#58;&#x6e;&#110;&#x6e;&#x77;&#106;&#115;&#x40;&#49;&#50;&#x36;&#x2e;&#x63;&#111;&#109;">&#110;&#110;&#x6e;&#119;&#x6a;&#x73;&#x40;&#x31;&#50;&#54;&#46;&#x63;&#x6f;&#109;</a></p>
 
 <h3>试用体会</h3>
 
