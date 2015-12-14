@@ -4,7 +4,7 @@
   <title><![CDATA[Handy's]]></title>
   <link href="http://Handy-Wang.github.io/atom.xml" rel="self"/>
   <link href="http://Handy-Wang.github.io/"/>
-  <updated>2015-12-14T23:08:32+08:00</updated>
+  <updated>2015-12-14T23:12:05+08:00</updated>
   <id>http://Handy-Wang.github.io/</id>
   <author>
     <name><![CDATA[Handy.Wang]]></name>
@@ -184,11 +184,13 @@
 
 <h2>模式介绍</h2>
 
-<p>微内核架构模式由两大组件构成：分别为<strong>系统内核</strong>和<strong>插件模块</strong>。即，应用程序的逻辑被分为独立的插件模块和基本的核心系统，以提供扩展性、灵活性以及被扩展特性和和逻辑的隔离性。<code>图Figure 3-1</code>以图说明了一个基本的微内核架构模式结构。</p>
+<p>微内核架构模式由两大组件构成：分别为<strong>系统内核</strong>和<strong>插件模块集</strong>。即，应用程序的逻辑被分为独立的插件模块集合和基本的核心系统，以提供扩展性、灵活性以及扩展特性和和逻辑的隔离性。<code>图Figure 3-1</code>以图说明了一个基本的微内核架构模式结构。</p>
 
-<p>通常，微内核架构模式中的<strong>系统内核部分</strong>是指能使系统正常运转所需要的最少功能的集合。很多操作都实现了微内核架构模式，这也是微内核名称的来源。从业务程序的角度讲，<strong>系统内核</strong>通常是指按一定场景、规则或复杂的条件来进行逻辑处理的通用业务逻辑。</p>
+<p>通常，微内核架构模式中的<strong>系统内核部分</strong>是指能使系统正常运转所需要的最少功能的集合。很多操作系统都实现了微内核架构模式，这也是微内核名字的由来。从业务程序的角度讲，<strong>系统内核</strong>通常是指按一定场景、规则或复杂的条件来进行逻辑处理的通用业务逻辑。</p>
 
 <p><img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/software_architecture_patterns_figure3_1.png" title="Figure 3-1" alt="Figure 3-1" /></p>
+
+<p>待续。。。</p>
 
 <h2>模式实例</h2>
 
@@ -1848,7 +1850,7 @@ iOS6的这种设计高明在两个地方：1）视图结构和视图数据的分
 
 <p>完全按照<a href="http://blog.thepete.net/blog/2012/06/24/writing-your-first-frank-test/">Writing Your First Frank Test</a>操作即可。
 请注意：这个HowTo中会有Ruby环境和插件的安装，做好心理准备。
-Touble shoot：<a href="&#x6d;&#x61;&#105;&#108;&#116;&#x6f;&#58;&#x6e;&#x6e;&#x6e;&#119;&#106;&#x73;&#64;&#x31;&#x32;&#54;&#46;&#99;&#111;&#x6d;">&#110;&#x6e;&#110;&#x77;&#106;&#x73;&#x40;&#49;&#50;&#x36;&#x2e;&#x63;&#x6f;&#x6d;</a></p>
+Touble shoot：<a href="&#x6d;&#97;&#105;&#108;&#x74;&#111;&#58;&#110;&#x6e;&#110;&#x77;&#106;&#x73;&#64;&#x31;&#x32;&#x36;&#x2e;&#99;&#x6f;&#109;">&#x6e;&#x6e;&#x6e;&#x77;&#x6a;&#115;&#x40;&#49;&#x32;&#54;&#x2e;&#99;&#111;&#x6d;</a></p>
 
 <h3>试用体会</h3>
 
