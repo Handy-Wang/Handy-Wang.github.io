@@ -159,6 +159,15 @@ categories:
 
 ![Figure 3-1](https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/software_architecture_patterns_figure3_1.png "Figure 3-1")
 
+围绕着系统内核的插件模块都是独立于系统内核的，这些插件模块集包含了各种对系统核心功能进行扩展的定制功能、附加特性等等。通常来讲，插件之间也是独立的，不过你也可以设计多个有依赖关系的插件。换句话说，你在设计插件集时，需要保证插件间有很好的通信机制从而使得插件间的依赖最小。
+
+同时，系统内核需要知道围绕它开发的插件哪些是与它可以正常通信的且如何通信。通常，一个常用的方式就是在系统内核依次注册这些插件，可以给每个插件注册诸如插件名称、数据交换协议、通信的数据结构在内的等等信息。比如，给一个税务系统开发一个可以标识出缴纳了高税额的纳税人的插件，那么注册信息就需要插件名称、上行下行的数据结构以及数据传输协议。这个例子中，假如你使用SOAP来做远程调用，那么还需要WSDL这个文件来对调用的服务进行描述。
+
+相关知识点：SOAP[^7], WSDL[^8]
+
+[^7]:[SOAP](https://docs.oracle.com/cd/E23943_01/doc.1111/e10807/c25_wsdl_and_soap.htm)
+[^8]:[WSDL](https://docs.oracle.com/cd/E23943_01/doc.1111/e10807/c25_wsdl_and_soap.htm)
+
 待续。。。
 ##模式实例
 ##模式考量
