@@ -168,8 +168,19 @@ categories:
 [^7]:[SOAP](https://docs.oracle.com/cd/E23943_01/doc.1111/e10807/c25_wsdl_and_soap.htm)
 [^8]:[WSDL](https://docs.oracle.com/cd/E23943_01/doc.1111/e10807/c25_wsdl_and_soap.htm)
 
-待续。。。
+插件与系统内核之间可以有用多种方式进行通信，比如：OSGi[^9]、消息机制、远程服务(Web Services)或系统内核直接实例化插件。至于采用哪种方式，这完全取决于你的项目类型(是小型项目还是大型项目)以及项目的部署的方式(是单一服务器部署还是分布式部署)。在此应该明白插件间要必须要保持相对独立。
+
+[^9]:[OSGi]()
+
+系统内核与插件之间的通信协议规范可以是标准协议也可以是自定义协议。通常在第三方团队开发的插件中可以发现自定义协议，这些自定义协议对于系统内核开发商来说是完全不可控的。在这种不可控的案例中，通常需要在插件的自定义协议与系统内核的标准协议之间建立一个适配器来对两种协议进行相互转换，这样操作后，系统内核的协议就不需要与每个插件协议耦合，只需要建立一个适配器即可。同时，请记住在一开始定义通信协议时就要做好协议的版本控制。
 ##模式实例
+微内核架构模式的最好实践可以说是Eclipse IDE。基础版Eclipse本身是一个很NB的编辑器。不过，当你为它加上各种插件后，它就变得更实用，更NB了。
+
+Web浏览器是另一个很不错的微内核架构模式实践：内容显示和一些扩展功能都不是浏览器的系统内核。
+
+以上两个例子是微内核架构模式基于产品型应用的实践，不过它还可以应用于大量商业程序。在这里咱们可以举个保险公司的索赔处理流程。
+Claims processing is a very complicated process. Each state has dif‐ ferent rules and regulations for what is and isn’t allowed in an insur‐ ance claim. For example, some states allow free windshield replacement if your windshield is damaged by a rock, whereas other states do not. This creates an almost infinite set of conditions for a standard claims process.
+待续。。。
 ##模式考量
 ##模式分析
 待续。。。
