@@ -178,9 +178,13 @@ categories:
 
 Web浏览器是另一个很不错的微内核架构模式实践：内容显示和一些扩展功能都不是浏览器的系统内核。
 
-以上两个例子是微内核架构模式基于产品型应用的实践，不过它还可以应用于大量商业程序。在这里咱们可以举个保险公司的索赔处理流程。
-Claims processing is a very complicated process. Each state has dif‐ ferent rules and regulations for what is and isn’t allowed in an insur‐ ance claim. For example, some states allow free windshield replacement if your windshield is damaged by a rock, whereas other states do not. This creates an almost infinite set of conditions for a standard claims process.
-待续。。。
+以上两个例子是微内核架构模式基于产品型应用的实践，不过它还可以应用于大量商业程序。在这里咱们可以举个保险公司的索赔处理流程。索赔处理是一个非常复杂的流程，不同的情况都有允许的和禁止的业务逻辑规则。比如某些情况下挡风玻璃被石头子儿砸坏了可以申请免费更换，但是也有不能免费更换的情况。正是这些不同的情况构成了标准的索赔流程。
+
+看到这里不要感到奇怪，因为大多数的理赔应用正是依靠大量的复杂的规则引擎集才能处理各种各样的理赔情况。不过，随着逻辑规则的修改或新增一个简单的逻辑规则都会影响其它现有的规则，这就需要更多的分析人员、开发人员和测试人员参与其中。庆幸地是，微内核模式就能解决刚才提到的大部分问题。
+
+如图`Figure 3-2`中的那一摞文件夹，它描述了索赔流程的系统内核部分。它包含了保险公司处理理赔申请的基本的业务逻辑，当然了，没有包括各公司自己定制一些逻辑规则。从图中可以看到，每个插件的逻辑规则都对应到了系统内核的不同业务场景。这些插件可以采用完全自行开发或引用现成的规则引擎来实现。无论采用什么方案来实现这些插件，这些插件都是独立于系统内核的，即，添加、移除、维护插件时都不会对系统内核和其它插件产生一丁点儿的影响。
+
+![Figure 3-2](https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/software_architecture_patterns_figure3_2.png "Figure 3-2")待续。。。
 ##模式考量
 ##模式分析
 待续。。。
