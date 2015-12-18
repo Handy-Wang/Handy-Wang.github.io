@@ -184,8 +184,14 @@ Web浏览器是另一个很不错的微内核架构模式实践：内容显示�
 
 如图`Figure 3-2`中的那一摞文件夹，它描述了索赔流程的系统内核部分。它包含了保险公司处理理赔申请的基本的业务逻辑，当然了，没有包括各公司自己定制一些逻辑规则。从图中可以看到，每个插件的逻辑规则都对应到了系统内核的不同业务场景。这些插件可以采用完全自行开发或引用现成的规则引擎来实现。无论采用什么方案来实现这些插件，这些插件都是独立于系统内核的，即，添加、移除、维护插件时都不会对系统内核和其它插件产生一丁点儿的影响。
 
-![Figure 3-2](https://github.com/Handy-Wang/Handy-Wang.github.io/blob/source/source/_posts/img/software_architecture_patterns_figure3_2.png?raw=true "Figure 3-2")##模式考量
-待续。。。
+![Figure 3-2](https://github.com/Handy-Wang/Handy-Wang.github.io/blob/source/source/_posts/img/software_architecture_patterns_figure3_2.png?raw=true "Figure 3-2")
+##模式考量
+
+One great thing about the microkernel architecture pattern is that it can be embedded or used as part of another architecture pattern. For example, if this pattern solves a particular problem you have with a specific volatile area of the application, you might find that you can’t implement the entire architecture using this pattern. In this case, you can embed the microservices architecture pattern in another pattern you are using (e.g., layered architecture). Similarly, the event-processor components described in the previous section on event-driven architecture could be implemented using the microservices architecture pattern.
+
+The microservices architecture pattern provides great support for evolutionary design and incremental development. You can first produce a solid core system, and as the application evolves incrementally, add features and functionality without having to make sig‐ nificant changes to the core system.
+
+For product-based applications, the microkernel architecture pat‐ tern should always be your first choice as a starting architecture, particularly for those products where you will be releasing addi‐ tional features over time and want control over which users get which features. If you find over time that the pattern doesn’t sat‐ isfy all of your requirements, you can always refactor your applica‐ tion to another architecture pattern better suited for your specific requirements.待续。。。
 ##模式分析
 待续。。。
 [^6]:[康威定律](http://www.kankanews.com/a/2013-03-26/004892183.shtml)
