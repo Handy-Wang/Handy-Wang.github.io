@@ -113,7 +113,7 @@ categories:
 	理由：应用程序整体的敏捷性是一种对不断变化的需求快速响应的能力。尽管分层架构的设计会把模块的变化隔离在它对应的层里，但是
 	分层架构对这种变化的响应还是显得迟钝和耗时，这是由于大多分层架构的具体实现都比较庞大，况且层里的组件间时常有紧耦合的情况。
 	
-**部署的便利性**
+**部署的简易性**
 
 	等级：低
 	理由：由于这种架构模式的分层实现方式，所以应用（尤其是大型应用）的部署成了一个问题。即，应用中的一个小修改就需要重新部署
@@ -144,15 +144,20 @@ categories:
 	理由：开发的简易性之所以能获得了一个相对较高的评级，主要是由于这一架构模式被大家所熟知而且从开发层面上来看也不复杂。由于大
 	多数公司在进行应用开发时，不同专业技能的人负责不同的模块（前端、服务器、数据库等），所以分层架构模式自然也成为了很多应用开
 	发的选择。诸如这种公司内部的沟通方式和组织结构与软件开发模式的联系被概括为康威定律。
-相关知识点：康威定律[^6]
+
+相关知识点：康威定律[^6]
+
+[^6]:[康威定律](http://www.kankanews.com/a/2013-03-26/004892183.shtml)
 
 <br/>
 
 #第二章 事件驱动型架构模式
 @磊哥 快点。。。。。等你翻译的内容。。。
-#第三章 微内核架构模式
+
+#第三章 微内核架构模式
 微内核模式是一种为基于产品的应用程序而生的架构模式，有时也称它为插件模式。那么，什么是基于产品的应用程序呢？基于产品的应用程序是一种分版本打包和分版本下载的第三方产品。很多公司也开发和发布类似产品级的内部业务程序，有：版本控制、版本日志和可插拔的功能特性。这种情况就适合采用微内核架构模式。微内核架构模式可以让开发者在自己的核心程序基础上开发一些带有扩展性和隔离性的插件。
-##模式介绍
+
+##模式介绍
 微内核架构模式由两大组件构成：分别为**系统内核**和**插件模块集**。即，应用程序的逻辑被分为独立的插件模块集合和基本的核心系统，以提供扩展性、灵活性以及扩展特性和和逻辑的隔离性。`图Figure 3-1`以图说明了一个基本的微内核架构模式结构。
 
 通常，微内核架构模式中的**系统内核部分**是指能使系统正常运转所需要的最少功能的集合。很多操作系统都实现了微内核架构模式，这也是微内核名字的由来。从业务程序的角度讲，**系统内核**通常是指按一定场景、规则或复杂的条件来进行逻辑处理的通用业务逻辑。
@@ -170,11 +175,13 @@ categories:
 
 插件与系统内核之间可以有用多种方式进行通信，比如：OSGi[^9]、消息机制、远程服务(Web Services)或系统内核直接实例化插件。至于采用哪种方式，这完全取决于你的项目类型(是小型项目还是大型项目)以及项目的部署的方式(是单一服务器部署还是分布式部署)。在此应该明白插件间要必须要保持相对独立。
 
-[^9]:[OSGi]()
+[^9]:[OSGi](https://www.osgi.org/)
 
 系统内核与插件之间的通信协议规范可以是标准协议也可以是自定义协议。通常在第三方团队开发的插件中可以发现自定义协议，这些自定义协议对于系统内核开发商来说是完全不可控的。在这种不可控的案例中，通常需要在插件的自定义协议与系统内核的标准协议之间建立一个适配器来对两种协议进行相互转换，这样操作后，系统内核的协议就不需要与每个插件协议耦合，只需要建立一个适配器即可。同时，请记住在一开始定义通信协议时就要做好协议的版本控制。
-##模式实例
-微内核架构模式的最好实践可以说是Eclipse IDE。基础版Eclipse本身是一个很NB的编辑器。不过，当你为它加上各种插件后，它就变得更实用，更NB了。
+
+##模式实例
+
+微内核架构模式的最好实践可以说是Eclipse IDE。基础版Eclipse本身是一个很NB的编辑器。不过，当你为它加上各种插件后，它就变得更实用，更NB了。
 
 Web浏览器是另一个很不错的微内核架构模式实践：内容显示和一些扩展功能都不是浏览器的系统内核。
 
@@ -185,13 +192,50 @@ Web浏览器是另一个很不错的微内核架构模式实践：内容显示�
 如图`Figure 3-2`中的那一摞文件夹，它描述了索赔流程的系统内核部分。它包含了保险公司处理理赔申请的基本的业务逻辑，当然了，没有包括各公司自己定制一些逻辑规则。从图中可以看到，每个插件的逻辑规则都对应到了系统内核的不同业务场景。这些插件可以采用完全自行开发或引用现成的规则引擎来实现。无论采用什么方案来实现这些插件，这些插件都是独立于系统内核的，即，添加、移除、维护插件时都不会对系统内核和其它插件产生一丁点儿的影响。
 
 ![Figure 3-2](https://github.com/Handy-Wang/Handy-Wang.github.io/blob/source/source/_posts/img/software_architecture_patterns_figure3_2.png?raw=true "Figure 3-2")
-##模式考量
 
-One great thing about the microkernel architecture pattern is that it can be embedded or used as part of another architecture pattern. For example, if this pattern solves a particular problem you have with a specific volatile area of the application, you might find that you can’t implement the entire architecture using this pattern. In this case, you can embed the microservices architecture pattern in another pattern you are using (e.g., layered architecture). Similarly, the event-processor components described in the previous section on event-driven architecture could be implemented using the microservices architecture pattern.
+##模式考量
 
-The microservices architecture pattern provides great support for evolutionary design and incremental development. You can first produce a solid core system, and as the application evolves incrementally, add features and functionality without having to make sig‐ nificant changes to the core system.
+微内核架构模式有一个优点，就是它能被内嵌到或作为其它架构模式的一部分。比如，当系统中某个模块的功能不太稳定时，你会发现只能用微内核架构模式来解决这种特定的问题，而不能用这个模式来替换原架构模式。在形如这种情况时，你就可以在原有的架构模式(分层架构)里内嵌微服务架构模式。类似地，上一章讲到的事件驱动架构里的事件处理器组件也可以采用微服务架构模式来实现。
 
-For product-based applications, the microkernel architecture pat‐ tern should always be your first choice as a starting architecture, particularly for those products where you will be releasing addi‐ tional features over time and want control over which users get which features. If you find over time that the pattern doesn’t sat‐ isfy all of your requirements, you can always refactor your applica‐ tion to another architecture pattern better suited for your specific requirements.待续。。。
-##模式分析
-待续。。。
-[^6]:[康威定律](http://www.kankanews.com/a/2013-03-26/004892183.shtml)
+刚才提到的微服务架构模式为不断演进的设计和逐渐增加的开发需求提供了大力支持。首先好好地设计一个坚实的系统内核，然后在系统迭代过程中的功能增加和改进行都不需要对系统内核进行改造。
+
+对于那些基于产品需求开发的应用程序，微内核架构模式应该作为架构的首选，特别是对于那些需要发布用户真正需要的新需求、新特性的产品。如果你发现这个架构不适合你的项目需求，你可以把架构方案修改成为更适合项目实际需求的架构方案。
+
+##模式分析
+下面的表格是对微内核架构模式各个特点的评级和分析描述。对于以下每个特点的评级是基于它是否能作为行业趋势或是否能作为本架构的代表性来评估的。至于本篇文章的几种架构的详细对比，请参见附录A。
+
+**整体的敏捷性**
+
+	等级：高
+	理由：整体敏捷性是指对不断修改的需求的适应能力。对采用微内核架构方案的系统的修改，都是可以采用插件方式来隔离和解耦的。通常，大多采用微内核架构的应用程序的系统内核都是趋于稳定的，而且相当强劲、基本不会再修改。
+	
+**部署的简易性**
+
+	等级：高
+	理由：鉴于此架构模式的整体架构，那么插件部分是可以在动行时被动态地追加到系统内核上的（热部署），从而最大程度上减少了服务器down机的时长。
+
+**可测性**
+
+	等级：高
+	理由：插件模块集可以很方便地被隔离测试，而且系统内核可以在不作任何改动的情况下就可以很容易地模拟出被扩展的插件特性功能。
+
+**性能**
+
+	等级：高
+	理由：尽管微内核模式不能被自荐给高性能应用程序，但是，大多用到了微内核模式的应用都能正常地动转，因为你可以定制和简化需要扩展的插件功能。JBoss应用服务器就是一个很好的采用了微内核架构的例子：通过插件扩展能力，你可以按需移除那些高消耗的或不需要的插件功能，比如：远程访问功能、消息功能以及缓存功能等很消耗内存、高CPU的会拖慢应用程序的插件功能。
+
+**可伸缩怀**
+
+	等极：低
+	理由：由于大多基于微内核架构的实现方案都是基于成形的产品应用而且规模较小，这些架构实现通常只是作为产品中的一个单元或模块，所以不利于扩展。尽管，在实际的插件模块开发中能做到插件级的伸缩，但，微内核架构并不是已具备整体高伸缩应用程序的首选。
+
+**开发的简易性**
+
+	等级：低
+	理由：基于微内核架构模式开发的应用，需要深思熟虑的设计和对接口协议的合理管理，这无疑增加了开发的复杂性。接口协议的版本管理、插件的注册机制、插件功能的粒度以及插件与系统内核的通信机制等等内容导致了增加实现微内核架构的复杂度。
+
+相关知识点：JBoss[^10]
+
+[^10]:[JBoss](http://www.jboss.org/)
+
+#第四章 微服务架构模式
