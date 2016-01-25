@@ -282,11 +282,11 @@ Web浏览器是另一个很不错的微内核架构模式实践：内容显示�
 此架构的另一条演变路径是为了解决面向服务的架构的应用(SOA)中的问题。尽管SOA模式很强大，强大到提出了无与伦比的抽象层级、异构系统间的连接性、服务的组织结构以及要与商业目标看齐的承诺，但由于它的复杂性、高成本、普遍性而难于被理解和实现，而且也常常导致了很多现有应用的失控。微服务架构的风格通过简化服务的概念、消除服务编排的需要以及简化服务组件间的连接性和访问来解决刚才聊到的SOA的复杂性。
 
 ##微服务架构的多种拓扑结构
-尽管我们可以列出很多实现微服务架构的方式，但是这里我们只聊聊三种主流的微服务架构拓扑结构：**基于REST风格的API的拓扑结构**、**基于REST风格的应用的拓扑结构**以及**集中式消息型的拓扑结构**。基于REST风格的API拓扑结构适用于通过一些API接口来提供一些独立的、小型服务的网站。如图Figure 4-2，这种拓扑结构由非常小细粒度的服务组件构成(所以称之为微服务)，每个组件内都包含了一个或两个既完成特定业务又独立于其它服务的模块。这些细粒度的服务组件可以通过基于REST风格的而且是基于Web部署的接口来访问。雅虎、谷歌和亚马逊公司的一些常见的用途单一的云服务就是实例。
+尽管我们可以列出很多实现微服务架构的方式，但是这里我们只聊聊三种主流的微服务架构拓扑结构：**基于REST风格的API的拓扑结构**、**基于REST风格的应用的拓扑结构**以及**集中式消息型的拓扑结构**。基于REST风格的API拓扑结构适用于通过一些API接口来提供一些独立的、小型服务的网站。如图Figure 4-2，这种拓扑结构由非常小细粒度的服务组件构成(所以称之为微服务)，每个组件内都包含了一个或两个既完成特定业务又独立于其它服务的模块。这些细粒度的服务组件可以通过基于REST风格的而且是基于Web部署的接口来访问。雅虎、谷歌和亚马逊公司的一些常见的且用途单一的云服务就是实际例子。
 
 ![Figure 4-2](https://github.com/Handy-Wang/Handy-Wang.github.io/blob/source/source/_posts/img/software_architecture_patterns_figure4_2.png?raw=true "Figure 4-2")
 
-基于REST风格的应用的拓扑结构与基于REST风格的API的拓扑结构的差异在于：基于REST风格的应用前端接收的是传统的网页请求或传统PC客户端的请求，而不是接收简单的API请求。如图Figure 4-3所示，应用的用户界面被部署为一个单独的Web应用，这个Web应用通过REST风格的接口来远程访问已部署好的服务组件(即业务逻辑)。基于应用的拓扑结构中的服务组件有别于基于API的拓扑结构中服务组，它里面的服务组件规模更大、粒度更糙而且这些组件只是整个应用中的冰山一角。所以，这种拓扑结构在中小型的复杂度较低的商业程序中应用较为普遍。
+基于REST风格的应用的拓扑结构与基于REST风格的API的拓扑结构的差异在于：基于REST风格的应用前端接收的是传统的网页请求或传统PC客户端的请求，而不是接收简单的API请求。如图Figure 4-3所示，应用的用户界面被部署为一个单独的Web应用，这个Web应用通过REST风格的接口来远程访问已部署好的服务组件(即业务逻辑)。基于应用的拓扑结构中的服务组件有别于基于API的拓扑结构中服务组件，它里面的服务组件规模更大、粒度更糙而且这些组件只是整个应用中的冰山一角。所以，这种拓扑结构在中小型的复杂度较低的商业程序中应用较为普遍。
 
 ![Figure 4-3](https://github.com/Handy-Wang/Handy-Wang.github.io/blob/source/source/_posts/img/software_architecture_patterns_figure4_3.png?raw=true "Figure 4-3")
 
@@ -301,26 +301,56 @@ Web浏览器是另一个很不错的微内核架构模式实践：内容显示�
 
 ##避免依赖和编排
 
-One of the main challenges of the microservices architecture pattern is determining the correct level of granularity for the service components. If service components are too coarse-grained you may not realize the benefits that come with this architecture pattern (deploy‐ ment, scalability, testability, and loose coupling). However, service components that are too fine-grained will lead to service orchestration requirements, which will quickly turn your lean microservices architecture into a heavyweight service-oriented architecture, com‐ plete with all the complexity, confusion, expense, and fluff typically found with SOA-based applications.
+微服务器架构模式中最具挑战的问题之一就是给众多服务组件定一个合理粒度的层级结构。如果这个粒度太糙，那么我们将不能从微服务架构模式中获益(可部署性、伸缩性、可测性、松耦合)。尽管粒度太糙不好，但粒度太细就需要对众多组件进行编排，那么一个很精简的微服务架构就会变为一个重量级的面向服务的架构，这将会遇到与基于SOA架构的应用程序相同的问题：复杂、混乱、开销大以及一些其它问题。
 
-If you find you need to orchestrate your service components from within the user interface or API layer of the application, then chan‐ ces are your service components are too fine-grained. Similarly, if you find you need to perform inter-service communication between service components to process a single request, chances are your service components are either too fine-grained or they are not parti‐ tioned correctly from a business functionality standpoint.
+如果你发现你需要在用户界面层或API层来编排、组织管理你的众多服务组件，那么说明这些组件的粒度太细了。同样的，如果在处理一个请求时需要在服务组件间通信，那么说明要么是这些服务组件是粒度太小，要么是这些服务组件的切割没有站在业务功能的角度来实施。
 
-Inter-service communication, which could force undesired cou‐ plings between components, can be handled instead through a shared database. For example, if a service component handing Inter‐ net orders needs customer information, it can go to the database to retrieve the necessary data as opposed to invoking functionality within the customer-service component.
+服务间通信会迫使组件间产生耦合，而不是采用共享数据的方式来处理。比如，一个处理网络定单的服务组件需要客户信息时，可以从数据库中获取一些必要的数据而不是通过调用其它服务组件来获取数据。共享数据库可以解决数据层面的问题，但是功能共享的问题如何来解决呢？比如，当一个服务组件需要另一个被包含在其它服务组件里的功能时，有时你是可以拷贝这部分你需要的功能代码的(但是打破了DRY原则：不要出现重复的代码)。在大多实现微服务架构的商业应用程序中这是一种非常常用的共享功能代码的方式，牺牲一小部分重复冗余的逻辑来换取组件间的独立性和可部署性。那些小型的工具类功能应该就是属于这一类。
 
-The shared database can handle information needs, but what about shared functionality? If a service component needs functionality contained within another service component or common to all ser‐ vice components, you can sometimes copy the shared functionality across service components (thereby violating the DRY princi‐ ple: don’t repeat yourself). This is a fairly common practice in most business applications implementing the microservices architecture pattern, trading off the redundancy of repeating small portions of business logic for the sake of keeping service components independ‐ ent and separating their deployment. Small utility classes might fall into this category of repeated code.
-
-If you find that regardless of the level of service component granu‐ larity you still cannot avoid service-component orchestration, then it’s a good sign that this might not be the right architecture pattern for your application. Because of the distributed nature of this pat‐ tern, it is very difficult to maintain a single transactional unit of work across (and between) service components. Such a practice would require some sort of transaction compensation framework for rolling back transactions, which adds significant complexity to this relatively simple and elegant architecture pattern.
+如果你发现无论服务组件的粒度粗细，你仍然需要对这些服务组件进行编排，那么说明你的项目不适合微服务架构模式。由于微服务架构的分布式特性，所以对于那种跨服务的事务操作是很难维护的。这种操作需要一些事务补救措施来回滚事务，但是这样就增加了微服务架构的复杂性。
 
 ##模式考量
+微服务架构模式解决了大型应用程序和面向服务架构的应用程序中的诸多常见问题。由于主要的应用程序组件被拆分为小的且可单独部署的单元，这样基于微服务架构的应用程序就更健壮、扩展性更强、能更好的支持持续交付。
 
-The microservices architecture pattern solves many of the common issues found in both monolithic applications as well as service- oriented architectures. Since major application components are split up into smaller, separately deployed units, applications built using the microservices architecture pattern are generally more robust, provide better scalability, and can more easily support con‐ tinuous delivery.
+此架构模式的另一优点在于它提供了实时的生产环境部署，因此很大程度上减少了每月或每周末需要的生产环境来一次大部署的次数。这是因为代码的修改已经与特定的服务组件被隔离开，即只需部署修改的服务组件。如果你只有一个服务组件实例，你可以写一些用户界面来检测热部署以及重定向用户的请求到错误页面或等待页面。或者，你可以在实时部署期间置换服务组件的多个实例，以使得在部署期间服务仍然可用（然而，分层架构很难做到这一点）。
 
-Another advantage of this pattern is that it provides the capability to do real-time production deployments, thereby significantly reducing the need for the traditional monthly or weekend “big bang” produc‐ tion deployments. Since change is generally isolated to specific ser‐ vice components, only the service components that change need to be deployed. If you only have a single instance of a service com‐ponent, you can write specialized code in the user interface applica‐ tion to detect an active hot-deployment and redirect users to an error page or waiting page. Alternatively, you can swap multiple instances of a service component in and out during a real-time deployment, allowing for continuous availability during deployment cycles (something that is very difficult to do with the layered archi‐ tecture pattern).
-
-One final consideration to take into account is that since the micro‐ services architecture pattern is a distributed architecture, it shares some of the same complex issues found in the event-driven architec‐ ture pattern, including contract creation, maintenance, and govern‐ ment, remote system availability, and remote access authentication and authorization.
+最后一个需要考量的点是：由于微服务架构模式是一个分布式架构，所以它也会遇到一些与事件驱动架构模式相同的问题，包括对接协议的建立、维护成本、管理成本、远程系统可用性以及远程访问的鉴权和授权。
 
 ##模式分析
 
-待续。。。
+下面的表格从常用架构特点角度出发对微服务架构进行了评级和分析。对于每一个架构特点的评级都是基于此架构在这一特点上的应用以及是否被大家所熟知。至于几种架构模式的并行对比，请参看附录A。
 
-特别感谢 @磊哥 对第二章的翻译。
+
+**整体的敏捷性**
+
+	等级：高
+	理由：整体敏捷性是指对不断修改的需求的适应能力。对采用微内核架构方案的系统的修改，都是可以采用插件方式来隔离和解耦的。由于存在单独部署单元的概念，所以任何修改都是被隔离到单独的服务组件里，这样就可以更快更简单地进行部署。同理，采用此架构搭建的应用程序的内部组件间都是松耦合的，从而也能促进变化的拥抱。
+	
+**部署的简易性**
+
+	等级：高
+	理由：由于事件处理器组件的解耦特性，所以整体上此架构模式是相对容易部署的。代理拓扑结构之所以比中间者拓扑结构更易于部署，主要是因为事件中间者组件与事件处理器之间是紧耦合的，即：对事件处理器的修改会级联到事件中间者的修改，最终两者都需要重新部署。
+
+**可测性**
+
+	等级：高
+	理由：由于业务功能被分离和隔离到独立的应和程序中，所以测试范围是可控的，而且还可以进行一些针对性测试。回归测试特定服务组件比回归测试整个大型应用程序会更容易、更可行。 由于组件是解耦的，所以，从开发的角度来说对某一点的修改不会对应用程序的其它部分超成影响，减轻了由于一个小小的修改而需要测试整个应用的压力。
+
+**性能**
+
+	等级：低
+	理由：尽管你可以使用此架构模式来搭建一个应用程序并且运行正常，但由于此架构的分布式特性，所以搭建出来的应用程序并不属于高性能的应用程序。
+
+**可伸缩怀**
+
+	等极：高
+	理由：由于应用程序被切分为独立的可部署单元，所以每个服务组件都可以单独进行自调整式扩展。比如，股票交易的管理操作区是不需要进行扩展的，这是因为使用此功能的用户量很少；然而交易区服务组件需要被扩展，这是因为大多股票交易程序都要很高的吞吐量。
+
+**开发的简易性**
+
+	等级：高
+	理由：由于所有功能都被隔离为单独的不同的服务组件，所以开发工作很容易在一个小的已被隔离的区域中进行。开发人员都没有机会由于修改一个服务组件而影响其它服务组件，所以减少了开发人员间或开发团队间协作的工作量。
+	
+#第五章 基于空间的架构模式
+
+感谢 @磊哥 贡献了第二章的翻译。
