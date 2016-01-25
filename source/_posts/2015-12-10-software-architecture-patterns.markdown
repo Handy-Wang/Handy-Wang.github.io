@@ -301,6 +301,26 @@ Web浏览器是另一个很不错的微内核架构模式实践：内容显示�
 
 ##避免依赖和编排
 
+One of the main challenges of the microservices architecture pattern is determining the correct level of granularity for the service components. If service components are too coarse-grained you may not realize the benefits that come with this architecture pattern (deploy‐ ment, scalability, testability, and loose coupling). However, service components that are too fine-grained will lead to service orchestration requirements, which will quickly turn your lean microservices architecture into a heavyweight service-oriented architecture, com‐ plete with all the complexity, confusion, expense, and fluff typically found with SOA-based applications.
+
+If you find you need to orchestrate your service components from within the user interface or API layer of the application, then chan‐ ces are your service components are too fine-grained. Similarly, if you find you need to perform inter-service communication between service components to process a single request, chances are your service components are either too fine-grained or they are not parti‐ tioned correctly from a business functionality standpoint.
+
+Inter-service communication, which could force undesired cou‐ plings between components, can be handled instead through a shared database. For example, if a service component handing Inter‐ net orders needs customer information, it can go to the database to retrieve the necessary data as opposed to invoking functionality within the customer-service component.
+
+The shared database can handle information needs, but what about shared functionality? If a service component needs functionality contained within another service component or common to all ser‐ vice components, you can sometimes copy the shared functionality across service components (thereby violating the DRY princi‐ ple: don’t repeat yourself). This is a fairly common practice in most business applications implementing the microservices architecture pattern, trading off the redundancy of repeating small portions of business logic for the sake of keeping service components independ‐ ent and separating their deployment. Small utility classes might fall into this category of repeated code.
+
+If you find that regardless of the level of service component granu‐ larity you still cannot avoid service-component orchestration, then it’s a good sign that this might not be the right architecture pattern for your application. Because of the distributed nature of this pat‐ tern, it is very difficult to maintain a single transactional unit of work across (and between) service components. Such a practice would require some sort of transaction compensation framework for rolling back transactions, which adds significant complexity to this relatively simple and elegant architecture pattern.
+
+##模式考量
+
+The microservices architecture pattern solves many of the common issues found in both monolithic applications as well as service- oriented architectures. Since major application components are split up into smaller, separately deployed units, applications built using the microservices architecture pattern are generally more robust, provide better scalability, and can more easily support con‐ tinuous delivery.
+
+Another advantage of this pattern is that it provides the capability to do real-time production deployments, thereby significantly reducing the need for the traditional monthly or weekend “big bang” produc‐ tion deployments. Since change is generally isolated to specific ser‐ vice components, only the service components that change need to be deployed. If you only have a single instance of a service com‐ponent, you can write specialized code in the user interface applica‐ tion to detect an active hot-deployment and redirect users to an error page or waiting page. Alternatively, you can swap multiple instances of a service component in and out during a real-time deployment, allowing for continuous availability during deployment cycles (something that is very difficult to do with the layered archi‐ tecture pattern).
+
+One final consideration to take into account is that since the micro‐ services architecture pattern is a distributed architecture, it shares some of the same complex issues found in the event-driven architec‐ ture pattern, including contract creation, maintenance, and govern‐ ment, remote system availability, and remote access authentication and authorization.
+
+##模式分析
+
 待续。。。
 
 特别感谢 @磊哥 对第二章的翻译。
