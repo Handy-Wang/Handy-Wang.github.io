@@ -30,4 +30,4 @@ categories:
 		* 全局断点法（All Exceptions）
 			* 适用于：停留到main里的crash，可能是EXC_CRASH（SIGABRT）或EXC_BAD_ACCESS（SIGBUG/SIGSEGV）导致的
 			* 加上全局断点再run，就可以看见哪一行导致crash了。
-	![图5](https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/ios_app_crash_debug_5.png "图5")
+	![图5](https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/ios_app_crash_debug_.png "图5")
