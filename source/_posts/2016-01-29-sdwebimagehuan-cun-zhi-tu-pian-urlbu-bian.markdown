@@ -83,4 +83,5 @@ OK，到此这次的主题已得到完美解决。
 2. [有关Last-Modified 与 If-Modified-Since](http://blog.csdn.net/taipingliebeiluo/article/details/5842766)
 3. [SDWebImageDownloader源码](https://github.com/rs/SDWebImage/blob/master/SDWebImage/SDWebImageDownloader.m)
 4. [SDWebImage load pictures and something about setting HTTP headers](http://stackoverflow.com/questions/32492414/sdwebimage-load-pictures-and-something-about-setting-http-headers)
-5. [AFNetWorking 和 SDWebImage 图片缓存对比](http://blog.csdn.net/u010165653/article/details/46473247)
+5. [**重点推荐**-AFNetWorking 和 SDWebImage 图片缓存对比](http://blog.csdn.net/u010165653/article/details/46473247)
+6. [**重点推荐**-How Does Caching Work in AFNetworking? : AFImageCache & NSUrlCache Explained](http://blog.originate.com/blog/2014/02/20/afimagecache-vs-nsurlcache/)
