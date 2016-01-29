@@ -69,3 +69,4 @@ categories:
 * 参考文献
 	* [my-app-crashed-now-what-part-1](http://www.raywenderlich.com/10209/my-app-crashed-now-what-part-1)
 	* [my-app-crashed-now-what-part-2](http://www.raywenderlich.com/10209/my-app-crashed-now-what-part-2)
+	* [App Crash探析](http://game.academy.163.com/library/2015/2/9/17717_497701.html)
