@@ -12,4 +12,4 @@ categories:
 
 * 制造一个ObjC crash
 	* 代码如下
-	![Figure 1-1](https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/software_architecture_patterns_figure1_1.png "Figure 1-1")
+	![Figure 1-1](https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/ios_app_crash_debug_1 "Figure 1-1")
