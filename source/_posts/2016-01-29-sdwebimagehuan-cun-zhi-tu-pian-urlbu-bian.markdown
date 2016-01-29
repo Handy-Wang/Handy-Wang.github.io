@@ -76,3 +76,10 @@ OK，到此这次的主题已得到完美解决。
 	If-None-Match的key，这对header与Last-Modified、If-Modified-Since的作用是相同的，即服务器是否需要返回最新的图片，
 	当然它们在服务器端的判断逻辑应该是等与不等的判断，Etag在客户端的存储同样可以采用在plist文件中存放图片key名称与Etag的对应
 	关系。
+	
+**参考资料**
+
+1. [又拍云](https://console.upyun.com)
+2. [有关Last-Modified 与 If-Modified-Since](http://blog.csdn.net/taipingliebeiluo/article/details/5842766)
+3. [SDWebImageDownloader源码](https://github.com/rs/SDWebImage/blob/master/SDWebImage/SDWebImageDownloader.m)
+4. [SDWebImage load pictures and something about setting HTTP headers](http://stackoverflow.com/questions/32492414/sdwebimage-load-pictures-and-something-about-setting-http-headers)
