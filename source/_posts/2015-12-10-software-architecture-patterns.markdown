@@ -384,19 +384,38 @@ Web浏览器是另一个很不错的微内核架构模式实践：内容显示�
 ##模式结构
 空间架构模式的神奇之处就在于虚拟中间件组件集以及被包含在处理单元中的内存级数据网格。如图5-2所示，它展示了一个典型的处理单元架构，包含了程序模块、内存数据网格、用于为故障恢复而准备的可选的异步持久化存储以及数据复制引擎。
 
-![Figure 5-2](https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/software_architecture_patterns_figure5_2.png "Figure 5-2")
+![Figure 5-2](https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/software_architecture_patterns_figure5__2.png "Figure 5-2")
 
+本质上说，虚拟中间件是此架构的控制器，负责管理请求、会话、数据复制、分布式请求处理以及部署处理单元。在虚拟中间件内部有四个主要的组件：消息网格、数据网格、处理网格以及部署管理器。
 
 ###消息网格
+如图5-3所示，消息网格的消息输入是用户请求和会话信息。当一个用户的请求进入虚拟中间件内后，消息网格组件来决定哪一个处于活跃状态的处理单元可以处理这个请求并把这个请求转发给相应的处理单元进行处理。消息网格的复杂度范围从一个简单的“循环算法”到一个更复杂的“下一个可用算法”，这些算法用于计算应该哪个处理单元来处理哪个请求。
 
 ###数据网格
 
+The data-grid component is perhaps the most important and crucial component in this pattern. The data grid interacts with the data- replication engine in each processing unit to manage the data repli‐ cation between processing units when data updates occur. Since the messaging grid can forward a request to any of the processing units available, it is essential that each processing unit contains exactly the same data in its in-memory data grid. Although Figure 5-4 shows a synchronous data replication between processing units, in reality this is done in parallel asynchronously and very quickly, sometimes completing the data synchronization in a matter of microseconds (one millionth of a second).
+
 ###处理网格
 
-###发布管理器
+The processing grid, illustrated in Figure 5-5, is an optional compo‐ nent within the virtualized middleware that manages distributed request processing when there are multiple processing units, each handling a portion of the application. If a request comes in that requires coordination between processing unit types (e.g., an order processing unit and a customer processing unit), it is the processing grid that mediates and orchestrates the request between those two processing units.
+
+###部署管理器
+
+The deployment-manager component manages the dynamic startup and shutdown of processing units based on load conditions. This component continually monitors response times and user loads, and starts up new processing units when load increases, and shuts down processing units when the load decreases. It is a critical component to achieving variable scalability needs within an application.
 
 ##模式考量
 
+The space-based architecture pattern is a complex and expensive pattern to implement. It is a good architecture choice for smaller web-based applications with variable load (e.g., social media sites, bidding and auction sites). However, it is not well suited for tradi‐ tional large-scale relational database applications with large amounts of operational data.
+Although the space-based architecture pattern does not require a centralized datastore, one is commonly included to perform the ini‐ tial in-memory data grid load and asynchronously persist data updates made by the processing units. It is also a common practice to create separate partitions that isolate volatile and widely used transactional data from non-active data, in order to reduce the memory footprint of the in-memory data grid within each process‐ ing unit.
+It is important to note that while the alternative name of this pattern is the cloud-based architecture, the processing units (as well as the virtualized middleware) do not have to reside on cloud-based hos‐ ted services or PaaS (platform as a service). It can just as easily reside on local servers, which is one of the reasons I prefer the name “space-based architecture.”
+From a product implementation perspective, you can implement many of the architecture components in this pattern through third- party products such as GemFire, JavaSpaces, GigaSpaces, IBM Object Grid, nCache, and Oracle Coherence. Because the imple‐ mentation of this pattern varies greatly in terms of cost and capabili‐ ties (particularly data replication times), as an architect, you should first establish what your specific goals and needs are before making any product selections.
+
 ##模式分析
+The following table contains a rating and analysis of the common architecture characteristics for the space-based architecture pattern. The rating for each characteristic is based on the natural tendency for that characteristic as a capability based on a typical implementa‐ tion of the pattern, as well as what the pattern is generally known for. For a side-by-side comparison of how this pattern relates to other patterns in this report, please refer to Appendix A at the end of this report.
+
+#附录A-各大架构模式的分析总结
+Figure A-1 summarizes the pattern-analysis scoring for each of the architecture patterns described in this report. This summary will help you determine which pattern might be best for your situation. For example, if your primary architectural concern is scalability, you can look across this chart and see that the event-driven pattern, microservices pattern, and space-based pattern are probably good architecture pattern choices. Similarly, if you choose the layered architecture pattern for your application, you can refer to the chart to see that deployment, performance, and scalability might be risk areas in your architecture.
+
+While this chart will help guide you in choosing the right pattern, there is much more to consider when choosing an architecture pat‐ tern. You must analyze all aspects of your environment, including infrastructure support, developer skill set, project budget, project deadlines, and application size (to name a few). Choosing the right architecture pattern is critical, because once an architecture is in place, it is very hard (and expensive) to change.
 
 感谢 @磊哥 贡献了第二章的翻译。
