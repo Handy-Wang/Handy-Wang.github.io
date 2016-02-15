@@ -384,6 +384,7 @@ Web浏览器是另一个很不错的微内核架构模式实践：内容显示�
 ##模式结构
 空间架构模式的神奇之处就在于虚拟中间件组件集以及被包含在处理单元中的内存级数据网格。如图5-2所示，它展示了一个典型的处理单元架构，包含了程序模块、内存数据网格、用于为故障恢复而准备的可选的异步持久化存储以及数据复制引擎。
 
+![Figure 5-2](https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/software_architecture_patterns_figure5_2.png "Figure 5-2")
 
 
 ###消息网格
