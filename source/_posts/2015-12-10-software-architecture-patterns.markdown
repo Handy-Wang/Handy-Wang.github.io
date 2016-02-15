@@ -362,4 +362,34 @@ Web浏览器是另一个很不错的微内核架构模式实践：内容显示�
 	
 #第五章 基于空间的架构模式
 
+大多数web应用的请求流转是按照下面的流程来进行的：从浏览器发起一个请求，此请求先到达静态资源服务器(Web Server, 如Apache、nginx)，然后是应用服务器(Application Server, 如Tomcat等)，最终到达数据库服务器。这个流程对于用户量少的应用来说是没有问题的，但是一旦用户负载增加就会出现瓶颈。首先出现瓶颈的是静态资源服务器，然后是应用服务器，最后是数据库服务器。通常，对于用户负载上升导致的瓶颈都是通过对资源服务器扩展来解决，这个方案相对简单且成本低，确实有时候可以解决问题。但是，大多数时候简单对的静态资源服务器进行扩展只会把瓶颈问题转移到应用服务器。然而，对应用服务器扩展就相对较难且成本较高，同时也把瓶颈问题又转移到了数据库服务器，这就使得扩展更难，成本更高了。尽管可以对数据库服务器进行扩展，但最终你会看到一个三角形的拓扑结构，即静态资源服务器所处夹角最大，因为它容易扩展，而数据库服务器所处的夹角最小，因为它最难扩展。
+
+在任何一个大型的、有着用户高并发负载的应用中，最终决定并发信息处理能力的因素往往是数据库。虽然各种缓存技术和数据库产品可以解决上述问题，但是靠扩展的来解决极限负载仍是一个难题。
+
+所以，基于空间的架构模式主要是用于定位和解决扩展性和并发性问题，此架构模式同样适用于用户并发量不稳定的系统。那么，从架构层面来解决扩展性问题比通过扩展数据库或改进缓存技术来解决要更好些。
+
+##模式描述
+空间架构模式（也被称为云架构模式）最小化了影响应用扩展的诸多因素。这种架构模式得名于元组空间的概念，分式式共享内存空间的概念。它通过去除中央数据库约束转而使用复制型内存数据网格来达到高扩展性。应用程序的数据被保存在内存中并被复制到所有活跃的处理单元中。当用户负载量上升或下降时，这些处理单元可以被动态的开启和关闭，从而解决了变化的扩展性问题。由于没有了中央数据库，那么数据库瓶颈就没有了，从而给应用程序提供了近乎无限扩展的能力。
+
+大多适合这种模式的应用都是标准的网站，接收浏览器的请求并执行一些操作。投标拍卖网站就可以作为一个案例来讲讲，这个网站就不断地接收互联网用户的投标。这个应用会接收某些条目的投标，并记录下时间信息，然后更新此条目的最新投标信息，最后把相关信息反馈给用户。
+
+此架构主要包含两大组件：处理单元和虚拟中间件。图5-1中描述了一个基本的空间架构模式以及它主要的组件。
+
+The processing-unit component contains the application compo‐ nents (or portions of the application components). This includes web-based components as well as backend business logic. The con‐ tents of the processing unit varies based on the type of application— smaller web-based applications would likely be deployed into a sin‐ gle processing unit, whereas larger applications may split the appli‐ cation functionality into multiple processing units based on the functional areas of the application. The processing unit typically 38 | Chapter 5: Space-Based Architecture
+contains the application modules, along with an in-memory data grid and an optional asynchronous persistent store for failover. It also contains a replication engine that is used by the virtualized mid‐ dleware to replicate data changes made by one processing unit to other active processing units.
+
+##模式结构
+
+###消息网格
+
+###数据网格
+
+###处理网格
+
+###发布管理器
+
+##模式考量
+
+##模式分析
+
 感谢 @磊哥 贡献了第二章的翻译。
