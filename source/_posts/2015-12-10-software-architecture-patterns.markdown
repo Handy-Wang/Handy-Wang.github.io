@@ -391,12 +391,13 @@ Web浏览器是另一个很不错的微内核架构模式实践：内容显示�
 ###消息网格
 如图5-3所示，消息网格的消息输入是用户请求和会话信息。当一个用户的请求进入虚拟中间件内后，消息网格组件来决定哪一个处于活跃状态的处理单元可以处理这个请求并把这个请求转发给相应的处理单元进行处理。消息网格的复杂度范围从一个简单的“循环算法”到一个更复杂的“下一个可用算法”，这些算法用于计算应该哪个处理单元来处理哪个请求。
 
-###数据网格
+![Figure 5-3](https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/software_architecture_patterns_figure5_3.png "Figure 5-3")
 
-The data-grid component is perhaps the most important and crucial component in this pattern. The data grid interacts with the data- replication engine in each processing unit to manage the data repli‐ cation between processing units when data updates occur. Since the messaging grid can forward a request to any of the processing units available, it is essential that each processing unit contains exactly the same data in its in-memory data grid. Although Figure 5-4 shows a synchronous data replication between processing units, in reality this is done in parallel asynchronously and very quickly, sometimes completing the data synchronization in a matter of microseconds (one millionth of a second).
+###数据网格
+数据网格组件可能是此架构模式中最为重要的组件。它直接与每个处理单元里的数据复制引擎打交道，当有数据更新时在处理单元间进行数据复制即数据同步。由于消息网格可以转发请求到任何一个可用的处理单元，所以每一个处理单元包含的数据必须一致。尽管图5-4中示意了一个处理单元间的同步数据复制过程，但是事实上这个过程在并行的异步操作下很快就完成了，有时数据同步的耗时已在微秒级。
 
 ###处理网格
-
+处理网格
 The processing grid, illustrated in Figure 5-5, is an optional compo‐ nent within the virtualized middleware that manages distributed request processing when there are multiple processing units, each handling a portion of the application. If a request comes in that requires coordination between processing unit types (e.g., an order processing unit and a customer processing unit), it is the processing grid that mediates and orchestrates the request between those two processing units.
 
 ###部署管理器
