@@ -375,10 +375,16 @@ Web浏览器是另一个很不错的微内核架构模式实践：内容显示�
 
 此架构主要包含两大组件：处理单元和虚拟中间件。图5-1中描述了一个基本的空间架构模式以及它主要的组件。
 
-The processing-unit component contains the application compo‐ nents (or portions of the application components). This includes web-based components as well as backend business logic. The con‐ tents of the processing unit varies based on the type of application— smaller web-based applications would likely be deployed into a sin‐ gle processing unit, whereas larger applications may split the appli‐ cation functionality into multiple processing units based on the functional areas of the application. The processing unit typically 38 | Chapter 5: Space-Based Architecture
-contains the application modules, along with an in-memory data grid and an optional asynchronous persistent store for failover. It also contains a replication engine that is used by the virtualized mid‐ dleware to replicate data changes made by one processing unit to other active processing units.
+![Figure 5-1](https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/software_architecture_patterns_figure5_1.png "Figure 5-1")
+
+从上图可以看到，处理单元组件包含了应用组件集（或应用组件集的一部分），它包含了基于web的组件以及后端的业务逻辑。处理单元的内容随着应用程序的类型而改变－如，基于Web的小型应用程序很有可能被部署到某一个处理单元里，而大型应用程序则很有可能根据功能模块的不同划分而被拆解到多个的处理单元里。所以，处理单元通常包含应用程序功能模块、内存级数据网格以及一个为故障恢复而准备的可选的异步持久化存储。另外，它还包含了一个复制引擎(replication engine)，是虚拟中间件用于复制处理单元间差异化的变更数据，即用于同步处理单元间的数据。
+
+虚拟中间件组件会处理一些清理和通信工作，它包含了很多控制数据同步和处理请求的组件。虚拟中间件包含了消息网格、数据网格、处理网格以及部署管理器。在接下来的章节中会详细介绍它们，而且它们可以被作为第三方产品进行定制化的开发或购买。
 
 ##模式结构
+空间架构模式的神奇之处就在于虚拟中间件组件集以及被包含在处理单元中的内存级数据网格。如图5-2所示，它展示了一个典型的处理单元架构，包含了程序模块、内存数据网格、用于为故障恢复而准备的可选的异步持久化存储以及数据复制引擎。
+
+
 
 ###消息网格
 
