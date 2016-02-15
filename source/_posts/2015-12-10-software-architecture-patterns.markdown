@@ -396,13 +396,13 @@ Web浏览器是另一个很不错的微内核架构模式实践：内容显示�
 ###数据网格
 数据网格组件可能是此架构模式中最为重要的组件。它直接与每个处理单元里的数据复制引擎打交道，当有数据更新时在处理单元间进行数据复制即数据同步。由于消息网格可以转发请求到任何一个可用的处理单元，所以每一个处理单元包含的数据必须一致。尽管图5-4中示意了一个处理单元间的同步数据复制过程，但是事实上这个过程在并行的异步操作下很快就完成了，有时数据同步的耗时已在微秒级。
 
+![Figure 5-4](https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/software_architecture_patterns_figure5_4.png "Figure 5-4")
+
 ###处理网格
-处理网格
-The processing grid, illustrated in Figure 5-5, is an optional compo‐ nent within the virtualized middleware that manages distributed request processing when there are multiple processing units, each handling a portion of the application. If a request comes in that requires coordination between processing unit types (e.g., an order processing unit and a customer processing unit), it is the processing grid that mediates and orchestrates the request between those two processing units.
+如图5-5所示，处理网格是虚拟中间件中的一个可选的组件。当有多个处理单元来处理应用程序的每一部分工作时，它负责管理分布式请求处理。举例，假如有一个请求来了，然后需要在不同处理单元间流转(比如，订单处理单元和客户信息处理单元)，那么处理网格就负责为这个请求协调和调度这两个处理单元。
 
 ###部署管理器
-
-The deployment-manager component manages the dynamic startup and shutdown of processing units based on load conditions. This component continually monitors response times and user loads, and starts up new processing units when load increases, and shuts down processing units when the load decreases. It is a critical component to achieving variable scalability needs within an application.
+部署管理器负责根据一些负载条件来动态地开启和关闭处理单元。这个组件还会持续监测响应时长、用户负载量以及根据用户负载量来启动和关闭处理单元。它是应用程序具备可变扩展性的重要组件。
 
 ##模式考量
 
