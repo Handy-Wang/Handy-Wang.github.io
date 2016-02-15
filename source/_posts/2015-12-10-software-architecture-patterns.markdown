@@ -102,7 +102,7 @@ categories:
 
 [^5]:[28原则资料](http://baike.baidu.com/view/40591.htm?fromtitle=%E4%BA%8C%E5%85%AB%E5%8E%9F%E5%88%99&fromid=3689905&type=syn)
 
-**其次**，需要考虑的是分层架构模式有把自己大一统的趋势。尽管你已把展现层和业务层拆分成了不同的模块。分层架构的各层代码都归类到了不同的项目开发目录。对于某些应用来说，它并不关注这点，但是这个问题确实会导致开发阶段的很多潜在的问题、健壮性问题、可靠性问题、性能问题以及扩展性问题。
+**其次**，需要考虑的是分层架构模式有把自己大一统的趋势。尽管你已把展现层和业务层拆分成了不同的模块。分层架构的各层代码都归类到了不同的项目开发目录。对于某些应用来说，它并不关注这点，但是这个问题确实会导致开发阶段的很多潜在的问题、健壮性问题、可靠性问题、性能问题以及伸缩性问题。
 
 ##模式分析
 下面的表格中是对分层架构的一些常规特点的评级和分析。每个特性的评级高低取决于它在架构的典型实现方案中能否作为自然趋势的能力，以及它能否能作为分层架构的主要强项。关于几种架构模式的整体比较结果，请参看附录A。
@@ -154,7 +154,7 @@ categories:
 #第二章 事件驱动型架构模式
 模型是一种流行的分布式异步架构，用于高度可扩展的程序。他同样具有高度适应的能力，可用于小型应用程序以及大型，复杂的系统。它是由高度解耦的，功能独立的事件处理组件组成，由此接受和处理事件。
 
-事件驱动架构包含中介和代理两种主要的模式。中介者模式通常应用于当需要通过一个中央控制器来协调多个模块之间的运作，而代理模式通常用于需要链式的传递和处理事件。由于这两者的实现方式和特性的不同，理解每一种模式并如何正确地运用于当前项目环境显得尤为重要。
+事件驱动架构包含中介和代理两种主要的模式。中介者模式通常应用于当需要通过一个集中式控制器来协调多个模块之间的运作，而代理模式通常用于需要链式的传递和处理事件。由于这两者的实现方式和特性的不同，理解每一种模式并如何正确地运用于当前项目环境显得尤为重要。
 
 ##中介者模式
 
@@ -169,10 +169,10 @@ categories:
 待续
 
 #第三章 微内核架构模式
-微内核模式是一种为基于产品的应用程序而生的架构模式，有时也称它为插件模式。那么，什么是基于产品的应用程序呢？基于产品的应用程序是一种分版本打包和分版本下载的第三方产品。很多公司也开发和发布类似产品级的内部业务程序，有：版本控制、版本日志和可插拔的功能特性。这种情况就适合采用微内核架构模式。微内核架构模式可以让开发者在自己的核心程序基础上开发一些带有扩展性和隔离性的插件。
+微内核模式是一种为基于产品的应用程序而生的架构模式，有时也称它为插件模式。那么，什么是基于产品的应用程序呢？基于产品的应用程序是一种分版本打包和分版本下载的第三方产品。很多公司也开发和发布类似产品级的内部业务程序，有：版本控制、版本日志和可插拔的功能特性。这种情况就适合采用微内核架构模式。微内核架构模式可以让开发者在自己的核心程序基础上开发一些带有伸缩性和隔离性的插件。
 
 ##模式介绍
-微内核架构模式由两大组件构成：分别为**系统内核**和**插件模块集**。即，应用程序的逻辑被分为独立的插件模块集合和基本的核心系统，以提供扩展性、灵活性以及扩展特性和和逻辑的隔离性。`图Figure 3-1`以图说明了一个基本的微内核架构模式结构。
+微内核架构模式由两大组件构成：分别为**系统内核**和**插件模块集**。即，应用程序的逻辑被分为独立的插件模块集合和基本的核心系统，以提供伸缩性、灵活性以及扩展特性和和逻辑的隔离性。`图Figure 3-1`以图说明了一个基本的微内核架构模式结构。
 
 通常，微内核架构模式中的**系统内核部分**是指能使系统正常运转所需要的最少功能的集合。很多操作系统都实现了微内核架构模式，这也是微内核名字的由来。从业务程序的角度讲，**系统内核**通常是指按一定场景、规则或复杂的条件来进行逻辑处理的通用业务逻辑。
 
@@ -242,7 +242,7 @@ Web浏览器是另一个很不错的微内核架构模式实践：内容显示�
 	的插件功能。JBoss应用服务器就是一个很好的采用了微内核架构的例子：通过插件扩展能力，你可以按需移除那些高消耗的或不需要的插件
 	功能，比如：远程访问功能、消息功能以及缓存功能等很消耗内存、高CPU的会拖慢应用程序的插件功能。
 
-**可伸缩怀**
+**可伸缩性**
 
 	等极：低
 	理由：由于大多基于微内核架构的实现方案都是基于成形的产品应用而且规模较小，这些架构实现通常只是作为产品中的一个单元或模块，
@@ -310,7 +310,7 @@ Web浏览器是另一个很不错的微内核架构模式实践：内容显示�
 如果你发现无论服务组件的粒度粗细，你仍然需要对这些服务组件进行编排，那么说明你的项目不适合微服务架构模式。由于微服务架构的分布式特性，所以对于那种跨服务的事务操作是很难维护的。这种操作需要一些事务补救措施来回滚事务，但是这样就增加了微服务架构的复杂性。
 
 ##模式考量
-微服务架构模式解决了大型应用程序和面向服务架构的应用程序中的诸多常见问题。由于主要的应用程序组件被拆分为小的且可单独部署的单元，这样基于微服务架构的应用程序就更健壮、扩展性更强、能更好的支持持续交付。
+微服务架构模式解决了大型应用程序和面向服务架构的应用程序中的诸多常见问题。由于主要的应用程序组件被拆分为小的且可单独部署的单元，这样基于微服务架构的应用程序就更健壮、伸缩性更强、能更好的支持持续交付。
 
 此架构模式的另一优点在于它提供了实时的生产环境部署，因此很大程度上减少了每月或每周末需要的生产环境来一次大部署的次数。这是因为代码的修改已经与特定的服务组件被隔离开，即只需部署修改的服务组件。如果你只有一个服务组件实例，你可以写一些用户界面来检测热部署以及重定向用户的请求到错误页面或等待页面。或者，你可以在实时部署期间置换服务组件的多个实例，以使得在部署期间服务仍然可用（然而，分层架构很难做到这一点）。
 
@@ -318,8 +318,7 @@ Web浏览器是另一个很不错的微内核架构模式实践：内容显示�
 
 ##模式分析
 
-下面的表格从常用架构特点角度出发对微服务架构进行了评级和分析。对于每一个架构特点的评级都是基于此架构在这一特点上的应用以及是否被大家所熟知。至于几种架构模式的并行对比，请参看附录A。
-
+下面的表格从常用架构特点角度出发对微服务架构进行了评级和分析。对于每一个架构特点的评级都是基于此架构在这一特点上的实际应用以及是否被大家所熟知。至于几种架构模式的并行对比，请参看附录A。
 
 **整体的敏捷性**
 
@@ -348,7 +347,7 @@ Web浏览器是另一个很不错的微内核架构模式实践：内容显示�
 	理由：尽管你可以使用此架构模式来搭建一个应用程序并且运行正常，但由于此架构的分布式特性，所以搭建出来的应用程序并不属于
 	高性能的应用程序。
 
-**可伸缩怀**
+**可伸缩性**
 
 	等极：高
 	理由：由于应用程序被切分为独立的可部署单元，所以每个服务组件都可以单独进行自调整式扩展。比如，股票交易的管理操作区是
@@ -369,7 +368,7 @@ Web浏览器是另一个很不错的微内核架构模式实践：内容显示�
 所以，基于空间的架构模式主要是用于定位和解决扩展性和并发性问题，此架构模式同样适用于用户并发量不稳定的系统。那么，从架构层面来解决扩展性问题比通过扩展数据库或改进缓存技术来解决要更好些。
 
 ##模式描述
-空间架构模式（也被称为云架构模式）最小化了影响应用扩展的诸多因素。这种架构模式得名于元组空间的概念，分式式共享内存空间的概念。它通过去除中央数据库约束转而使用复制型内存数据网格来达到高扩展性。应用程序的数据被保存在内存中并被复制到所有活跃的处理单元中。当用户负载量上升或下降时，这些处理单元可以被动态的开启和关闭，从而解决了变化的扩展性问题。由于没有了中央数据库，那么数据库瓶颈就没有了，从而给应用程序提供了近乎无限扩展的能力。
+空间架构模式（也被称为云架构模式）最小化了影响应用扩展的诸多因素。这种架构模式得名于元组空间的概念，分式式共享内存空间的概念。它通过去除集中式数据库约束转而使用复制型内存数据网格来达到高扩展性。应用程序的数据被保存在内存中并被复制到所有活跃的处理单元中。当用户负载量上升或下降时，这些处理单元可以被动态的开启和关闭，从而解决了变化的扩展性问题。由于没有了集中式数据库，那么数据库瓶颈就没有了，从而给应用程序提供了近乎无限扩展的能力。
 
 大多适合这种模式的应用都是标准的网站，接收浏览器的请求并执行一些操作。投标拍卖网站就可以作为一个案例来讲讲，这个网站就不断地接收互联网用户的投标。这个应用会接收某些条目的投标，并记录下时间信息，然后更新此条目的最新投标信息，最后把相关信息反馈给用户。
 
@@ -404,21 +403,55 @@ Web浏览器是另一个很不错的微内核架构模式实践：内容显示�
 ![Figure 5-5](https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/software_architecture_patterns_figure5__5.png "Figure 5-5")
 
 ###部署管理器
-部署管理器负责根据一些负载条件来动态地开启和关闭处理单元。这个组件还会持续监测响应时长、用户负载量以及根据用户负载量来启动和关闭处理单元。它是应用程序具备可变扩展性的重要组件。
+部署管理器负责根据一些加载条件来动态地开启和关闭处理单元。这个组件还会持续监测响应时长、用户负载量以及根据用户负载量来启动和关闭处理单元。它是应用程序具备可变扩展性的重要组件。
 
 ##模式考量
+空间架构模式是一个既复杂而且实现成本又高的架构模式。对于有一定可变负载需求的小型Web应用程序来说它是一个合适的架构选择（比如，社交媒体网站，投标拍卖网站）。但是，它不适合传统的基于大型关系型数据库的且有大量操作数据的应用程序。
 
-The space-based architecture pattern is a complex and expensive pattern to implement. It is a good architecture choice for smaller web-based applications with variable load (e.g., social media sites, bidding and auction sites). However, it is not well suited for tradi‐ tional large-scale relational database applications with large amounts of operational data.
-Although the space-based architecture pattern does not require a centralized datastore, one is commonly included to perform the ini‐ tial in-memory data grid load and asynchronously persist data updates made by the processing units. It is also a common practice to create separate partitions that isolate volatile and widely used transactional data from non-active data, in order to reduce the memory footprint of the in-memory data grid within each process‐ ing unit.
-It is important to note that while the alternative name of this pattern is the cloud-based architecture, the processing units (as well as the virtualized middleware) do not have to reside on cloud-based hos‐ ted services or PaaS (platform as a service). It can just as easily reside on local servers, which is one of the reasons I prefer the name “space-based architecture.”
-From a product implementation perspective, you can implement many of the architecture components in this pattern through third- party products such as GemFire, JavaSpaces, GigaSpaces, IBM Object Grid, nCache, and Oracle Coherence. Because the imple‐ mentation of this pattern varies greatly in terms of cost and capabili‐ ties (particularly data replication times), as an architect, you should first establish what your specific goals and needs are before making any product selections.
+虽然空间架构模式不需要一个集中的数据存储，但是在处理单元中通常包含了一个数据存储，用于内存数据网格的初始化加载和数据变更的异步持久化。这也是一个常见的做法，即通过创建单独的分区来把广泛使用的事务数据从稳定的数据中隔离出来，这是为了减少每个处理单元中内存级数据网格的内存占用。
+
+需要非常注意的是，虽然这种架构模式的替代名称是基于云计算的架构，但是处理单元不需要驻留在云托管服务或PaaS(平台即服务)。这些处理单元可以很容易的被驻留在本地服务器，这也是我给这种架构模式起名“基于空间的架构模式”的原因。
+
+从产品实现的角度来说，此架构中的很多组件你都可以通过第三方产品来实现，比如：GemFire、JavaSpaces、GigaSpaces、IBM对象网格、nCache以及Oracle Coherence。由于实现此架构模式的成本和功能差异很大(特别是数据复制的需要的时长)，所以作为架构师，在选择使用哪个产品来实现架构中的组件前，你首先需要做的是明确你的目标和指标。
 
 ##模式分析
-The following table contains a rating and analysis of the common architecture characteristics for the space-based architecture pattern. The rating for each characteristic is based on the natural tendency for that characteristic as a capability based on a typical implementa‐ tion of the pattern, as well as what the pattern is generally known for. For a side-by-side comparison of how this pattern relates to other patterns in this report, please refer to Appendix A at the end of this report.
+下面对空间架构模式的特点进行了评级和分析。对于每一个架构特点的评级都是基于此架构在这一特点上的实际应用以及是否被大家所熟知。至于几种架构模式的并行对比，请参看附录A。
+
+**整体的敏捷性**
+
+	等级：高
+	理由：整体敏捷性是指对不断修改的需求的适应能力。由于处理单元(应用程序或应用程序模块的部署实例)可以被快速的启动和关闭，那么应用程序就能对用户负载量的上升和下降作为很好的处理。采用此模式的架构通常对代码的变化也能作出很好的处理，因为此类应用程序规模较小而且此架构模式具有动态的特性。
+	
+**部署的简易性**
+
+	等级：高
+	理由：通常，虽然空间架构模式不是解耦和分布式的，但是它具备动态性，而且很多基于云的工具都可以很容易的插拔。
+
+**可测性**
+
+	等级：低
+	理由：在测试环境中要模拟高用户负载的情况是高成本且很耗时的，这使得对应用程序的可扩展性方面的测试变得困难。
+
+**性能**
+
+	等级：高
+	理由：在此架构模式中采用内存数据访问和缓存机制的方式，使得应用程序达到了高性能。
+
+**可伸缩性**
+
+	等极：高
+	理由：高扩展性源于一个事实，即此架构模式几乎没有或根本没有对集中式数据库的依赖，所以从根本上铲除了这个瓶颈。
+
+**开发的简易性**
+
+	等级：低
+	理由：复杂的缓存和内存数据网格产品让这种模式的实现相对复杂，主要是因为缺乏对用于创建这类的架构的工具和产品的熟悉。此外，必须特别注意在开发此类架构时，要确保源代码不会影响性能和可伸缩性。
 
 #附录A-各大架构模式的分析总结
-Figure A-1 summarizes the pattern-analysis scoring for each of the architecture patterns described in this report. This summary will help you determine which pattern might be best for your situation. For example, if your primary architectural concern is scalability, you can look across this chart and see that the event-driven pattern, microservices pattern, and space-based pattern are probably good architecture pattern choices. Similarly, if you choose the layered architecture pattern for your application, you can refer to the chart to see that deployment, performance, and scalability might be risk areas in your architecture.
+图A-1中总结了各个模式的得分情况。这个总结将会帮你选择一个合适的架构模式。比如，如果你的架构关注点是可伸缩性，那么你可以从此图中得知事件驱动架构模式、微服务架构模式以及空间架构模式都是合适的选择。同样，如果你选择分层架构模式，那么你可以从图中得知，此架构的部署简易性、性能和可伸缩性将会是此架构中比较有风险的部分。
 
-While this chart will help guide you in choosing the right pattern, there is much more to consider when choosing an architecture pat‐ tern. You must analyze all aspects of your environment, including infrastructure support, developer skill set, project budget, project deadlines, and application size (to name a few). Choosing the right architecture pattern is critical, because once an architecture is in place, it is very hard (and expensive) to change.
+
+
+虽然此图可以辅助你选择一种相对合适的架构模式，但是当你真正在选择一个架构模式时还是要仔细思考思考。你必须分析实际场景的方方面面，包括基础设施维护、开发人员的技术水平、项目预算、项目交付日期以及应用程序的大小。选择一个合适的架构模式是至关重要的，因为一旦生根就很难改变了。
 
 感谢 @磊哥 贡献了第二章的翻译。
