@@ -181,7 +181,7 @@ categories:
 
 为了说明白中间拓扑结构是如何运转的，我假投你已通过保险公司投保了而且你打算要搬家了。在这个案例中，初始事件也许应该叫“搬迁事件”。与处理“搬迁事件”相关的步骤包含在事件中间者中，如图2-2所示。事件中介者为“搬迁事件”中的每一步都创建了一个处理事件（比如，修改地址、重算保费，等等），然后把处理事件发送到事件通道中并等待相应事件处理器的处理。这个过程会一直持续，直到“搬迁事件”中所有的步骤都被处理完毕。图中，事件中介者里的重算保费和更新索赔事项上面的横线箭头表示这两步可以同时进行。
 
-
+![Figure 2-2](https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/software_architecture_patterns_figure2_2.png "Figure 2-2")
 
 ##代理拓扑结构
 
