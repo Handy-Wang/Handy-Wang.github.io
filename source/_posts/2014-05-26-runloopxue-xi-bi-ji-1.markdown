@@ -184,7 +184,7 @@ categories:
 
 	NSTimer *timer1 = [NSTimer timerWithTimeInterval:1 target:self selector:@selector(doTimer1) userInfo:nil repeats:YES];
 	
-	[runloop addTimer:timer1 forMode:NSRunLoopCommonModes];
+ 	[runloop addTimer:timer1 forMode:NSRunLoopCommonModes];
 
 ####RunLoop与GCD
 RunLoop与GCD并没有直接关系，当且仅当GCD使用到main_queue时才有关系，如下：
@@ -280,5 +280,6 @@ RunLoop与GCD并没有直接关系，当且仅当GCD使用到main_queue时才有
 <br /><br /><br />
 
 ##参考资料
+* [Threading Programming Guide - iOS Developer Library](https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/Multithreading/RunLoopManagement/RunLoopManagement.html#//apple_ref/doc/uid/10000057i-CH16-SW1)
 * [视频: iOS线下分享《RunLoop》by 孙源@sunnyxx](http://v.youku.com/v_show/id_XODgxODkzODI0.html)
 * [深入理解RunLoop](http://www.cocoachina.com/ios/20150601/11970.html)
