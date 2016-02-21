@@ -250,12 +250,21 @@ RunLoop与GCD并没有直接关系，当且仅当GCD使用到main_queue时才有
 		
 		- (void)testURLConnection {
 		    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+		        [[NSThread currentThread] setName:@"Handy-Thread"];
+		        
 		        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.baidu.com"]];
 		        _conn = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
 		        [_conn scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
 		        [_conn start];
-		
-		        [[NSRunLoop currentRunLoop] run];
+		        
+		        //不但运行RunLoop也让当前线程一直维持住，尽管URLConnection执行完后这个线程也不会结束。这里维持住线程采用NSMachPort方式而不是采用while(YES)就是为了不让CPU空转。
+		        NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
+		        [runLoop addPort:[NSMachPort port] forMode:NSDefaultRunLoopMode];
+		        [runLoop run];
+		        
+		        //这种方式在connection执行完成后，RunLoop也结束了。
+		        //[[NSRunLoop currentRunLoop] run];
+		        
 		        NSLog(@"Finish runloop...");
 		    });
 		}
