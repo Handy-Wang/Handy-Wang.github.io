@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "RunLoop学习笔记(一)一基本原理介绍"
+title: "RunLoop学习笔记(一) 基本原理介绍"
 date: 2014-05-26 17:20:41 +0800
 comments: true
 categories: 
