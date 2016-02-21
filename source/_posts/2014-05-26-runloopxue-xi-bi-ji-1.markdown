@@ -226,7 +226,7 @@ RunLoop与GCD并没有直接关系，当且仅当GCD使用到main_queue时才有
 				//GCD
 				__CFRunLoop_IS_SERVING_THE_MAIN_DISPATCH_QUEUE__();
 			} else {
-				__CFRunLoopDoSource1(); //基于port的消息通读，如：某个端口来网络数据了等情况
+				__CFRunLoopDoSource1(); //基于port的消息通讯
 			}
 			
 			__CFRunLoopDoBlocks(); // 执行6个__CFRUNLOOP_IS_*中的某些函数
@@ -246,7 +246,33 @@ RunLoop与GCD并没有直接关系，当且仅当GCD使用到main_queue时才有
 		
 * 在一个线程里发起一个NSURLConnection网络数据请求，但是NSURLConnection的delegate没有回调？
 
-		答：需要在保证NSURLConnection线程alive的前提下，将NSURLConnection以NSRunLoopCommonModes加入到RunLoop中运行。为什么是以NSRunLoopCommonModes模式呢，结合本文讲解可知，为了在RunLoop处于TrackingMode时也能处理接收到数据回调的CALLBACK。如，在滑动数据列表时也能加载并显示出网络图片。
+		答：需要在 保证NSURLConnection线程的RunLoop已run 的前提下，将NSURLConnection以NSRunLoopCommonModes加入到RunLoop中运行。为什么是以NSRunLoopCommonModes模式呢，结合本文讲解可知，为了在RunLoop处于TrackingMode时也能接收到数据回调的CALLBACK。
+		
+		- (void)testURLConnection {
+		    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+		        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.baidu.com"]];
+		        _conn = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
+		        [_conn scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+		        [_conn start];
+		
+		        [[NSRunLoop currentRunLoop] run];
+		        NSLog(@"Finish runloop...");
+		    });
+		}
+		
+		- (void)connection:(NSURLConnection __unused *)connection didReceiveResponse:(NSURLResponse *)response {
+		    NSLog(@"%@", NSStringFromSelector(_cmd));
+		    _didReceiveResponse = YES;
+		}
+		
+		- (void)connection:(NSURLConnection __unused *)connection didFailWithError:(NSError *)error {
+		    NSLog(@"%@", NSStringFromSelector(_cmd));
+		}
+		
+		- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+		    NSLog(@"%@", NSStringFromSelector(_cmd));
+		}
+
 		
 * 在主线程环境下的一个方法体里的第一行调用performSelector:withObject:afterDelay:这种带afterDelay的方法簇时，这一行代码实际执行时机往往是在方法体执行过程的最后，为什么呢？如下：
 
@@ -276,8 +302,9 @@ RunLoop与GCD并没有直接关系，当且仅当GCD使用到main_queue时才有
 
 		答：在testPerformSelectorAfterDelay方法体内的代码肯定是按顺序执行，先执行performSelector:withObject:afterDelay方法，再执行for循环。由于performSelector只是向RunLoop注册Timer Source并不是执行，尽管delay是0，所以注册完后就执行完了，接着就执行for循环，然后testPerformSelectorAfterDelay方法运行完了，整个App就没有什么可做的了进入了sleep。我们结合本文讲的知识和上面提到的伪代码可知，Timer真正地执行时机是取决于是在RunLoop否收收到了timer machport msg，由于RunLoop已进入了sleep，而且delay是0，所以瞬间之后RunLoop收到了timer mach_msg从而把RunLoop唤醒然后回调Timer要做的事情，再然后RunLoop接着进入sleep.
 
-到此，RunLoop的相关知识就介绍完了。下篇我将结合开源项目AFNetworking来讲讲RunLoop的实际应用。
-<br /><br /><br />
+到此，RunLoop的相关知识就介绍完了。
+
+下篇我将结合开源项目AFNetworking来讲讲RunLoop的实际应用。
 
 ##参考资料
 * [Threading Programming Guide - iOS Developer Library](https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/Multithreading/RunLoopManagement/RunLoopManagement.html#//apple_ref/doc/uid/10000057i-CH16-SW1)
