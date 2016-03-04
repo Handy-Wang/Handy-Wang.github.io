@@ -62,7 +62,7 @@ categories:
 	__CFRUNLOOP_IS_CALLING_OUT_TO_A_SOURCE0_CALLBACK_FUNCTION__
 	__CFRUNLOOP_IS_CALLING_OUT_TO_A_SOURCE1_CALLBACK_FUNCTION__
 	
-从上面的函数命名上可以知道，它们是RunLoop从内部回调到外部或外部Observer的函数。其实，无论主线程或子线程的RunLoop的回调，都是通过类似以上的这些函数来完成的。讲这个点，只是为了让同学们离RunLoop的机制近一点，以便于对后面内容的理解。
+从上面的函数命名上可以知道，它们是RunLoop从内部回调到外部或外部Observer的函数，这些函数对应到相应RunLoop的Activity状态。其实，无论主线程或子线程的RunLoop的回调，都是通过类似以上的这些函数来完成的。讲这个点，只是为了让同学们离RunLoop的机制近一点，以便于对后面内容的理解。
 
 ####与RunLoop相关的技术
 其实，与RunLoop相关的技术我们经常用到，它们是，UI层相关的NSTimer、UIEvent、Autorelease；NSObject相关的NSObject (NSDelayedPerforming)方法簇、NSObject (NSThreadPerformAdditions)方法簇；CA相关的CADisplayLink、CATransition、CAAnimation；GCD中的dispatch_get_main_queue()；NSURLConnection。
@@ -105,7 +105,7 @@ categories:
 * **RunLoop的InputSource、Timer、Observer** <br/>到这里，我们知道RunLoop不只是为了维持线程的持续运转，更重要的是为了在线程里面接收RunLoop外部的一些逻辑请求，我把这些描述逻辑请求的数据结构(InputSource、Timer)统称为RunLoop的数据源，RunLoop根据数据源里设定的条件处理完数据源后会回调到数据源的Observer.<br /><br />
 那么结合RunLoop的不同模式以及App运行时有很多RunLoop，所以在RunLoop内部肯定是有一个RunLoopMode与InputSource/Timer的一对多的关系，即每个RunLoopMode都对应了多个不同的数据源(InputSource/Timer)。也就是说，一个RunLoop运行在某个RunLoopMode时，只会触发此模式下的InputSource、Timer集合，进而再回调到对应的Observer。至于RunLoopMode里的InputSource、Timer集合元素的执行先后顺序取决于InputSource、Timer的自身描述，比如InputSource的UIEvent触发时机不一样、Timer的时间间隔不一样。
 	* **InputSource(CFRunLoopSource)**<br/>
-	InputSource就是RunLoop数据源的一种，它是一个抽象概念，它有具体的实现，如后面会提到的UIEvent、CFSocket、CFMachPort、CFMessagePort。在RunLoop里InputSource分为：source0、source1、自定义source
+	InputSource就是RunLoop数据源的一种，它是一个抽象概念，它有具体的实现，如后面会提到的UIEvent、CFSocket、CFMachPort、CFMessagePort。在RunLoop里InputSource分为：source0、source1、自定义source(也是source0或source1中的一种)
 		* **source0**: 处理App内部事件，App负责管理自己的事件触发，如：UIEvent(Touch事件等，GS发起到RunLoop运行再到事件回调到UI)、CFSocket
 		* **source1**: 由RunLoop和内核管理，由Mach port驱动，如CFMachPort、CFMessagePort。特别要注意一下Mach port，它是一个轻量级的进程间通讯的方式，可以理解为它是一个通讯通道，假如同时有几个进程都挂在这个通道上，那么某些进程向这个通道发送消息后，别一些挂在这个通道上的进程就可以收到相应的消息。这个Port的概念非常重要，因为它是让RunLoop休眠和被唤醒的关键，它是RunLoop与系统内核进行消息通讯的窗口。
 		* **自定义source**: 自定义的source也必须是source0和source1中的一种，然后可以被添加到RunLoop里运行。
@@ -158,6 +158,58 @@ categories:
 		};
 		
 	所以，我们可以用Observer监听RunLoop状态的变化，事实上Framework里很多机制都是由RunLoopObserver触发的。如CAAnimation，RunLoop应该是在收集完每一轮要做的事情后，在RunLoop一轮的后期(kCFRunLoopBeforeWaiting, kCFRunLoopAfterWaiting)来执行动画。
+	
+* **RunLoop运行的伪代码 <br/>**
+
+		int32_t __CFRunLoopRun()
+		{
+		    //通知即将进入runloop
+		    __CFRunLoopDoObservers(KCFRunLoopEntry);
+		
+		    do
+		    {
+		        // 通知将要处理timer和source
+		        __CFRunLoopDoObservers(kCFRunLoopBeforeTimers);
+		        __CFRunLoopDoObservers(kCFRunLoopBeforeSources);
+		
+		        __CFRunLoopDoBlocks();  //处理非延迟的主线程调用
+		        __CFRunLoopDoSource0(); //处理UIEvent事件
+		
+		        //GCD dispatch main queue
+		        CheckIfExistMessagesInMainDispatchQueue();
+		
+		        // 即将进入休眠
+		        __CFRunLoopDoObservers(kCFRunLoopBeforeWaiting);
+		
+		        // 等待内核mach_msg事件
+		        mach_port_t wakeUpPort = SleepAndWaitForWakingUpPorts();
+		
+		        // Zzz...
+		
+		        // 从等待中醒来
+		        __CFRunLoopDoObservers(kCFRunLoopAfterWaiting);
+		
+		        // 处理timer的唤醒
+		        if (wakeUpPort == timerPort)
+		            __CFRunLoopDoTimers();
+		
+		        // 处理异步方法唤醒,如dispatch_async
+		        else if (wakeUpPort == mainDispatchQueuePort)
+		            __CFRUNLOOP_IS_SERVICING_THE_MAIN_DISPATCH_QUEUE__()
+		
+		        // UI刷新,动画显示
+		        else
+		            __CFRunLoopDoSource1();
+		
+		        // 再次确保是否有同步的方法需要调用
+		        __CFRunLoopDoBlocks();
+		
+		    } while (!stop && !timeout);
+		
+		    //通知即将退出runloop
+		    __CFRunLoopDoObservers(CFRunLoopExit);
+		}
+
 			
 ####RunLoop与AutoRelease
 我们知道AutoRelease对象是被AutoReleasePool管理的，那么AutoRelease对象在什么时候被回收呢？可能有人会说在AutoReleasePool回收的时候。这样说没错，但是对于Application主线程的AutoReleasePool里的AutoRelease对象来说呢，因为Main AutoReleasePool是不会被回收的。带着这个问题，我们来分析一下：
