@@ -106,9 +106,11 @@ categories:
 那么结合RunLoop的不同模式以及App运行时有很多RunLoop，所以在RunLoop内部肯定是有一个RunLoopMode与InputSource/Timer的一对多的关系，即每个RunLoopMode都对应了多个不同的数据源(InputSource/Timer)。也就是说，一个RunLoop运行在某个RunLoopMode时，只会触发此模式下的InputSource、Timer集合，进而再回调到对应的Observer。至于RunLoopMode里的InputSource、Timer集合元素的执行先后顺序取决于InputSource、Timer的自身描述，比如InputSource的UIEvent触发时机不一样、Timer的时间间隔不一样。
 	* **InputSource(CFRunLoopSource)**<br/>
 	InputSource就是RunLoop数据源的一种，它是一个抽象概念，它有具体的实现，如后面会提到的UIEvent、CFSocket、CFMachPort、CFMessagePort。在RunLoop里InputSource分为：source0、source1、自定义source(也是source0或source1中的一种)
-		* **source0**: 处理App内部事件(特指非port-based事件，这里的事件是一个广义的事件，包括但不限于UI事件，)，App负责管理自己的事件触发，如：UIEvent(Touch事件等，GS发起到RunLoop运行再到事件回调到UI)
+		* **source0**: 处理App内部事件(特指non-port-based事件，这里的事件是一个广义的事件，包括但不限于UI事件)，App负责管理自己的事件触发，如：UIEvent(Touch事件等，GS发起到RunLoop运行再到事件回调到UI)
 		* **source1**: 由RunLoop和内核管理，由Mach port驱动（特指port-based事件），如CFMachPort、CFMessagePort、CFSocket。特别要注意一下Mach port，它是一个轻量级的进程间通讯的方式，可以理解为它是一个通讯通道，假如同时有几个进程都挂在这个通道上，那么某些进程向这个通道发送消息后，别一些挂在这个通道上的进程就可以收到相应的消息。这个Port的概念非常重要，因为它是让RunLoop休眠和被唤醒的关键，它是RunLoop与系统内核进行消息通讯的窗口。
-		* **自定义source**: 这里指的是广义上的手动创建的non-port-based和port-based source，所以是source0和source1中的一种，然后可以被添加到RunLoop里运行。
+		* **自定义source**: 这里指的是广义上的手动创建的non-port-based和port-based source，而不只是Apple在[文档](https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/Multithreading/RunLoopManagement/RunLoopManagement.html#//apple_ref/doc/uid/10000057i-CH16-SW20)中提到的Input Sources包含的Port-based input sources和Custom input sources中的Custom input sources，所以我叫它广义的自定义source，所以这里提到的自定义source是source0和source1中的一种，然后可以被添加到RunLoop里运行。
+
+				Input sources deliver events asynchronously to your threads. The source of the event depends on the type of the input source, which is generally one of two categories. Port-based input sources monitor your application’s Mach ports. Custom input sources monitor custom sources of events. As far as your run loop is concerned, it should not matter whether an input source is port-based or custom. The system typically implements input sources of both types that you can use as is. The only difference between the two sources is how they are signaled. Port-based sources are signaled automatically by the kernel, and custom sources must be signaled manually from another thread.
 		
 		在CFRunLoopSource的源码里，source0、source1是以一个union的数据结构存在的
 		
