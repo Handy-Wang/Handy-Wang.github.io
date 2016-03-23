@@ -28,7 +28,7 @@ categories:
 
 <!-- more -->
 
-![D_UIKit|QuarzCore|CoreGraphics关系图.jpg](http://upload-images.jianshu.io/upload_images/1672953-dbbee8aa6ca50dec.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![UIKit|QuarzCore|CoreGraphics关系图](https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/UIKit-QuarzCore-CoreGraphics-relations.jpg "UIKit|QuarzCore|CoreGraphics关系图")
 
 * **UIKit Framework**
 正如Apple官方文档对[UIKit Framework](http://www.baidu.com)的介绍，它主要提供了：界面呈现能力、事件响应能力、驱动RunLoop运行和与系统内核通信的数据。简单来说就是：主要负责界面展示、事件响应以及RunLoop运转动力。*UIView当然是属于UIKit Framework*。
@@ -47,7 +47,7 @@ categories:
 
 UIView与CALayer-界面渲染(Rendering)
 
-![D_UIView的显示流程图.jpg](http://upload-images.jianshu.io/upload_images/1672953-bceff4bc5ab8c115.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![UIView的显示流程图](https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/uiview_rendering_process.jpg "UIView的显示流程图")
 
 如图所示，RunLoop/CALayer/UIView之间的协作流程就非常清楚了。下面按图中步骤对流程作下讲解：
 
