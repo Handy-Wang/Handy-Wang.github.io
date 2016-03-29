@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "UIView与CALayer中动画的创建和执行过程"
-date: 2016-10-11 22:49:40 +0800
+date: 2015-10-11 22:49:40 +0800
 comments: true
 categories: 
 ---
