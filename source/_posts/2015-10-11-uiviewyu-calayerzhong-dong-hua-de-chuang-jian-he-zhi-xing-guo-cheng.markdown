@@ -25,7 +25,7 @@ CAAction即动画行为，它是一个protocol(CAAnimation实现了此protocol)�
 
 **CAAnimation的继承结构**
 
-![CAAnimation.jpg](http://upload-images.jianshu.io/upload_images/1672953-894f566c5de7b1e5.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![CAAnimation.jpg](https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/uiview_calayer_animation_creation_caanimation_hierarchy.jpg)
 
 **CATransaction**
 CATransacton是一个与动画相关的概念，它负责把多个对Layer或View的可动画属性的修改集中在一起一次性提交并执行，所以Animation应该需要被包含在CATransaction中的。CATransaction分为**隐式**和**显示**。 
@@ -88,7 +88,7 @@ CATransacton是一个与动画相关的概念，它负责把多个对Layer或Vie
 
 从以上代码中可以看到：为什么同样是对CALayer或UIView的相同属性作修改，而有些有动画而有些没有动画呢？带着这个疑问，我们接下来看下面这张图。
 
-![E_UIView:CALayer的动画创建及执行过程.jpg](http://upload-images.jianshu.io/upload_images/1672953-e19247ef714a05cf.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![E_UIView:CALayer的动画创建及执行过程.jpg](https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/uiview_calayer_animation_creation_callprocess.jpg)
 如上图，我来分别梳理一个修改CALayer和UIView属性时的动画创建过程(没错，其实不在动画块里修改属性也有动画创建过程存在的)。
 
 #####CALayer的动画创建和执行过程(如图中黑实线箭头及序号)
