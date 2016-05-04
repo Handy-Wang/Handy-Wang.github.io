@@ -12,14 +12,14 @@ iOS原生的 UITextField 和 UITextView 只支持文本内容的左、中、右�
 
 <!-- more -->
 
-![Screen Shot 2016-05-04 at 17.27.44.png](http://upload-images.jianshu.io/upload_images/1672953-f2853ea05cc533c5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![目标](https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/9point_alignment_textfield_textview1.png "目标")
 
 ###知识铺垫
 
 iOS7之后，UILabel / UITextField / UITextView的实现采用TextKit进行了替换，所以对于这个命题我主要需要关注TextKit. 
-下面以一张图来说明TextKit内部的关键类与UITextView的逻辑关系.
+下面以一张图来说明TextKit内部的关键类与UITextView的逻辑关系. 
 
-![TextKit类的协作.png](http://upload-images.jianshu.io/upload_images/1672953-97f127b005a7ad5e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![TextKit类的协作](https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/9point_alignment_textfield_textview2.png "TextKit类的协作")
 
 * 说明
   * NSTextStorage 存储着文本的样式信息且是NSAttribute的子类，可以把它近似看成NSAttributeString. NSTextStorage关联一个NSLayoutManager.
