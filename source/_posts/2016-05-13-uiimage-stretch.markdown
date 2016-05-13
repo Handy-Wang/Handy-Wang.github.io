@@ -9,16 +9,19 @@ categories:
 ## 一张可拉伸图片的定义－译自[iOS原文](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIImage_Class/#Defining a Stretchable Image)
 <br />
 一张可拉伸的图片其实给自己定义了一个区域，在这个区域内的图片内容以一种更美观优雅的方式被重复显示。可拉伸图片通常用于视图的背景，因为这种图片可以按拉伸区域的定义被撑大或缩小，从而以一种更美观的方式来填充视图区域。
+
+<!-- more -->
+
 <br />
 iOS提供了 `resizableImageWithCapInsets:`、`resizableImageWithCapInsets:resizingMode:` 两个方法来指定图片的拉伸区域。方法中的`insets`参数(insets = (top,left,bottom,right))把图片细分为了两个或多个区域，其中的top/left/bottom/right称为inset。给insets中的每个inset指定一个非零值，就可以把图片细分为9个区域，如下图。
 <br />
-> <img src="http://aligitlab.oss-cn-hangzhou-zmf.aliyuncs.com/uploads/AmapMobileWiki/amapDynamicUI/3b2e9563dd39156eebc87574b1f170a2/Figure_1.png" width="610.5" height="208" />
+> <img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/image_stretch1.png" width="610.5" height="208" />
 
 <br />
 从上图可以看出，每个inset的值给图片指定了一个不可以拉伸的区域。通过top inset和bottom inset在图片的上边和下边划定了两块不可拉伸的区域，通过left inset和right inset在图片的左边和右边划定了两块不可拉伸的区域。通过下图可以看出，当图片被拉伸时，这9块区域是怎么被拉伸的。显然四个角是没有被拉伸的，因为它们同时处于横向和纵向的inset区域。
 
 <br />
-> <img src="http://aligitlab.oss-cn-hangzhou-zmf.aliyuncs.com/uploads/AmapMobileWiki/amapDynamicUI/066076292a7636b80539f77926d7a110/Figure_2.png" width="486" height="153" />
+> <img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/image_stretch2.png" width="486" height="153" />
 
 ***
 
@@ -42,7 +45,7 @@ iOS提供了 `resizableImageWithCapInsets:`、`resizableImageWithCapInsets:resiz
 
 * 原图
 
-> ![heart](http://aligitlab.oss-cn-hangzhou-zmf.aliyuncs.com/uploads/AmapMobileWiki/amapDynamicUI/194b7c76fb98873f91b89a81c83e5aa9/heart.png)
+> ![image_stretch3.png](https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/image_stretch3.png)
 
 * 保护区域、可拉伸区域图
 
@@ -52,7 +55,7 @@ iOS提供了 `resizableImageWithCapInsets:`、`resizableImageWithCapInsets:resiz
 
 所以，最后拉伸后的效果如下图左侧模拟器里。
 
-> ![Screen_Shot_2016-05-13_at_14.47.55](http://aligitlab.oss-cn-hangzhou-zmf.aliyuncs.com/uploads/AmapMobileWiki/amapDynamicUI/a0f9722d12327a3f82277ee62c4c6433/Screen_Shot_2016-05-13_at_14.47.55.png)
+> ![image_stretch4.png](https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/image_stretch4.png)
 
 ## iOS Xcode里的image slicing功能
 
@@ -68,12 +71,12 @@ Xcode5开始支持Image Slicing功能，即通过可视化的方式给图片指�
 Image Slicing功能默认是把可拉伸区域定义为1x1日区域(如下图红色画框部分)，运行的图片效果是左侧模拟器里上面一张黑图。左侧模拟器里下面一张黑图是通过上面提到两个SDK方法指定的保护区域，显然这两种方式运行出来的图片效果不一致。这是因为SDK方法指定的保护区域算出来的拉伸区域为50x27，即：130-2*40-50，107-2*40=27。
 
 <br />
-![_40_40_40_40__E7_9A_84_E9_BB_98_E8_AE_A4slicing-_E6_A0_87_E8_AE_B0](http://aligitlab.oss-cn-hangzhou-zmf.aliyuncs.com/uploads/AmapMobileWiki/amapDynamicUI/ba7495e88c89f7eba2e2711e4e1c30be/_40_40_40_40_%E7%9A%84%E9%BB%98%E8%AE%A4slicing-%E6%A0%87%E8%AE%B0.jpg)
+![image_stretch5.jpg](https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/image_stretch5.jpg)
 
 <br />
 想要通过Image Slicing功能划分保护区域的图片的最终显示效果与SDK划分的一致，只需要修改Image Slicing里的拉伸区域大小(如下图)，这同时也说明了在Image Slicing功能里，虽然划定了保护区域的但仍可以调整拉伸区域的大小，而SDK方式的拉伸区域的大小是计算出来的。
 
-![_40_40_40_40_slicing-_E6_A0_87_E8_AE_B0](http://aligitlab.oss-cn-hangzhou-zmf.aliyuncs.com/uploads/AmapMobileWiki/amapDynamicUI/4f2b810dc48d7c448478224e905c92e6/_40_40_40_40_slicing-%E6%A0%87%E8%AE%B0.jpg)
+![image_stretch6.jpg](https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/image_stretch6.jpg)
 
 完结。
 
