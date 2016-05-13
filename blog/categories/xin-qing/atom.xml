@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: 心情 | Handy's]]></title>
+  <link href="http://blog.handy.wang/blog/categories/xin-qing/atom.xml" rel="self"/>
+  <link href="http://blog.handy.wang/"/>
+  <updated>2016-05-13T16:11:00+08:00</updated>
+  <id>http://blog.handy.wang/</id>
+  <author>
+    <name><![CDATA[Handy.Wang]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[重生]]></title>
+    <link href="http://blog.handy.wang/blog/2013/12/08/zhong-sheng/"/>
+    <updated>2013-12-08T21:35:09+08:00</updated>
+    <id>http://blog.handy.wang/blog/2013/12/08/zhong-sheng</id>
+    <content type="html"><![CDATA[<p>『重生』－佛经天龙八部中提到的迦楼罗，500年涅磐一次，凤凰涅槃。笔者也是想了许久决定引用此名作为第一篇文章的名字。</p>
+
+<p>其实，对于笔者来说，这里有几个意思，细细道来。</p>
+
+<!--more-->
+
+
+<p>这其一，便是许久没有写博文了，大致也有一年吧。</p>
+
+<p>这其二，那是，额。。。其实，有一个事儿我已经纠结了几年。刚才工作那会儿，对技术的渴望是发自内心的狂野的，所以只要是浏览到自以为好的技术就要收藏到浏览器里，但是重装系统时总会
+忘备份，又或是那个网页在要用的时候打不开了；后来，我开始在JavaEye上写博文了，关键技术、心得、笔记等都一股脑儿的往上放，也分了些类别，但是我觉得麻烦，还觉得乱，
+界面不Too Simple Too Easy；再后来，我觉得把重要东西放在网上不靠谱，遇到要记录或笔记的都虚拟打印成PDF文件存在电脑里；再再后来，貌似EverNote开始流行了，我也开始臭屁了，
+各种Note stack、Note分类搞了一片一片的，那个看上去NB呀，但是每次都要登录再往里写，现在时间一长我找个文章好一个费劲；再再再后来。。。，好了不说了。这么多种方式我必须在这里
+把它们统一起来。</p>
+
+<p>这其三，额，理由好难想。。。，嗯，对了，昨天『蛋蛋』借了我一本《淘宝技术这十年》，看了三分之一了，各种NB技术术语，各种NB的Cache，各种NB的FS(FileSystem)，这，更坚定了我写博文
+的决心，平时必须要有技术积累，各种架构重构。</p>
+
+<p>这其四，真的，Octopress的UI风格纯净，我喜欢！目标很单纯，就是为了写博客而写博客，而且目前我所它架在github里了。</p>
+
+<p>这些理由充分吗，呵呵，其实就是想自己的博文在这里改头换面并一直坚持下去，让每一篇文章都充满故事。</p>
+
+<p>这篇也有故事。写到这里，Octopress让我有一种似曾相识的感觉，是的，多年前我就在github上用Liquid写过主页，向我推荐的这个人是一位故友－Zigzag</p>
+
+<p>已逝的行为、精神、灵魂，涅槃重生吧。</p>
+]]></content>
+  </entry>
+  
+</feed>

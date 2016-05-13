@@ -1,0 +1,697 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Mac OS下搭建APNS推送服务器(Apache+PHP) - Handy's</title>
+  <meta name="author" content="Handy.Wang">
+
+  
+  <meta name="description" content="配置Apache+PHP Mac OS自带Apache服务器和PHP，所以只需少许配置便可将它派上用场 1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+1）启动Apache服务器
+打开“终端（terminal）”，然后（注意， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.handy.wang/blog/2013/12/19/mac-osxia-da-jian-apnstui-song-fu-wu-qi">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Handy's" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//libs.baidu.com/jquery/1.7.2/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Fjalla+One" rel="stylesheet" type="text/css">
+<!--- MathJax Configuration -->
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+</head>
+
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Handy's</a></h1>
+  
+    <h2>Stay hungry, stay foolish.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscribe" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS" target="_blank"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25" viewbox="0 0 100 100"><path class="social" d="M 13.310204,73.332654 C 5.967347,73.332654 0,79.322448 0,86.621428 c 0,7.338776 5.967347,13.262246 13.310204,13.262246 7.370408,0 13.328572,-5.92245 13.328572,-13.262246 0,-7.29898 -5.958164,-13.288774 -13.328572,-13.288774 z M 0.01530612,33.978572 V 53.143878 C 12.493878,53.143878 24.229592,58.02347 33.068368,66.865306 41.894898,75.685714 46.767346,87.47449 46.767346,100 h 19.25 C 66.017346,63.592858 36.4,33.979592 0.01530612,33.978572 l 0,0 z M 0.03877552,0 V 19.17449 C 44.54796,19.17551 80.77551,55.437756 80.77551,100 H 100 C 100,44.87653 55.15102,0 0.03877552,0 z"></path></svg></a></li>
+  
+</ul>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    
+      <form action="https://www.google.com/search" method="get">
+        <fieldset role="search">
+          <input type="hidden" name="sitesearch" value="blog.handy.wang" />
+    
+          <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+        </fieldset>
+      </form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>	
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      
+        <h1 class="entry-title">Mac OS下搭建APNS推送服务器(Apache+PHP)</h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+        
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h3>配置Apache+PHP</h3>
+
+
+<p>Mac OS自带Apache服务器和PHP，所以只需少许配置便可将它派上用场</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>1）启动Apache服务器
+</span><span class='line'>打开“终端（terminal）”，然后（注意，sudo需要的密码就是系统的root帐号密码）运行“sudo apachectl start”
+</span><span class='line'>再输入帐号密码这样Apache就运行了。如此在浏览器中输入“http://localhost”就可以看到一个内容为“It works!”
+</span><span class='line'>的页面。其位于“/Library/WebServer/Documents/”下，这就是Apache的默认根目录
+</span><span class='line'>
+</span><span class='line'>2）配置Apache支持PHP
+</span><span class='line'>在终端中运行“sudo vi /etc/apache2/httpd.conf”，打开Apache的配置文件。
+</span><span class='line'>找到“#LoadModule php5_module libexec/apache2/libphp5.so”，把前面的#号去掉，
+</span><span class='line'>保存（在命令行输入:w）并退出vi（在命令行输入:q）。运行“sudo apachectl restart”，
+</span><span class='line'>重启Apache，这样PHP就可以用了。
+</span><span class='line'>
+</span><span class='line'>3）测试PHP在Apache中运行是否正常
+</span><span class='line'>运行“sudo cp /Library/WebServer/Documents/index.html.en /Library/WebServer/Documents/info.php”
+</span><span class='line'>即在Apache的根目录下复制index.html.en文件并重命名为info.php。
+</span><span class='line'>在终端中运行“sudo vi /Library/WebServer/Document/info.php”，这样就可以在vi中编辑info.php文件了。
+</span><span class='line'>在“It’s works!”后面加上“&lt;?php phpinfo(); ?&gt;”，然后保存之。如此就可以在http://localhost/info.php中看到
+</span><span class='line'>有关PHP的信息，比如10.8中内置PHP版本号是5.3.13。</span></code></pre></td></tr></table></div></figure>
+
+
+<!--more-->
+
+
+<h3>制作Pem文件</h3>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>1）打开keychain，选择左上Keychains区域中的login，再选择左下Category区域中的My Certificates，
+</span><span class='line'>然后在右边找到项目使用的Push证书(注意：当有developement和production时一定要记住你导出的是哪个)
+</span><span class='line'>后面做测试时无论是打包还是直接build在device的App都要使用对应的codesign.
+</span><span class='line'>
+</span><span class='line'>2）分别把Certificate和key的p12导出，命名为cert.p12和key.p12
+</span><span class='line'>
+</span><span class='line'>3）打开terminal运行以下代码：
+</span><span class='line'>    openssl pkcs12 -clcerts -nokeys -out cert.pem -in cert.p12
+</span><span class='line'>    openssl pkcs12 -nocerts -out key.pem -in key.p12
+</span><span class='line'>    openssl rsa -in key.pem -out key-noenc.pem
+</span><span class='line'>    cat cert.pem key-noenc.pem &gt; apns.pem
+</span><span class='line'>把最后生成的apns.pem保管好</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<h3>编写PHP页面</h3>
+
+
+<p>在Apache根录下新建一个index.php文件，代码如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;html&gt;
+</span><span class='line'>&lt;head&gt;
+</span><span class='line'>  &lt;title&gt;Push Simulator&lt;/title&gt;
+</span><span class='line'>  &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
+</span><span class='line'>  &lt;meta id="viewport" name="viewport"content="width=320; initial-scale=1.0;maximum-scale=1.0;user-scalable=no;"/&gt;
+</span><span class='line'>  &lt;script language="javascript"&gt;
+</span><span class='line'>      function onTokenChange(value) {
+</span><span class='line'>          if (value == "other") {
+</span><span class='line'>              var token_other = document.getElementById("token_other");
+</span><span class='line'>              token_other.style.display = "inline"
+</span><span class='line'>          }
+</span><span class='line'>          else {
+</span><span class='line'>              var token_other = document.getElementById("token_other");
+</span><span class='line'>              token_other.style.display = "none"
+</span><span class='line'>          }
+</span><span class='line'>      };
+</span><span class='line'>  &lt;/script&gt;
+</span><span class='line'>&lt;/head&gt;
+</span><span class='line'>&lt;body&gt;
+</span><span class='line'>  &lt;h2 style="border-bottom:red solid 1px;"&gt;Push Simulator&lt;/h2&gt;
+</span><span class='line'>  &lt;form action="a.php" method="post"&gt;
+</span><span class='line'>      &lt;div&gt;Badge number&lt;/div&gt;
+</span><span class='line'>      &lt;div&gt;
+</span><span class='line'>          &lt;input style="width:40px;" value="1" name="badgeNumber"&gt;&lt;/input&gt;
+</span><span class='line'>      &lt;/div&gt;
+</span><span class='line'>      &lt;br /&gt;
+</span><span class='line'>
+</span><span class='line'>      &lt;div&gt;Alert message&lt;/div&gt;
+</span><span class='line'>      &lt;div&gt;
+</span><span class='line'>          &lt;input style="width:150px;" value="新消息内容" name="msg"&gt;&lt;/input&gt;
+</span><span class='line'>      &lt;/div&gt;
+</span><span class='line'>      &lt;br /&gt;
+</span><span class='line'>
+</span><span class='line'>      &lt;div&gt;Link2&lt;/div&gt;
+</span><span class='line'>      &lt;div&gt;
+</span><span class='line'>          &lt;input style="width:450px;" value="video://vid=1605673&mid=10348504&columnId=117&channelId=1" name="link2"&gt;&lt;/input&gt;
+</span><span class='line'>      &lt;/div&gt;
+</span><span class='line'>      &lt;br /&gt;
+</span><span class='line'>
+</span><span class='line'>      &lt;div&gt;
+</span><span class='line'>          Token:
+</span><span class='line'>          &lt;select name="token" id="tokenSelect" onchange="onTokenChange(this.options[this.options.selectedIndex].value);"&gt;
+</span><span class='line'>              &lt;option value="4e52bb2a215643c0da52477177ba19793720ebc17ec5a38aa853a68a22ab7f93"&gt;token1&lt;/option&gt;
+</span><span class='line'>              &lt;option value="other"&gt;Other&lt;/option&gt;
+</span><span class='line'>          &lt;/select&gt;
+</span><span class='line'>          &lt;input style="width:450px;display:none;" value="" id="token_other" name="token_other"&gt;
+</span><span class='line'>      &lt;/div&gt;
+</span><span class='line'>      &lt;div&gt;
+</span><span class='line'>          Schema:
+</span><span class='line'>          &lt;select name="schema"&gt;
+</span><span class='line'>              &lt;option value="apns.pem"&gt;apns.pem&lt;/option&gt;
+</span><span class='line'>          &lt;/select&gt;
+</span><span class='line'>      &lt;/div&gt;
+</span><span class='line'>      &lt;br /&gt;
+</span><span class='line'>
+</span><span class='line'>      &lt;div&gt;
+</span><span class='line'>          &lt;input type="submit" value="发送"&gt;&lt;/input&gt;
+</span><span class='line'>      &lt;/div&gt;
+</span><span class='line'>  &lt;/form&gt;
+</span><span class='line'>&lt;/body&gt;
+</span><span class='line'>&lt;/html&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>再在Apache根录下新建一个a.php文件(这个文件才是真正用来发推送的)，代码如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+<span class='line-number'>92</span>
+<span class='line-number'>93</span>
+<span class='line-number'>94</span>
+<span class='line-number'>95</span>
+<span class='line-number'>96</span>
+<span class='line-number'>97</span>
+<span class='line-number'>98</span>
+<span class='line-number'>99</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;?php
+</span><span class='line'>/*
+</span><span class='line'>* 文件名称：Lib_Push_IPhone_Server.php
+</span><span class='line'>* 摘    要：苹果PUSH发送类
+</span><span class='line'>* 版    本：1.0
+</span><span class='line'>*/
+</span><span class='line'>class Lib_Push_IPhone_Server  {
+</span><span class='line'>  //发布版的server：gateway.push.apple.com 开发版：gateway.sandbox.push.apple.com
+</span><span class='line'>  private $apnsHost = 'gateway.sandbox.push.apple.com';
+</span><span class='line'>  private $apnsPort = '2195';
+</span><span class='line'>  private $sslPem = ''; //开发版本和发布版的pem不一样，用不同的证书生成
+</span><span class='line'>  private $passPhrase = 'sohu';
+</span><span class='line'>  private $apnsConnection = null ;
+</span><span class='line'> 
+</span><span class='line'>  public function __destruct(){
+</span><span class='line'>  //退出时，关闭到苹果服务器的连接
+</span><span class='line'>      $this-&gt;closeConnections();
+</span><span class='line'>      }
+</span><span class='line'> 
+</span><span class='line'>  //建立到苹果服务器的连接
+</span><span class='line'>  function connectToAPNS($pem) {
+</span><span class='line'>      $streamContext = stream_context_create();
+</span><span class='line'>      stream_context_set_option($streamContext, 'ssl', 'local_cert', $pem);
+</span><span class='line'>      $this-&gt;apnsConnection = stream_socket_client('ssl://'.$this-&gt;apnsHost.':'.$this-&gt;apnsPort, $error, $errorString, 60, STREAM_CLIENT_CONNECT, $streamContext);
+</span><span class='line'>      if($this-&gt;apnsConnection == false) {
+</span><span class='line'>          $this-&gt;Nslog("Failed to connect {".$error."} {".$errorString."}");
+</span><span class='line'>          $this-&gt;closeConnections();
+</span><span class='line'>      }
+</span><span class='line'>  }
+</span><span class='line'> 
+</span><span class='line'>  //发送消息到苹果
+</span><span class='line'>  function sendNotification($deviceToken, $message) {
+</span><span class='line'>      if(!$this-&gt;apnsConnection){
+</span><span class='line'>          $this-&gt;connectToAPNS();
+</span><span class='line'>      }
+</span><span class='line'>      $apnsMessage = chr(0) . chr(0) . chr(32) . pack('H*', str_replace(' ', '', $deviceToken)) . chr(0) . chr(strlen($message)) . $message;
+</span><span class='line'>      return fwrite($this-&gt;apnsConnection, $apnsMessage);
+</span><span class='line'>  }
+</span><span class='line'> 
+</span><span class='line'>  //关闭到苹果服务器的连接
+</span><span class='line'>  function closeConnections() {
+</span><span class='line'>      fclose($this-&gt;apnsConnection);
+</span><span class='line'>  }
+</span><span class='line'> 
+</span><span class='line'>  function NsLog($logmsg) {
+</span><span class='line'>      print date("Y-m-d H:i:s")."\t".$logmsg."\n";
+</span><span class='line'>  }
+</span><span class='line'>}
+</span><span class='line'>?&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;?php
+</span><span class='line'>    //=========================
+</span><span class='line'>    $schema           = $_POST['schema'];
+</span><span class='line'>    $badgeNumber  = $_POST['badgeNumber'];
+</span><span class='line'>    $msg          = $_POST['msg'];
+</span><span class='line'>    $link2            = $_POST['link2'];
+</span><span class='line'>    $token            = $_POST['token'];
+</span><span class='line'>    $token_other  = $_POST['token_other'];
+</span><span class='line'>    if ($token == 'other') {
+</span><span class='line'>        $token = $token_other;
+</span><span class='line'>    }
+</span><span class='line'>
+</span><span class='line'>    $body = array();
+</span><span class='line'>    $body['aps'] = array('alert' =&gt; $msg);
+</span><span class='line'>    $body['aps']['badge'] = $badgeNumber;
+</span><span class='line'>    $body['url'] = $link2;
+</span><span class='line'>    $payload = json_encode($body);
+</span><span class='line'>    $push = new Lib_Push_IPhone_Server();
+</span><span class='line'>
+</span><span class='line'>    $push-&gt;connectToAPNS($schema);
+</span><span class='line'>    $push-&gt;sendNotification($token, $payload);
+</span><span class='line'>    $push-&gt;closeConnections();
+</span><span class='line'>?&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;title&gt;iOS PushNotification Simulator&lt;/title&gt;
+</span><span class='line'>&lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
+</span><span class='line'>&lt;meta id="viewport" name="viewport"content="width=320; initial-scale=1.0;maximum-scale=1.0;user-scalable=no;"/&gt;
+</span><span class='line'>&lt;body&gt;
+</span><span class='line'>    &lt;div&gt;&lt;a href="javascript:history.back();"&gt;&lt;&lt;&lt;&lt;返回&lt;/a&gt;&lt;/div&gt;
+</span><span class='line'>    &lt;div&gt;Schema&lt;/div&gt;
+</span><span class='line'>    &lt;div&gt;&lt;?=$schema?&gt;&lt;/div&gt;
+</span><span class='line'>    &lt;br /&gt;
+</span><span class='line'>    
+</span><span class='line'>    &lt;div&gt;Badge Number&lt;/div&gt;
+</span><span class='line'>    &lt;div&gt;&lt;?=$badgeNumber?&gt;&lt;/div&gt;
+</span><span class='line'>    &lt;br /&gt;
+</span><span class='line'>    
+</span><span class='line'>    &lt;div&gt;Alert Message&lt;/div&gt;
+</span><span class='line'>    &lt;div&gt;&lt;?=$msg?&gt;&lt;/div&gt;
+</span><span class='line'>    &lt;br /&gt;
+</span><span class='line'>
+</span><span class='line'>    &lt;div&gt;Link2&lt;/div&gt;
+</span><span class='line'>    &lt;div&gt;&lt;?=$link2?&gt;&lt;/div&gt;
+</span><span class='line'>    &lt;br /&gt;
+</span><span class='line'>    
+</span><span class='line'>    &lt;div&gt;Token&lt;/div&gt;
+</span><span class='line'>    &lt;div&gt;&lt;?=$token?&gt;&lt;/div&gt;
+</span><span class='line'>    &lt;br /&gt;
+</span><span class='line'>&lt;/body&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>再把apns.pem拷到Apache根目录下，然后重启Apche: sudo apachectl restart</p>
+
+<h3>配置index.php为默认首页</h3>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>找到
+</span><span class='line'>&lt;IfModule dir_module&gt;
+</span><span class='line'>    DirectoryIndex index.html
+</span><span class='line'>&lt;/IfModule&gt;
+</span><span class='line'>修改为
+</span><span class='line'>&lt;IfModule dir_module&gt;
+</span><span class='line'>    DirectoryIndex index.php index.html
+</span><span class='line'>&lt;/IfModule&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>重启Apche: sudo apachectl restart</p>
+
+<h3>测试</h3>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>在浏览器地址栏里输入http://apache服务器地址，如:http://localhost，便能看到index.php页面。
+</span><span class='line'>在这个页面填写相关参数便可以发送。</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<h3>注意要点</h3>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>1）导出cert.p12和key.p12时的p12一定要是最后测试的App对应用的codesign
+</span><span class='line'>即：developent的p12对应Debug模式的App，production的p12对应AppStore模式的App
+</span><span class='line'>
+</span><span class='line'>2）生成pem时一定要小心
+</span><span class='line'>
+</span><span class='line'>3）在index.php页面测试时，一定要选择对的schema（即pem，目前只有一种，
+</span><span class='line'>我的项目中有多种：debug和debug-inhouse）填对token，
+</span><span class='line'>这个token要以xcode输出的为准，因为它会变化</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<h3>GOOD LUCK!!!</h3>
+
+
+
+
+<h3>参考</h3>
+
+
+<ol style="margin-top:-18px; padding-left:28px;">
+    <li style="padding-bottom:10px;">
+        <a target="_blank" href="http://dancewithnet.com/2010/05/09/run-apache-php-mysql-in-mac-os-x/">在Mac OS X中配置Apache＋PHP＋MySQL</a><br/>
+    </li>
+    <li>
+        <a target="_blank" href="http://stackoverflow.com/questions/11536587/creating-pem-file-for-push-notification">Creating.pem file for push notification</a><br/>
+    </li>
+</ol>
+
+
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+
+
+  <span class="byline author vcard">Authored by <span class="fn">
+  
+    Handy.Wang
+  
+  </span></span>
+
+
+      
+
+
+
+
+
+      
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/apns/'>APNS</a>, <a class='category' href='/blog/categories/apache/'>Apache</a>, <a class='category' href='/blog/categories/php/'>PHP</a>, <a class='category' href='/blog/categories/ios/'>iOS</a>, <a class='category' href='/blog/categories/tui-song/'>推送</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.handy.wang/blog/2013/12/19/mac-osxia-da-jian-apnstui-song-fu-wu-qi/" data-via="" data-counturl="http://blog.handy.wang/blog/2013/12/19/mac-osxia-da-jian-apnstui-song-fu-wu-qi/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/12/17/ios-app-uidiao-shi-gong-ju2/" title="Previous Post: iOS App UI调试工具（二）· Realtime Debug Portal">&laquo; iOS App UI调试工具（二）· Realtime Debug Portal</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/12/26/you-kios6memorywarningyin-fa-de-si-kao/" title="Next Post: 由kIOS6MEMORYWARNING引发的思考">由kIOS6MEMORYWARNING引发的思考 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+
+</div>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - Handy.Wang -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> | Themed with <a href="https://github.com/lucaslew/whitespace">Whitespace</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

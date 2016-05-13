@@ -1,0 +1,3443 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Handy's]]></title>
+  <link href="http://blog.handy.wang/atom.xml" rel="self"/>
+  <link href="http://blog.handy.wang/"/>
+  <updated>2016-05-13T16:11:00+08:00</updated>
+  <id>http://blog.handy.wang/</id>
+  <author>
+    <name><![CDATA[Handy.Wang]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[UIImage Stretch]]></title>
+    <link href="http://blog.handy.wang/blog/2016/05/13/uiimage-stretch/"/>
+    <updated>2016-05-13T15:05:40+08:00</updated>
+    <id>http://blog.handy.wang/blog/2016/05/13/uiimage-stretch</id>
+    <content type="html"><![CDATA[<h2>一张可拉伸图片的定义－译自<a href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIImage_Class/#Defining%20a%20Stretchable%20Image">iOS原文</a></h2>
+
+<br />
+
+
+<p>一张可拉伸的图片其实给自己定义了一个区域，在这个区域内的图片内容以一种更美观优雅的方式被重复显示。可拉伸图片通常用于视图的背景，因为这种图片可以按拉伸区域的定义被撑大或缩小，从而以一种更美观的方式来填充视图区域。</p>
+
+<br />
+
+
+<p>iOS提供了 <code>resizableImageWithCapInsets:</code>、<code>resizableImageWithCapInsets:resizingMode:</code> 两个方法来指定图片的拉伸区域。方法中的<code>insets</code>参数(insets = (top,left,bottom,right))把图片细分为了两个或多个区域，其中的top/left/bottom/right称为inset。给insets中的每个inset指定一个非零值，就可以把图片细分为9个区域，如下图。</p>
+
+<br />
+
+
+<blockquote><p><img src="http://aligitlab.oss-cn-hangzhou-zmf.aliyuncs.com/uploads/AmapMobileWiki/amapDynamicUI/3b2e9563dd39156eebc87574b1f170a2/Figure_1.png" width="610.5" height="208" /></p></blockquote>
+
+<br />
+
+
+<p>从上图可以看出，每个inset的值给图片指定了一个不可以拉伸的区域。通过top inset和bottom inset在图片的上边和下边划定了两块不可拉伸的区域，通过left inset和right inset在图片的左边和右边划定了两块不可拉伸的区域。通过下图可以看出，当图片被拉伸时，这9块区域是怎么被拉伸的。显然四个角是没有被拉伸的，因为它们同时处于横向和纵向的inset区域。</p>
+
+<br />
+
+
+<blockquote><p><img src="http://aligitlab.oss-cn-hangzhou-zmf.aliyuncs.com/uploads/AmapMobileWiki/amapDynamicUI/066076292a7636b80539f77926d7a110/Figure_2.png" width="486" height="153" /></p></blockquote>
+
+<hr />
+
+<h2>图片保护区域</h2>
+
+<p>基于上面Apple对图片拉伸的描述，下面从实例例子出发来讲讲图片的保护区域</p>
+
+<br />
+
+
+<p>开发中常常需要对图片进行拉伸操作，如果控件的宽高比例和要显示的图片的宽高比例不同的话，图片将不会按照自身宽高比进行拉伸或者收缩，导致最终显示的图片效果变差，因此常常需要对图片进行特殊处理(按一定规则进行拉伸或者收缩)。为了使得拉伸后的图片具有美观的效果，这里要提到一个“保护”或者英文“cap”的概念。
+为了保护图片在拉伸的过程中保持美观，因此我们需要知道图片要被保护的区域，即图片的上下左右各要保护多少，这样在拉伸的时候就会只拉伸非保护区域，即用非保护区域的像素来填充视图的拉伸空间。最终，水平拉伸的填充取决于左右保护区域的多少，垂直方向的填充取决于上下保护区域的多少。</p>
+
+<h3>用于描述图片保护区域的字符串格式</h3>
+
+<p>字符串内包含了上、左、下、右四个方向需要保护的大小的值：“topValue,leftValue,bottomValue,rightValue”，也可简写为&#8221;value&#8221;，&#8221;value&#8221; 等价于&#8221;value, value, value, value&#8221;，即上左下右四个方向需要保护的尺寸是一样的。</p>
+
+<p>如：“20,40,20,40”，&#8221;40&#8221;，&#8221;40&#8221; = &ldquo;40,40,40,40&rdquo;</p>
+
+<h3>示例</h3>
+
+<p>以一个宽、高分别为&#8221;130, 107&#8221;的图片为例，设置图片保护区域为： &ldquo;40, 40, 40, 40&rdquo;</p>
+
+<ul>
+<li>原图</li>
+</ul>
+
+
+<blockquote><p><img src="http://aligitlab.oss-cn-hangzhou-zmf.aliyuncs.com/uploads/AmapMobileWiki/amapDynamicUI/194b7c76fb98873f91b89a81c83e5aa9/heart.png" alt="heart" /></p></blockquote>
+
+<ul>
+<li>保护区域、可拉伸区域图</li>
+</ul>
+
+
+<p>保护区域为：右则九宫格图四个角的区域</p>
+
+<p>非保护区域为：右则九宫格图的“井”字区域</p>
+
+<p>所以，最后拉伸后的效果如下图左侧模拟器里。</p>
+
+<blockquote><p><img src="http://aligitlab.oss-cn-hangzhou-zmf.aliyuncs.com/uploads/AmapMobileWiki/amapDynamicUI/a0f9722d12327a3f82277ee62c4c6433/Screen_Shot_2016-05-13_at_14.47.55.png" alt="Screen_Shot_2016-05-13_at_14.47.55" /></p></blockquote>
+
+<h2>iOS Xcode里的image slicing功能</h2>
+
+<p>看完以上内容已经完全可以了解stretch的概念了，那么既然已经看到这里了，我再多聊聊<code>iOS Xcode里的image slicing功能</code>。</p>
+
+<br />
+
+
+<p>Xcode5开始支持Image Slicing功能，即通过可视化的方式给图片指定CapInsets。一张图片通过这个功能设定好CapInsets后，在代码里不用调用上面提到的两个方法来指定保护区域，直接加载图片就可以按设定的CapInsets来拉伸图片，对于Image Slicing功能的使用很简单就不多说了。</p>
+
+<br />
+
+
+<p>下面才是我想说的主要内容。仍以上面为例｀以一个宽、高分别为&#8221;130, 107&#8221;的图片为例，设置图片保护区域为： &ldquo;40, 40, 40, 40&#8221;｀</p>
+
+<br />
+
+
+<p>Image Slicing功能默认是把可拉伸区域定义为1x1日区域(如下图红色画框部分)，运行的图片效果是左侧模拟器里上面一张黑图。左侧模拟器里下面一张黑图是通过上面提到两个SDK方法指定的保护区域，显然这两种方式运行出来的图片效果不一致。这是因为SDK方法指定的保护区域算出来的拉伸区域为50x27，即：130-2<em>40-50，107-2</em>40=27。</p>
+
+<br />
+
+
+<p><img src="http://aligitlab.oss-cn-hangzhou-zmf.aliyuncs.com/uploads/AmapMobileWiki/amapDynamicUI/ba7495e88c89f7eba2e2711e4e1c30be/_40_40_40_40_%E7%9A%84%E9%BB%98%E8%AE%A4slicing-%E6%A0%87%E8%AE%B0.jpg" alt="_40_40_40_40__E7_9A_84_E9_BB_98_E8_AE_A4slicing-_E6_A0_87_E8_AE_B0" /></p>
+
+<br />
+
+
+<p>想要通过Image Slicing功能划分保护区域的图片的最终显示效果与SDK划分的一致，只需要修改Image Slicing里的拉伸区域大小(如下图)，这同时也说明了在Image Slicing功能里，虽然划定了保护区域的但仍可以调整拉伸区域的大小，而SDK方式的拉伸区域的大小是计算出来的。</p>
+
+<p><img src="http://aligitlab.oss-cn-hangzhou-zmf.aliyuncs.com/uploads/AmapMobileWiki/amapDynamicUI/4f2b810dc48d7c448478224e905c92e6/_40_40_40_40_slicing-%E6%A0%87%E8%AE%B0.jpg" alt="_40_40_40_40_slicing-_E6_A0_87_E8_AE_B0" /></p>
+
+<p>完结。</p>
+
+<h2>参考</h2>
+
+<ul>
+<li><a href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIImage_Class/">Defining a Stretchable Image</a></li>
+<li><a href="https://onevcat.com/2013/06/new-in-xcode5-and-objc/">WWDC 2013 Session笔记 &ndash; Xcode5和ObjC新特性</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[扩展UITextView &amp; UITextField支持九宫格对齐方式]]></title>
+    <link href="http://blog.handy.wang/blog/2016/05/04/kuo-zhan-uitextview-and-uitextfieldzhi-chi-jiu-gong-ge-dui-qi-fang-shi/"/>
+    <updated>2016-05-04T21:27:05+08:00</updated>
+    <id>http://blog.handy.wang/blog/2016/05/04/kuo-zhan-uitextview-and-uitextfieldzhi-chi-jiu-gong-ge-dui-qi-fang-shi</id>
+    <content type="html"><![CDATA[<h3>目标</h3>
+
+<p>iOS原生的 UITextField 和 UITextView 只支持文本内容的左、中、右对齐，但是目前我的需求是需要让UITextField 和 UITextView 支持9宫格对齐方式，并能按此对齐方式进行正常输入，如下图：</p>
+
+<!-- more -->
+
+
+<p><img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/9point_alignment_textfield_textview1.png" title="目标" alt="目标" /></p>
+
+<h3>知识铺垫</h3>
+
+<p>iOS7之后，UILabel / UITextField / UITextView的实现采用TextKit进行了替换，所以对于这个命题我主要需要关注TextKit.
+下面以一张图来说明TextKit内部的关键类与UITextView的逻辑关系.</p>
+
+<p><img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/9point_alignment_textfield_textview2.png" title="TextKit类的协作" alt="TextKit类的协作" /></p>
+
+<ul>
+<li><p>说明</p>
+
+<ul>
+<li>NSTextStorage 存储着文本的样式信息且是NSAttribute的子类，可以把它近似看成NSAttributeString. NSTextStorage关联一个NSLayoutManager.</li>
+<li>NSLayoutManager  负责布局动作的类，把文本按其样式信息放到NSTextContainer里进行布局排版. NSLayoutManager关联一个NSTextContainer.</li>
+<li>NSTextContainer 提供给NSLayoutManager用于排版的布局空，当然这肯定是根据文本信息计算出来的. 图中的黑块部分就是最终文本被填充上去的区域.</li>
+<li>UITextView 以上三步都是计算的过程，从NS打头可以看出去显示无关。UITextView则提供了显示的空间，继承自UIScrollView，它包含了一个NSTextContainer用于显示以上三步计算出来的结果. 图中的黑块部分同上，蓝色部分是UITextView与NSTextContainer之间的inset，即textContainerInset .</li>
+</ul>
+</li>
+<li><p>综上</p>
+
+<ul>
+<li>有了以上对TextKit与UITextView关系的初步了解后，要做到目标图中UITextView的样式，纵向上需设置textContainerInset的top和bottom，横向上需要设置UITextView的textAlignment即可。</li>
+<li>UITextField要做目标图中的样式，</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>源码</h3>
+
+<p>加微博 @我是小山我是坏人</p>
+
+<h3>参考</h3>
+
+<ul>
+<li><a href="http://esoftmobile.com/2013/10/17/text-kit%E5%85%A5%E9%97%A8/">Text Kit入门</a></li>
+<li><a href="http://esoftmobile.com/2013/10/17/text-kit%E8%BF%9B%E9%98%B6/">Text Kit进阶</a></li>
+<li><a href="http://www.ituring.com.cn/tupubarticle/2542">第 9 章　iOS 7中文字排版和渲染引擎——Text Kit</a></li>
+<li><a href="https://www.raywenderlich.com/50151/text-kit-tutorial">Text Kit Tutorial</a></li>
+<li><a href="http://orangejuiceliberationfront.com/cocoa-text-system-everywhere/">Cocoa Text System everywhere…</a></li>
+<li><a href="http://www.howwaydo.com/how-to-lose-marginpadding-in-uitextview/">How to lose margin/padding in UITextView</a></li>
+<li><a href="http://www.pixeldock.com/blog/how-to-get-rid-of-the-padding-insets-in-an-uitextview/">How to get rid of the padding / insets in an UITextView</a></li>
+<li><a href="https://developer.apple.com/library/ios/documentation/StringsTextFonts/Conceptual/TextAndWebiPhoneOS/Introduction/Introduction.html#">Text Programming Guide for iOS</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[SDWebImage缓存之图片URL不变]]></title>
+    <link href="http://blog.handy.wang/blog/2016/01/29/sdwebimagehuan-cun-zhi-tu-pian-urlbu-bian/"/>
+    <updated>2016-01-29T10:35:08+08:00</updated>
+    <id>http://blog.handy.wang/blog/2016/01/29/sdwebimagehuan-cun-zhi-tu-pian-urlbu-bian</id>
+    <content type="html"><![CDATA[<pre><code>SDWebImage在iOS项目中是一个很常用的开源库，而且众所周知的是，它是基于URL作为Key来实现图片缓存机制的。在90%左右的情况下，
+图片与URL是一一对应的，即使服务器修改了图片也会相应的变更URL。但是在少数情况下，服务器修改了图片后不会变更相应的URL，也就是
+说图片本身的内容变了然而它的URL没有变化，那么按照对SDWebImage的常规使用方法的话，客户端肯定更新不到同一URL对应到服务器已变
+更的图片内容。
+</code></pre>
+
+<p>基于这一现象，我们来进行分析。</p>
+
+<!--more-->
+
+
+<p>客户端第一次请求图片时，Charles抓包得知response header里有一个名为Last-Modified、数据是时间戳的键值对。</p>
+
+<p>客户端第二次及以后请求图片时，通过Charles抓包发现，服务器返回304 not modified状态，说明服务器在接收客户端请求后通过某种判断逻辑得出结论：“客户端已缓存的图片与服务器图片都是最新的”，那么服务器如何判断的呢？</p>
+
+<p>通过查阅HTTP协议相关的资料得知，与服务器返回的Last-Modified相对应的request header里可以加一个名为If-Modified-Since的key，value即是服务器回传的服务端图片最后被修改的时间，第一次图片请求时If-Modified-Since的值为空，第二次及以后的客户端请求会把服务器回传的Last-Modified值作为If-Modified-Since的值传给服务器，这样服务器每次接收到图片请求时就将If-Modified-Since与Last-Modified进行比较，如果客户端图片已陈旧那么返回状态码200、Last-Modified、图片内容，客户端存储Last-Modified和图片；如果客户端图片是最新的那么返回304 Not Modified、不会返回Last-Modified、图片内容。</p>
+
+<p>关于服务器的比较逻辑，需要强调一下。</p>
+
+<p>经查资料得知，Apache比较时是看If-Modified-Since之后有没有更新图片，Nginx比较时是看If-Modified-Since与Last-Modified是否相等，所以对于Apache服务器环境客户端每次都要严格的存储服务器回传的Last-Modified以便下次请求时作为If-Modified-Since的值传给服务器，对于Nginx服务器环境客户端不必存储服务器回传的Last-Modified，每次请求时只需将图片自身的fileModificationDate作为If-Modified-Since的值传服务器即可。在实际开发中，如果遇到明明传了If-Modified-Since、服务器图片也变更了、但是客户端却请求不到最新的图片的情况时，那么就需要查看一下服务器对这两个时间戳的比较逻辑。</p>
+
+<p>那么，现在我们可以回到SDWebImage上来了。通过查看SDWebImageDownloader的源码得知，它开放了一个headersFilter的block，意在让开发者可以对所有图片请求追加一些额外的header，这正合我意。那么我们就可以在诸如AppDelegate didFinishLaunching的地方追加如下代码：</p>
+
+<pre><code>SDWebImageDownloader *imgDownloader = SDWebImageManager.sharedManager.imageDownloader;
+imgDownloader.headersFilter  = ^NSDictionary *(NSURL *url, NSDictionary *headers) {
+
+    NSFileManager *fm = [[NSFileManager alloc] init];
+    NSString *imgKey = [SDWebImageManager.sharedManager cacheKeyForURL:url];
+    NSString *imgPath = [SDWebImageManager.sharedManager.imageCache defaultCachePathForKey:imgKey];
+    NSDictionary *fileAttr = [fm attributesOfItemAtPath:imgPath error:nil];
+
+    NSMutableDictionary *mutableHeaders = [headers mutableCopy];
+
+    NSDate *lastModifiedDate = nil;
+
+    if (fileAttr.count &gt; 0) {
+        if (fileAttr.count &gt; 0) {
+            lastModifiedDate = (NSDate *)fileAttr[NSFileModificationDate];
+        }
+
+    }
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.timeZone = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
+    formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    formatter.dateFormat = @"EEE, dd MMM yyyy HH:mm:ss z";
+
+    NSString *lastModifiedStr = [formatter stringFromDate:lastModifiedDate];
+    lastModifiedStr = lastModifiedStr.length &gt; 0 ? lastModifiedStr : @"";
+    [mutableHeaders setValue:lastModifiedStr forKey:@"If-Modified-Since"];
+
+    return mutableHeaders;
+};
+</code></pre>
+
+<p>然后，加载图片的地方以前怎么写还是怎么写，但别忘了Option是SDWebImageRefreshCached</p>
+
+<pre><code>NSURL *imgURL = [NSURL URLWithString:@"http://handy-img-storage.b0.upaiyun.com/3.jpg"];
+[[self imageView] sd_setImageWithURL:imgURL
+                    placeholderImage:nil
+                             options:SDWebImageRefreshCached];
+</code></pre>
+
+<p>经测试，服务器只修改图片不变更URL的时候，客户端也可以更新到最新的图片。</p>
+
+<p>从以上第一段代码内容可以看出我采用的是与ngix服务器比较逻辑对应的代码，BTW:我测试的服务器是<strong>又拍云</strong>，说明<strong>又拍云</strong>的比较逻辑是等与不等的关系判断，不是大小关系的判断。</p>
+
+<p>这里顺便说一下，如果服务器的环境是类似于Apache的比较逻辑时，客户端可以把Last-Modified存放在图片的名称上(这需要修改SDWebImage源码，不建议)，或者用一个plist文件存放图片key名称与时间的对应关系(这个不用修改源码)。</p>
+
+<p>OK，到此这次的主题已得到完美解决。</p>
+
+<p><strong>知识扩展</strong></p>
+
+<pre><code>其实，在抓取服务器返回的数据包时，还发现response header中还有一个ETag，与之相对应的request header中可以追加一个
+If-None-Match的key，这对header与Last-Modified、If-Modified-Since的作用是相同的，即服务器是否需要返回最新的图片，
+当然它们在服务器端的判断逻辑应该是等与不等的判断，Etag在客户端的存储同样可以采用在plist文件中存放图片key名称与Etag的对应
+关系。
+</code></pre>
+
+<p><strong>参考资料</strong></p>
+
+<ol>
+<li><a href="https://console.upyun.com">又拍云</a></li>
+<li><a href="http://blog.csdn.net/taipingliebeiluo/article/details/5842766">有关Last-Modified 与 If-Modified-Since</a></li>
+<li><a href="https://github.com/rs/SDWebImage/blob/master/SDWebImage/SDWebImageDownloader.m">SDWebImageDownloader源码</a></li>
+<li><a href="http://stackoverflow.com/questions/32492414/sdwebimage-load-pictures-and-something-about-setting-http-headers">SDWebImage load pictures and something about setting HTTP headers</a></li>
+<li><a href="http://blog.csdn.net/u010165653/article/details/46473247"><strong>重点推荐</strong>-AFNetWorking 和 SDWebImage 图片缓存对比</a></li>
+<li><a href="http://blog.originate.com/blog/2014/02/20/afimagecache-vs-nsurlcache/"><strong>重点推荐</strong>-How Does Caching Work in AFNetworking? : AFImageCache &amp; NSUrlCache Explained</a></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[iOS Crash快速分析实战]]></title>
+    <link href="http://blog.handy.wang/blog/2016/01/26/ios-crashfen-xi/"/>
+    <updated>2016-01-26T10:57:50+08:00</updated>
+    <id>http://blog.handy.wang/blog/2016/01/26/ios-crashfen-xi</id>
+    <content type="html"><![CDATA[<pre><code>实际开发中或使用App过程中遇到App crash是一件很常见的事儿，但是要能快速定位是哪一行代码导致的可能就不一定是件易事儿了。
+在这里我结合自己与别人遇到过的坑，总结了一下。
+</code></pre>
+
+<!--more-->
+
+
+<ul>
+<li>ObjC Crash
+
+<ul>
+<li><p>制造一个Crash，代码如下
+<img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/ios_app_crash_debug_1.png" title="图1" alt="图1" /></p></li>
+<li><p>Crash了，假装不知道是由于什么导致的：
+<img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/ios_app_crash_debug_2.png" title="图2" alt="图2" /></p></li>
+<li><p>左侧的Crash trace 也是很让人无语
+<img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/ios_app_crash_debug_3.png" title="图3" alt="图3" /></p></li>
+<li><p>展开看一下更详细的crash trace
+<img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/ios_app_crash_debug_4.png" title="图4" alt="图4" /></p></li>
+<li><p>想办法排查：</p>
+
+<ul>
+<li>全局断点法（All Exceptions）
+
+<ul>
+<li>适用于：停留到main里的crash，可能是EXC_CRASH（SIGABRT）或EXC_BAD_ACCESS（SIGBUG/SIGSEGV）导致的</li>
+<li>加上全局断点再run，就可以看见哪一行导致crash了。
+<img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/ios_app_crash_debug_5.png" title="图5" alt="图5" />
+<img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/ios_app_crash_debug_6.png" title="图6" alt="图6" /></li>
+</ul>
+</li>
+<li>Xcode Zoombie法
+
+<ul>
+<li>适用于：EXC_BAD_ACCESS（SIGBUG/SIGSEGV）</li>
+<li>修改scheme的配置项
+<img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/ios_app_crash_debug_7.png" title="图7" alt="图7" /></li>
+</ul>
+</li>
+<li>UncaughtExceptionHandler收集日志
+
+<ul>
+<li>适用于：收集crash日志并上报给服务器</li>
+<li><a href="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/UncaughtExceptionHandler.zip">源码</a></li>
+</ul>
+</li>
+<li>符号表解析法
+
+<ul>
+<li>适用于：crash日志文件里全是二进制内容，看不出哪里crash的情况下</li>
+<li>把.app、.dSYM、.crash三个文件放到一个目录里
+<img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/ios_app_crash_debug_8.png" title="图8" alt="图8" /></li>
+<li>连上手机，把.crash文件导入到Xcode 的device log里
+<img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/ios_app_crash_debug_9.png" title="图9" alt="图9" /></li>
+<li>Xcode就会desymbol符号表，即可查看导致crash的位置。</li>
+</ul>
+</li>
+<li>NSAssert断言跟踪法
+
+<ul>
+<li>适用于：采用NSAssert跟踪代码，即时跟踪到由于服务器脏数据导致的crash</li>
+<li>如下：
+<img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/ios_app_crash_debug_10.png" title="图10" alt="图10" /></li>
+</ul>
+</li>
+<li>辅助工具：
+
+<ul>
+<li>Instruments</li>
+<li>Crashlytics</li>
+<li>Bugly</li>
+</ul>
+</li>
+<li>终极大招：注释代码、回滚代码方式的排除法</li>
+<li>总结：
+
+<ul>
+<li>分析console输出的crash日志</li>
+<li>分析crash trace</li>
+<li>分析crash log</li>
+<li>Crash到main里，建议首先采用全局断点法</li>
+<li>EXC_BAD_ACCESS时，建议首先采用enable Zombie Objects方法</li>
+<li>不要忽视Xcode里的编译警告，可能它们正是问题所在。如果你不明白编译警告的内容，那么就把它弄清楚，因为这会节约你很多不必要的调试程序的时间开销。</li>
+<li>注意用真机和模拟器调试时得到的结果可能不一样，建议以真机为准。</li>
+<li>正所谓，授之以鱼不如授之以渔，以上都是一些分析的方式，开发中需要按实际情况分析和采用不同的方法。也许以上方法并不能解你遇到的问题，这就需要我们自己趟坑了。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>JS Crash
+
+<ul>
+<li>待续</li>
+</ul>
+</li>
+<li>参考文献
+
+<ul>
+<li><a href="http://www.raywenderlich.com/10209/my-app-crashed-now-what-part-1">my-app-crashed-now-what-part-1</a></li>
+<li><a href="http://www.raywenderlich.com/10209/my-app-crashed-now-what-part-2">my-app-crashed-now-what-part-2</a></li>
+<li><a href="http://game.academy.163.com/library/2015/2/9/17717_497701.html">App Crash探析</a></li>
+</ul>
+</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[软件架构模式（译）]]></title>
+    <link href="http://blog.handy.wang/blog/2015/12/10/software-architecture-patterns/"/>
+    <updated>2015-12-10T16:10:37+08:00</updated>
+    <id>http://blog.handy.wang/blog/2015/12/10/software-architecture-patterns</id>
+    <content type="html"><![CDATA[<p>原文：<a href="http://www.oreilly.com/programming/free/files/software-architecture-patterns.pdf">《Software Architecture Patterns》</a></p>
+
+<br/>
+
+
+<h1>前言</h1>
+
+<p>对于很多开发人员来说，在着手开发时并没有一套有条理的架构体系来指导他们，这简直是一件太正常的事情了。在没有一套清晰的、经过推敲过的架构体系时，许多开发人员和架构师都遵守所谓的行业标准－分层架构模式（也称之为多层架构），即创建隐式的多层结构，即把只是从源代码角度，把模块的源代码都放在不同的源代码路径下，看似像分层了。但，实际上这种层次架构有诸多问题：模块角色没有清晰地划分，模块职责不明确，模块间的关系不清楚。这种架构通常称之为：<a href="http://www.cin.ufpe.br/~sugarloafplop/mud.pdf">大泥球</a>-架构反模式</p>
+
+<p>缺少有条理的架构的应用通常都是紧耦合的、不健壮的、难以维护的，而且没有清晰的视野感和方向感。所以，非常难以确定这个应用的架构特点，以至于不能全面地理解这个应该系统中各模块的内部逻辑。很难找到与开发和维护相关的诸多基本问题的答案：这个应用具有伸缩性吗？这个应用有什么性能特点？这个应用是否很容易维护？这个应用有什么技术特性？</p>
+
+<p>诸多架构模式可以辅助我们定义应用程序的基本特性和行为。例如，某些架构模式偏向于高可伸缩性，某些架构模式偏向于高度敏捷性。所以，在选择一种适合于某个项目的架构之前，了解不同架构模式的特点、优点和缺点是非常有必要的。</p>
+
+<p>作为一名架构师，你需要经常检验你的架构决策，尤其是在选择某种特别的架构或方案的时候。</p>
+
+<!--more-->
+
+
+<br/>
+
+
+<h1>第一章 分层架构模式</h1>
+
+<p>最常见的架构模式是分层架构模式，也称之为多层架构模式。它是一种适用于大多数<code>Jave EE</code>应用的行业标准，被很多架构师、设计师、攻城师所熟知；它与众多公司传统方式的技术交流和组织结构很对口，从而成为众多业务开发工作的首选。</p>
+
+<h2>模式介绍</h2>
+
+<p>分层架构模式采用横向划分的方式把的各组件划分到相应的层级里面，每层结构在应用里都担任着特定的角色（比如，视图层负责UI展示、业务逻辑层负责业务逻辑处理）。虽然在分层架构模式的理念里没有强制要求分几层，但是一般分为四层：<strong>展现层、业务层、持久化层和数据库层</strong>（<code>如图Figure 1-1.</code>）。在某些情况下，业务层和持久化层统一合并到业务层，尤其是在持久化逻辑代码（比如：SQL或HSQL）被直接写在业务层的各组件中的时候。所以，一般小型应用只有三层架构，而大型的或更复杂的应用则会有五层或更多层架构。</p>
+
+<p>每层架构在应用中都有着特定的角色和职责。例如，展现层是负责处理处所有界面显示和用户浏览时的逻辑，而业务层是充当处理业务请求相关事宜的角色。每层架构都是围绕它需要处理的特定业务逻辑的本职工作进行抽象的。例如，展现层不需要也不用担心将要显示的数据是从哪儿来的，它只需要负责把得到的数据按一定样式显示正确就行。同理，当业务层从某个地方获取到业务数据后，不需要关心这些数据以什么样的样式或形态显示到屏幕后，它只需要关注从持久层获取数据并对这些按一定的逻辑规则加工就好（比如，数据计算或数据整理工作），然后把最终的数据传递给展示层。</p>
+
+<p><img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/software_architecture_patterns_figure1_1.png" title="Figure 1-1" alt="Figure 1-1" /></p>
+
+<p>其中，分层架构的重要特性之一是各层架构中的组件分工明确。即，每个组件只会处理它所属那层架构的工作。例如，展现层中的组件只会处理展示逻辑，业务层中的组件只会处理业务逻辑。这种对组件的分门别类就构建成了角色明确、职责分明的分层架构，以及易于开发、测试、管理和维护的应用。所以，各层架构中各个组件的接口功能和作用域的良好定义就显示尤其重要了。</p>
+
+<h2>关键理念</h2>
+
+<p><strong><code>封闭性</code></strong>－注意<code>图Figure 1-2</code>中，每层架构的右侧都有一个“CLOSED”标签。这是分层架构中其中一个非常重要的理念－封闭。封闭的分层表示：当请求在多层间传递时，它要经过多层传递才会传递到目标层。例如，从展现层发起一个请求，这个请求首先需要经过业务层，再经过持久化层，才能最终到达数据库层。</p>
+
+<p><img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/software_architecture_patterns_figure1_2.png" title="Figure 1-2" alt="Figure 1-2" /></p>
+
+<p>然而，为什么不允许展现层直接访问其它的各层（持久层或数据库层）呢？因为按常规思维，展现层直接访问数据库层要比经过多层传递后才能查询或保存数据的效率要高得多呀，为什么呢？这个答案就存在于另一个关键理念之中－每层架构的隔离性。</p>
+
+<p><strong><code>隔离性</code></strong>－每层架构的隔离性是指每层内部的修改不会对其它层造成任何影响：层内的任何改变都被隔离于其它层及相关层(比如，含有SQL的持久层)之外。如果允许展现层直接访问持久层，那么对持久层SQL的修改就会同时影响到业务层和展现层，这样做显示使得应用的各层之间的组件都产生了各种复杂依赖、紧耦合。这样的架构非常难于维护。</p>
+
+<p>隔离还意味着分层架构的每层都是独立的，因此每层都不感知其它层内的逻辑细节。为了能很好的理解隔离理念的强大和重要，那么试想一下这种情况：</p>
+
+<pre><code>在花九牛二虎之力把展现层的技术方案由JSP重构为JSF时，只要展示层与业务层之间的对接协议保持不变(例如，使用某个Model数据结构),
+那么业务层是不会受展现层技术方案重构影响的，而且其它层更是完全独立于展现层的界面技术方案的。
+</code></pre>
+
+<p><strong><strong>相关知识点：</strong></strong>JSP<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup>、JSF<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup><br/><br/>
+按以上介绍，当具备封闭性的架构层促成了隔离性的架构层以及层与层之间的修改能达到隔离时，那么是时候可以合理地使一些架构层开放了。例如：你可以给业务层增加一个其内部组件可以访问的且包含了很多通用组件的共享服务层（其内包含了数据、字符串工具类或辅助类和日志类）。其实，创建一个服务层一直是一个非常好的设计，因为这个设计从架构上限定：业务层可以访问共享层，而不是展现层可以访问共享层。如果没有这种分层的架构设计，那么将完全不能从架构上来阻止展现层对共享服务层的访问，而且很难管理这种访问受限的情况。</p>
+
+<p>在上面这个为业务层开放了一个共享服务层的例子中，新的服务层应该处于业务层的下面以表明展现层是不能直接访问共享层的。但是，这样的层次结构有一个问题，即：业务层必须要经过共享服务层才能访问到持久化层，如果真是这样的话，就不合理了。这是分层架构一直存在的一个老问题，不过已经通过创建<strong>具有开放特性的架构层</strong>的方式解决了。</p>
+
+<p>如<code>图Figure 1-3</code>所示，图中的服务层右侧有一个“开放”的绿色标签，说明这一层是具有有开放性的，即上层来的请求可以绕开它，从而请求可以直接被传递到开放层的下一层。参考下图示意，就可以解决刚才的那个问题了，即：业务层专属的共享层可以设计为开放层，然后业务层在需要访问持久化层时可以绕开共享，这样就相当合理了吧，嘿嘿。</p>
+
+<p><img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/software_architecture_patterns_figure1_3.png" title="Figure 1-3" alt="Figure 1-3" /></p>
+
+<p>基于具有开、闭特性的分层架构很好地诠释了各个层与请求流程的关系，同时也为架构师、工程师很好地理解各层间的访问约束提供了必要的信息。要是不能与架构中具有开、闭特性的各层合理对接，那么肯定会使得整个架构内部是紧耦合的、不健壮的，而且非常难以测试、维护和开发。</p>
+
+<h2>模式实例</h2>
+
+<p>图<code>Figure 1-4</code>呈现了分层架构的工作原理，即，一个业务员查询客户数据的流程。图中的黑色箭头指示了由上至下获取客户数据的过程，红色箭头指示了数据返回并最终展示的过程。其中，客户数据除了包含客户资料还包含了客户自己产生的订单数据。</p>
+
+<p><strong>详细分析</strong></p>
+
+<ul>
+<li><code>Customer Screen</code>模块负责接收业务员的请求以及显示查询到的客户数据。它并不感知需要查询几个数据库才能最终获取到客户数据，而是只需要负责接收业务员的查询请求，并把请求传递给<code>Customer Delegate</code>模块。</li>
+<li><code>Customer Delegate</code>模块负责感知业务层中哪些模块可以处理来自于<code>Customer Screen</code>的请求，以及如何与业务层中的相应模块(<code>Customer Object</code>)对接（接口协议）。</li>
+<li><code>Customer Object</code>模块负责整合展现层需要的客户数据。它不但要请求持久层里客户资料对应的模块(<code>Customer DAO</code>)，还要请求订单数据对应的模块(<code>Order DAO</code>)。</li>
+<li><code>Customer DAO</code>模块和<code>Order DAO</code>依次执行SQL语句来对数据库进行查询，获取到相应数据后回传给业务层的<code>Customer Object</code>模块。一旦<code>Customer Object</code>把客户资料和订单数据都获取到，就会整合两部分数据并把整合后的数据回传给<code>Customer Object</code>，从而进一步回传给<code>Customer Screen</code>模块，最终把查询到的数据展现给业务员。</li>
+</ul>
+
+
+<p><img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/software_architecture_patterns_figure1__4.png" title="Figure 1-4" alt="Figure 1-4" /></p>
+
+<p>从技术实现的角度来看，这些模块有很多不同的技术实现方案。</p>
+
+<p>比如，</p>
+
+<pre><code>在Java平台，Customer Screen可以采用JSF(Java Server Faces)方案，并由Customer Delegate来管理JSF的数据对象。
+业务层的Customer Object可以采用Spring[^]管理的数据对象或EJB3的数据对象来实现。
+持久化层的DAO层(Data Access Objects)可以采用POJO（Plain Old Java Objects）与MyBatis
+或JDBC或Hibernate组合实现。
+
+从微软平台的角度来制定技术实现方案时，Customer Screen模块可以使用.NET框架中的ASP(Active Server Pages)
+来访问业务层里以C#语言开发的子模块，而持久化层的子模块则采用ADO方案（ActiveX Data Objects）。
+</code></pre>
+
+<p><strong><strong>相关知识点：</strong></strong>Spring<sup id="fnref:3"><a href="#fn:3" rel="footnote">3</a></sup>、EJB<sup id="fnref:4"><a href="#fn:4" rel="footnote">4</a></sup><br/><br/></p>
+
+<h2>架构考量</h2>
+
+<p>分层架构是一个很稳定的通用架构模式，它可以作为很多应用的一个初始加构，尤其是在你不确定什么的加构适合你的项目的时候。尽管如此，当你在选择此架构模式时，仍然需要注意几点：</p>
+
+<p><strong>首先</strong>，需要注意的是<code>污水池反模式</code>。它描述了这样一种场景，即一个请求经过多层传递却没有执行任何逻辑操作。例如，展现层接受了用户查询客户数据的请求后，然后传递给业务层，再传递到持久化层，持久化层组装相应的查询SQL并传递到数据库层去获取数据。最后，从数据库查询到的数据没有经过任何处理（如整合、运算、数据转换）就一层一层地又回传给展现层。</p>
+
+<p>采用分层架构的应用或多或少地有被沦陷为<code>污水池反模式</code>的模块。但是，重要的还是分析应用中沦陷为<code>污水池反模式</code>的请求的占比。<code>28原则</code><sup id="fnref:5"><a href="#fn:5" rel="footnote">5</a></sup>一直是一个用于检验你的项目是否遭遇了<code>污水池反模式</code>的很好的实践，即大概20%的请求只在层与层之间被简单传递，大概80%的请求不仅在层与层被传递同时还有一些相应的逻辑处理。但是，如果你发现这个比率是反过来的，即20%的请求在层间传递且逻辑处理，80%的请求只是在层间传递，那么，这时你就应该考虑做一些开放某些层的工作了，这个工作比管理有隔离缺陷的层的工作更难。</p>
+
+<p><strong>其次</strong>，需要考虑的是分层架构模式有把自己大一统的趋势。尽管你已把展现层和业务层拆分成了不同的模块。分层架构的各层代码都归类到了不同的项目开发目录。对于某些应用来说，它并不关注这点，但是这个问题确实会导致开发阶段的很多潜在的问题、健壮性问题、可靠性问题、性能问题以及伸缩性问题。</p>
+
+<h2>模式分析</h2>
+
+<p>下面的表格中是对分层架构的一些常规特点的评级和分析。每个特性的评级高低取决于它在架构的典型实现方案中能否作为自然趋势的能力，以及它能否能作为分层架构的主要强项。关于几种架构模式的整体比较结果，请参看附录A。</p>
+
+<p><strong>整体的敏捷性</strong></p>
+
+<pre><code>等级：低
+理由：应用程序整体的敏捷性是一种对不断变化的需求快速响应的能力。尽管分层架构的设计会把模块的变化隔离在它对应的层里，但是
+分层架构对这种变化的响应还是显得迟钝和耗时，这是由于大多分层架构的具体实现都比较庞大，况且层里的组件间时常有紧耦合的情况。
+</code></pre>
+
+<p><strong>部署的简易性</strong></p>
+
+<pre><code>等级：低
+理由：由于这种架构模式的分层实现方式，所以应用（尤其是大型应用）的部署成了一个问题。即，应用中的一个小修改就需要重新部署
+整个应用（或重新部署应用的大部分功能），从而导致对应用的部署工作就需要在非工作时间或非工作日来计划、安排和实施。正因为如
+此，这种架构模式不太适合持续集成，从而进一步降低了部署便利性的整体评级。
+</code></pre>
+
+<p><strong>可测性</strong></p>
+
+<pre><code>等级：高
+理由：在这一架构模式中，各功能组件都属于相应的架构层，每层之间相对独立，每层都可以被模拟，从而便于测试。如，可以模拟展现层
+来测试业务层，也可以模拟业务层来测试展现层。
+</code></pre>
+
+<p><strong>性能</strong></p>
+
+<pre><code>等级：低
+理由：虽然很多采用分层架构的应用都能正常运转，但是由于业务请求时常需要跨层访问才能获取到期望的结果，从而使得它不在高性能
+应用的行列。
+</code></pre>
+
+<p><strong>可伸缩性</strong></p>
+
+<pre><code>等级：低
+理由：由于这一架构模式的紧耦合倾向性和庞大性，那么一旦采用了这一架构模式的应用就难于扩展。尽管你可以把逻辑架构层进行拆分
+成物理架构层或把整应用复制到多个结点，但是一旦在应用开发中这样做了，那要干的活就多了。
+</code></pre>
+
+<p><strong>开发的简易性</strong></p>
+
+<pre><code>等级：高
+理由：开发的简易性之所以能获得了一个相对较高的评级，主要是由于这一架构模式被大家所熟知而且从开发层面上来看也不复杂。由于大
+多数公司在进行应用开发时，不同专业技能的人负责不同的模块（前端、服务器、数据库等），所以分层架构模式自然也成为了很多应用开
+发的选择。诸如这种公司内部的沟通方式和组织结构与软件开发模式的联系被概括为康威定律。
+</code></pre>
+
+<p>相关知识点：康威定律<sup id="fnref:6"><a href="#fn:6" rel="footnote">6</a></sup></p>
+
+<br/>
+
+
+<h1>第二章 事件驱动型架构模式</h1>
+
+<p>事件驱动架构模式是一个用于创建具有高度可伸缩性应用程序的架构模式，此模式具有分布步式和异步特性。它也可适用于小型的以及大型的复杂应用程序。事件驱动架构模式由高度解耦的、单一职责的事件处理组件组成，这些组件可以异步的接收和处理事件。</p>
+
+<p>事件驱动模式主要分为两种拓扑结构，分别是中介拓扑结构和代理拓扑结构。中介拓扑结构通常用于需要协调事件内部多个步骤的情况，这个工作在中介拓扑结构中是由中介者这个角色的组件来完成，另外，代理拓扑结构通常用于处理链式事件的情况。由于这两种拓扑结构的架构特点和实现策略存在差异，所以理解这两种拓扑结构各自适用的场景是非常重要的。</p>
+
+<h2>中介拓扑结构</h2>
+
+<p>中介拓扑结构适用于那些有多个步骤且需要在一定程度上进行内部协调处理的事件。比如，一个股票交易的事件首先需要进行交易验证，其次检查此交易是否符合各种股票交易准则，接着把此交易分配给一个代理商，然后计算佣金，最后与之前提到的代理商完结交易。刚才提到的这些个步骤需要在一定程度上来协调，从而决定这些步骤的顺序，以让它们串行或并行的进行。</p>
+
+<p>中介拓扑结构中主要有四类组件：事件队列集、一个事件中介者、事件通道集和事件处理器集。整个事件处理流程是从客户端发送一个事件到事件队列中开始的，事件队列表负责传输这些事件到事件中介者。事件中介者负责接收这些初始事件并对它们进行整理，然后把初始事件分解为多个步骤并以异步事件的形式发送到事件通道中来执行每一步。事件处理器负责监听事件通道、接收来自于事件中介者的事件以及真正意义上的执行明确的业务逻辑。图2-1中示例了事件驱动架构模式中通用的中介拓扑结构。</p>
+
+<p><img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/software_architecture_patterns_figure2_1.png" title="Figure 2-1" alt="Figure 2-1" /></p>
+
+<p>在事件驱动架构中随处可见数十个甚至上百个事件队列。此架构模式并不明确事件队列的实现方式，所以这个事件队列可以是消息列表、Web服务甚至是它们的任何组合。</p>
+
+<p>从上面的描述中可以知道事件驱动架构中有两类事件：初始事件和处理事件。初始事件是中介者接收到的最原始的那个事件，而处理事件则是由中介者分解初始事件而产生的并由事件处理器来接收并执行的事件。</p>
+
+<p>事件中介者组件负责整理协调初始事件内部的各个步骤。初始事件中的每一个步骤都会被事件中介者包装成一个明确的处理事件发送到事件通道中，最终这些处理事件会被事件处理器接收和处理。需要特别注意的是：事件中介者不会真正地通过执行具体业务逻辑来处理初始事件，相反，它感知的是初始事件中需要处理的各个步骤。</p>
+
+<p>事件通道服务于事件中介者，它负责把初始事件中每一步对应的处理事件异步地传递给事件处理器。事件通道可以是消息队列或者消息主题，消息主题在中介拓扑结构中被大量使用以便“处理事件”可能被多个事件处理器处理（每个事件处理器负责不同的与处理事件对应的任务）。</p>
+
+<p>事件处理器中包含了处理“处理事件”的必要的业务逻辑，而且是自包含的、独立的、高度解偶的组件。事件管理器负责执行应有程序或系统中明确的任务。尽管事件处理器的粒度可粗可细，但是请牢记：每个事件处理器只做一件明确的事情，而且不依赖于其它事件处理器来完成任务。</p>
+
+<p>事件中介者可以采用多种方案来实施，但是，作为一名架构师，你需要明白你从众多备选方案中选择的方案是否真正地满足你的技术需求。</p>
+
+<p>实现事件中介者最简单常规的方式是利用开源方案来做集成，比如Spring, Apache Camel, Mule ESB. 在这些开源集成方案中的事件流程都是采用Java或DSL(domain-specific language)实现的。对于一些需要复杂的中介功能和协调功能的应用程序，你可以采用与BPEL引擎耦合的BPEL(business process execution language)方案来实现，比如已开源的Apache ODE。BPEL是一个标准的类似于XML的语言，用于描述数据以及处理初始事件需要的步骤。对于那些需要更复杂的中介功能和协调功能的应用程序，可以采用BPM(business process manager，如jBPM)方案来实现事件中介者。</p>
+
+<p>充分理解你的需求并把合理的中介者实现方案与之匹配是成功使用事件驱动架构中的中介拓扑结构的关键。采用开源集成方案来完成复杂的业务流程管理是一个好方法，就像正在实施一个BPM解决方案来执行简单的路由逻辑。</p>
+
+<p>为了说明白中间拓扑结构是如何运转的，我假投你已通过保险公司投保了而且你打算要搬家了。在这个案例中，初始事件也许应该叫“搬迁事件”。与处理“搬迁事件”相关的步骤包含在事件中间者中，如图2-2所示。事件中介者为“搬迁事件”中的每一步都创建了一个处理事件（比如，修改地址、重算保费，等等），然后把处理事件发送到事件通道中并等待相应事件处理器的处理。这个过程会一直持续，直到“搬迁事件”中所有的步骤都被处理完毕。图中，事件中介者里的重算保费和更新索赔事项上面的横线箭头表示这两步可以同时进行。</p>
+
+<p><img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/software_architecture_patterns_figure2_2.png" title="Figure 2-2" alt="Figure 2-2" /></p>
+
+<h2>代理拓扑结构</h2>
+
+<p>代理拓扑结构有别于中介者拓扑结构的地方在于没有集中式的事件中介者，相反，消息流采用轻量级的消息代理以链式的形式穿插于各事件处理器之间（如，ActiveMQ, HornetQ, 等等）。这种拓扑结构对于相对简单的事件处理流程来说非常有用，因为此拓扑结构中不需要或没有集中式的事件协调机制。</p>
+
+<p>代理拓扑结构中主要有两类组件：代理者组件和事件处理器组件。代理者组件可以是集中式的或组合式的，它包含了事件流转过程中的所有事件通道。</p>
+
+<p>代理者组件中的事件通道可以是消息队列、消息主题或它们的组合。</p>
+
+<p>如图2-3对代理拓扑结构的示例。如图所示，已没有事件中介者组件来控制和协调初始事件，相反，每一个事件处理器组件负责处理一个事件，然后产生一个新的事件以表明原事件处理完毕。例如，平衡股票投资组合的事件处理器会收到一个被称为投票分割的初始事件，然后它根据这一初始事件来做一些投资组合的再平衡工作，然后得到一个需要其它事件处理器进一步处理的新事件。请注意，有时一些新事件被生成后并没有其它事件处理器来接着处理。不过，这对于正处于优化阶段的应用程序或为以后的功能扩展留有余地来说是很常见的。</p>
+
+<p><img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/software_architecture_patterns_figure2_3.png" title="Figure 2-3" alt="Figure 2-3" /></p>
+
+<p>为了能很好的描述代理拓扑结构的运转流程，我们延用与中介拓扑结构中提到的相同的案例(投保人搬家了)。由于在代理拓扑结构没有集中式的事件中介者来接收初始事件，所以客户处理组件直接来接收初始事件，并进行客户地址修改，然后抛出一个客户地址已修改的事件。在这个案例中，有两个事件处理器对客户地址变动事件感觉兴趣，它们分别是：保费流程和索赔流程。保费处理器组件会根据新地址来重新计算汽车保险的费率，然后抛出一个事件以表明此步流程处理完毕。另一方面，理赔流程组件也接收到了地址变更事件，但在这个处理器它的工作是更新一个更好的理赔方案，然后抛出一个事件表明处理完毕。这两个处理器产生的新的事件接下来会被其它的相关事件处理器接收，并按这个事件链一直持续下去直到没有新的事件可以抛出。</p>
+
+<p>如图2-4所示，代理拓扑结构是与执行业务功能的事件链条相关的。我认为，理解代理拓扑结构的最好的方式就是返它想像成接力赛。在接力赛中，每组里的每个运动员会依次手持接力棒跑一段距离，然后把接力棒交给下一个接力的运动员手里，并按这个方式一直传递下去直到最后一个运动员冲过终点。在接力赛中，一旦运动员把接力棒交给下一个运动员后，那么前一个运动员就完成比赛了。对于代理拓扑结构来说也是这样：一旦事件处理器处理完了某个事件，那么它就不再与初始事件相关了。</p>
+
+<p><img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/software_architecture_patterns_figure2_4.png" title="Figure 2-4" alt="Figure 2-4" /></p>
+
+<h2>模式考量</h2>
+
+<p>事件驱动架构模式是一个实现起来相对复杂的模式，主要是因为它异步的分布式特点。所以，在实现这个架构时，你必须要解决各种分布式架构的问题，比如远程处理的可用性、缺乏响应性以及代理拓扑结构中代理者失败重连逻辑或中介拓扑结构中的失败重连逻辑。</p>
+
+<p>在选择事件驱动架构模式时，有一点需要注意是此架构模式中的业务流程并不支持原子型事务。由于事件处理器之间是高度解藕的且是分布式的，所以很难在多个事件处理器之间维持一个事务。正是因为这样，当你决定采用此架构模式来设计应用程序时，你必须要认真考虑一下哪些事件是可以或不可以单独运行的，从而来规划事件处理器的粒度。如果你需要在多个事件处理器之间单独拆分出来一个模块，那么说明这个架构模式不适合你。</p>
+
+<p>也许事件驱动架构最难的地方是创建、维护和管理事件处理器的协议。通常每个事件都有一个特定的协议(数据以及数据格式)。那么，在采用此架构模式时，一开始就约定好一个标准的数据格式以及它的版本策略就尤为重要了。</p>
+
+<h2>模式分析</h2>
+
+<p>下面是对事件驱动架构模式的评分和分析。对于每一个架构特点的评级都是基于此架构在这一特点上的实际应用以及是否被大家所熟知。至于几种架构模式的并行对比，请参看附录A。</p>
+
+<p><strong>整体的敏捷性</strong></p>
+
+<pre><code>等级：高
+理由：整体敏捷性是指对不断修改的需求的适应能力。由于事件处理器组件都是单一功能的而且完全与其它事件处理器组件解耦的，所以
+对一个事件处理器的修改对于其它事件处理器来说是隔离的而且可能在不影响其它事件处理器的情况下快速完成。
+</code></pre>
+
+<p><strong>部署的简易性</strong></p>
+
+<pre><code>等级：高
+理由：回顾此架构，它是一个相对容易部署的架构模式，因为事件处理器组件间都是解耦的。相比之下，代理拓扑结构比中介拓扑结构更
+易于部署，这主要是因为事件中介者组件在某种程序上与事件处理器产生紧耦合，即对事件处理器的修改也会涉及到事件中介者的修改，
+所以它们都需要被重新部署。
+</code></pre>
+
+<p><strong>可测性</strong></p>
+
+<pre><code>等级：低
+理由：尽管单独的单元测试不太难，但是却需要大量的测试工具来辅助。而且此架构模式的异步特性使测试变得更复杂。
+</code></pre>
+
+<p><strong>性能</strong></p>
+
+<pre><code>等级：高
+理由：尽管有可能由于所有相关的消息传递机制的问题而导致事件驱动架构不能正常运转，但通常来说，一个架构是否具备高性能是依仗
+它的异步能力的；换句话说，一个架构具备解耦、异步的能力要比评估消息队列的开销更为重要。
+</code></pre>
+
+<p><strong>可伸缩性</strong></p>
+
+<pre><code>等极：高
+理由：对于此架构来说，伸缩性的特点是与身俱来的，因为它内部的事件处理器都是高度独立且事件处理器之间是解耦的。每一个事件处
+理器可以被单独扩展，而且可以被更细粒度的扩展。
+</code></pre>
+
+<p><strong>开发的简易性</strong></p>
+
+<pre><code>等级：低
+理由：由于此架构的异步特性以及对数据协议的制定和对容错机制的要求，所以此架构模式的开发工作会复杂一些。
+</code></pre>
+
+<h1>第三章 微内核架构模式</h1>
+
+<p>微内核模式是一种为基于产品的应用程序而生的架构模式，有时也称它为插件模式。那么，什么是基于产品的应用程序呢？基于产品的应用程序是一种分版本打包和分版本下载的第三方产品。很多公司也开发和发布类似产品级的内部业务程序，有：版本控制、版本日志和可插拔的功能特性。这种情况就适合采用微内核架构模式。微内核架构模式可以让开发者在自己的核心程序基础上开发一些带有伸缩性和隔离性的插件。</p>
+
+<h2>模式介绍</h2>
+
+<p>微内核架构模式由两大组件构成：分别为<strong>系统内核</strong>和<strong>插件模块集</strong>。即，应用程序的逻辑被分为独立的插件模块集合和基本的核心系统，以提供伸缩性、灵活性以及扩展特性和和逻辑的隔离性。<code>图Figure 3-1</code>以图说明了一个基本的微内核架构模式结构。</p>
+
+<p>通常，微内核架构模式中的<strong>系统内核部分</strong>是指能使系统正常运转所需要的最少功能的集合。很多操作系统都实现了微内核架构模式，这也是微内核名字的由来。从业务程序的角度讲，<strong>系统内核</strong>通常是指按一定场景、规则或复杂的条件来进行逻辑处理的通用业务逻辑。</p>
+
+<p><img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/software_architecture_patterns_figure3_1.png" title="Figure 3-1" alt="Figure 3-1" /></p>
+
+<p>围绕着系统内核的插件模块都是独立于系统内核的，这些插件模块集包含了各种对系统核心功能进行扩展的定制功能、附加特性等等。通常来讲，插件之间也是独立的，不过你也可以设计多个有依赖关系的插件。换句话说，你在设计插件集时，需要保证插件间有很好的通信机制从而使得插件间的依赖最小。</p>
+
+<p>同时，系统内核需要知道围绕它开发的插件哪些是与它可以正常通信的且如何通信。通常，一个常用的方式就是在系统内核依次注册这些插件，可以给每个插件注册诸如插件名称、数据交换协议、通信的数据结构在内的等等信息。比如，给一个税务系统开发一个可以标识出缴纳了高税额的纳税人的插件，那么注册信息就需要插件名称、上行下行的数据结构以及数据传输协议。这个例子中，假如你使用SOAP来做远程调用，那么还需要WSDL这个文件来对调用的服务进行描述。</p>
+
+<p>相关知识点：SOAP<sup id="fnref:7"><a href="#fn:7" rel="footnote">7</a></sup>, WSDL<sup id="fnref:8"><a href="#fn:8" rel="footnote">8</a></sup></p>
+
+<p>插件与系统内核之间可以有用多种方式进行通信，比如：OSGi<sup id="fnref:9"><a href="#fn:9" rel="footnote">9</a></sup>、消息机制、远程服务(Web Services)或系统内核直接实例化插件。至于采用哪种方式，这完全取决于你的项目类型(是小型项目还是大型项目)以及项目的部署的方式(是单一服务器部署还是分布式部署)。在此应该明白插件间要必须要保持相对独立。</p>
+
+<p>系统内核与插件之间的通信协议规范可以是标准协议也可以是自定义协议。通常在第三方团队开发的插件中可以发现自定义协议，这些自定义协议对于系统内核开发商来说是完全不可控的。在这种不可控的案例中，通常需要在插件的自定义协议与系统内核的标准协议之间建立一个适配器来对两种协议进行相互转换，这样操作后，系统内核的协议就不需要与每个插件协议耦合，只需要建立一个适配器即可。同时，请记住在一开始定义通信协议时就要做好协议的版本控制。</p>
+
+<h2>模式实例</h2>
+
+<p>微内核架构模式的最好实践可以说是Eclipse IDE。基础版Eclipse本身是一个很NB的编辑器。不过，当你为它加上各种插件后，它就变得更实用，更NB了。</p>
+
+<p>Web浏览器是另一个很不错的微内核架构模式实践：内容显示和一些扩展功能都不是浏览器的系统内核。</p>
+
+<p>以上两个例子是微内核架构模式基于产品型应用的实践，不过它还可以应用于大量商业程序。在这里咱们可以举个保险公司的索赔处理流程。索赔处理是一个非常复杂的流程，不同的情况都有允许的和禁止的业务逻辑规则。比如某些情况下挡风玻璃被石头子儿砸坏了可以申请免费更换，但是也有不能免费更换的情况。正是这些不同的情况构成了标准的索赔流程。</p>
+
+<p>看到这里不要感到奇怪，因为大多数的理赔应用正是依靠大量的复杂的规则引擎集才能处理各种各样的理赔情况。不过，随着逻辑规则的修改或新增一个简单的逻辑规则都会影响其它现有的规则，这就需要更多的分析人员、开发人员和测试人员参与其中。庆幸地是，微内核模式就能解决刚才提到的大部分问题。</p>
+
+<p>如图<code>Figure 3-2</code>中的那一摞文件夹，它描述了索赔流程的系统内核部分。它包含了保险公司处理理赔申请的基本的业务逻辑，当然了，没有包括各公司自己定制一些逻辑规则。从图中可以看到，每个插件的逻辑规则都对应到了系统内核的不同业务场景。这些插件可以采用完全自行开发或引用现成的规则引擎来实现。无论采用什么方案来实现这些插件，这些插件都是独立于系统内核的，即，添加、移除、维护插件时都不会对系统内核和其它插件产生一丁点儿的影响。</p>
+
+<p><img src="https://github.com/Handy-Wang/Handy-Wang.github.io/blob/source/source/_posts/img/software_architecture_patterns_figure3_2.png?raw=true" title="Figure 3-2" alt="Figure 3-2" /></p>
+
+<h2>模式考量</h2>
+
+<p>微内核架构模式有一个优点，就是它能被内嵌到或作为其它架构模式的一部分。比如，当系统中某个模块的功能不太稳定时，你会发现只能用微内核架构模式来解决这种特定的问题，而不能用这个模式来替换原架构模式。在形如这种情况时，你就可以在原有的架构模式(分层架构)里内嵌微服务架构模式。类似地，上一章讲到的事件驱动架构里的事件处理器组件也可以采用微服务架构模式来实现。</p>
+
+<p>刚才提到的微服务架构模式为不断演进的设计和逐渐增加的开发需求提供了大力支持。首先好好地设计一个坚实的系统内核，然后在系统迭代过程中的功能增加和改进行都不需要对系统内核进行改造。</p>
+
+<p>对于那些基于产品需求开发的应用程序，微内核架构模式应该作为架构的首选，特别是对于那些需要发布用户真正需要的新需求、新特性的产品。如果你发现这个架构不适合你的项目需求，你可以把架构方案修改成为更适合项目实际需求的架构方案。</p>
+
+<h2>模式分析</h2>
+
+<p>下面的表格是对微内核架构模式各个特点的评级和分析描述。对于以下每个特点的评级是基于它是否能作为行业趋势或是否能作为本架构的代表性来评估的。至于本篇文章的几种架构的详细对比，请参见附录A。</p>
+
+<p><strong>整体的敏捷性</strong></p>
+
+<pre><code>等级：高
+理由：整体敏捷性是指对不断修改的需求的适应能力。对采用微内核架构方案的系统的修改，都是可以采用插件方式来隔离和解耦的。通常，
+大多采用微内核架构的应用程序的系统内核都是趋于稳定的，而且相当强劲、基本不会再修改。
+</code></pre>
+
+<p><strong>部署的简易性</strong></p>
+
+<pre><code>等级：高
+理由：鉴于此架构模式的整体架构，那么插件部分是可以在动行时被动态地追加到系统内核上的（热部署），从而最大程度上减少了服务器
+down机的时长。
+</code></pre>
+
+<p><strong>可测性</strong></p>
+
+<pre><code>等级：高
+理由：插件模块集可以很方便地被隔离测试，而且系统内核可以在不作任何改动的情况下就可以很容易地模拟出被扩展的插件特性功能。
+</code></pre>
+
+<p><strong>性能</strong></p>
+
+<pre><code>等级：高
+理由：尽管微内核模式不能被自荐给高性能应用程序，但是，大多用到了微内核模式的应用都能正常地动转，因为你可以定制和简化需要扩展
+的插件功能。JBoss应用服务器就是一个很好的采用了微内核架构的例子：通过插件扩展能力，你可以按需移除那些高消耗的或不需要的插件
+功能，比如：远程访问功能、消息功能以及缓存功能等很消耗内存、高CPU的会拖慢应用程序的插件功能。
+</code></pre>
+
+<p><strong>可伸缩性</strong></p>
+
+<pre><code>等极：低
+理由：由于大多基于微内核架构的实现方案都是基于成形的产品应用而且规模较小，这些架构实现通常只是作为产品中的一个单元或模块，
+所以不利于扩展。尽管，在实际的插件模块开发中能做到插件级的伸缩，但，微内核架构并不是已具备整体高伸缩应用程序的首选。
+</code></pre>
+
+<p><strong>开发的简易性</strong></p>
+
+<pre><code>等级：低
+理由：基于微内核架构模式开发的应用，需要深思熟虑的设计和对接口协议的合理管理，这无疑增加了开发的复杂性。接口协议的版本管理、
+插件的注册机制、插件功能的粒度以及插件与系统内核的通信机制等等内容导致了增加实现微内核架构的复杂度。
+</code></pre>
+
+<p>相关知识点：JBoss<sup id="fnref:10"><a href="#fn:10" rel="footnote">10</a></sup></p>
+
+<h1>第四章 微服务架构模式</h1>
+
+<p>微服务架构作为一种应用程序架构的可选方案以及它面向服务的特点，在行业中得到了快速的发展。由于它仍处于不断地演进中，所以关于它到底是什么以及如何具体实施的问题也一直存在。那么本章会就一些关键概念和基础知识进行讲解，以给大家提供一些是否选择此架构模式的参考依据。</p>
+
+<h2>模式描述</h2>
+
+<p>无论你选择什么拓扑结构还是架构的实现方式，总有一些适用于这几种架构模式的通用核心概念。其中，第一个就是分块部署的概念。如图Figure 4-1所示，微服务架构中每个组件都是被单独部署的，这样更利于流水线部署、提高扩展性以及对应用和组件的高度解耦。</p>
+
+<p>也许，要能很好地理解此架构模式的关键之一就是理解什么是服务组件。至于服务，与其去了解微服务架构里提供的各种服务，还不如去了解提供服务的各个组件，这些组件的粒度大小从一个小模块到一个应用的大的组成部分不等。这些服务组件包含了一个或多个负责某个小功能或大型业务逻辑的子模块。所以，在微服务器架构中合理地设计服务组件的粒度层次的确是一件非常有挑战的事情。关于这一挑战更详细的讨论，我们会在“服务组件编排”一节中介绍。</p>
+
+<p><img src="https://github.com/Handy-Wang/Handy-Wang.github.io/blob/source/source/_posts/img/software_architecture_patterns_figure4_1.png?raw=true" title="Figure 4-1" alt="Figure 4-1" /></p>
+
+<p>理解微服务架构的另一个关键是要明白它是一种分布式架构，即：此架构中的所有服务组件都是解耦而且可以通过一些远程访问协议(JMS<sup id="fnref:11"><a href="#fn:11" rel="footnote">11</a></sup>、AMQP<sup id="fnref:12"><a href="#fn:12" rel="footnote">12</a></sup>、REST<sup id="fnref:13"><a href="#fn:13" rel="footnote">13</a></sup>、SOAP、RM<sup id="fnref:14"><a href="#fn:14" rel="footnote">14</a></sup>I等等)来访问的。这也就不难理解为什么此架构具备很好的伸缩性和部署性。</p>
+
+<p>微服务架构中令人兴奋的是它自身是从解决别的一些普通的架构模式中相关的问题演进而来，而不是为了守株待兔那些还未发生的问题而设计出来。微服务架构风格主要从两方面演进而来：采用分层架构开发的大型应用，以及采用面向服务的架构开发的分布式应用。</p>
+
+<p>此架构从大型应用到微服务架构风格的演进过程，主要经历了持续交付的发展历程，从研发到产品的持续部署的概念使得应用程序的部署更简单了。那些典型的由存在紧耦合关系的组件集构成的大型应用，非常难于维护、测试以及部署（所以，在很多大型IT企业里出现了非常常见的“按月迭代开发”现象）。这几个因素综合起来往往导致了应用的不稳定、不健壮，每次新部署的内容都会被下一次推翻。微服务架构模式通过把应用拆分为几个可单独部署的单元来解决刚才说的那几个问题，从而使得这些单元可以独立于别的服务组件进行单独开发、测试以及部署。</p>
+
+<p>此架构的另一条演变路径是为了解决面向服务的架构的应用(SOA)中的问题。尽管SOA模式很强大，强大到提出了无与伦比的抽象层级、异构系统间的连接性、服务的组织结构以及要与商业目标看齐的承诺，但由于它的复杂性、高成本、普遍性而难于被理解和实现，而且也常常导致了很多现有应用的失控。微服务架构的风格通过简化服务的概念、消除服务编排的需要以及简化服务组件间的连接性和访问来解决刚才聊到的SOA的复杂性。</p>
+
+<h2>微服务架构的多种拓扑结构</h2>
+
+<p>尽管我们可以列出很多实现微服务架构的方式，但是这里我们只聊聊三种主流的微服务架构拓扑结构：<strong>基于REST风格的API的拓扑结构</strong>、<strong>基于REST风格的应用的拓扑结构</strong>以及<strong>集中式消息型的拓扑结构</strong>。基于REST风格的API拓扑结构适用于通过一些API接口来提供一些独立的、小型服务的网站。如图Figure 4-2，这种拓扑结构由非常小细粒度的服务组件构成(所以称之为微服务)，每个组件内都包含了一个或两个既完成特定业务又独立于其它服务的模块。这些细粒度的服务组件可以通过基于REST风格的而且是基于Web部署的接口来访问。雅虎、谷歌和亚马逊公司的一些常见的且用途单一的云服务就是实际例子。</p>
+
+<p><img src="https://github.com/Handy-Wang/Handy-Wang.github.io/blob/source/source/_posts/img/software_architecture_patterns_figure4_2.png?raw=true" title="Figure 4-2" alt="Figure 4-2" /></p>
+
+<p>基于REST风格的应用的拓扑结构与基于REST风格的API的拓扑结构的差异在于：基于REST风格的应用前端接收的是传统的网页请求或传统PC客户端的请求，而不是接收简单的API请求。如图Figure 4-3所示，应用的用户界面被部署为一个单独的Web应用，这个Web应用通过REST风格的接口来远程访问已部署好的服务组件(即业务逻辑)。基于应用的拓扑结构中的服务组件有别于基于API的拓扑结构中服务组件，它里面的服务组件规模更大、粒度更糙而且这些组件只是整个应用中的冰山一角。所以，这种拓扑结构在中小型的复杂度较低的商业程序中应用较为普遍。</p>
+
+<p><img src="https://github.com/Handy-Wang/Handy-Wang.github.io/blob/source/source/_posts/img/software_architecture_patterns_figure4_3.png?raw=true" title="Figure 4-3" alt="Figure 4-3" /></p>
+
+<p>微服务架构模式的另一种常见拓扑架构是集中式消息型的拓扑结构。如图Figure 4-4 所示，这种拓扑架构除了访问方式不是采用远程调用的方式而是采用REST方式外，和前面提到的基于应用的拓扑结构相似，它用到了轻量级的集中式消息代理（如：ActiveMQ<sup id="fnref:15"><a href="#fn:15" rel="footnote">15</a></sup>、HornetQ<sup id="fnref:16"><a href="#fn:16" rel="footnote">16</a></sup>等等）。在理解这一拓扑结构时不要与SOA架构模式混淆，也不要把它当成是SOA的轻量版。这种拓扑结构中的轻量级消息代理不会做任务服务组件的编排转换工作或复杂的路由工作，它只是负责转发对远程服务组件的访问。</p>
+
+<p>这种集中式消息型拓扑结构尤其是在大型商业项目或需要在用户界面层与服务组件层之间做复杂传输控制的项目中会用到。这一基于简单REST风格的拓扑结构的特点是强大的排队机制，异步消息机制、监听机制、错误处理机制以及更好的负载平衡和伸缩性。单点故障问题和架构瓶颈问题往往与一个集中式代理相关，这些问题可以通过代理集群和代理互联来查找（可以把一个代理实例切分为多个代理实例，从而可以分散基于系统功能区的消息吞吐量的加载）。</p>
+
+<p><img src="https://github.com/Handy-Wang/Handy-Wang.github.io/blob/source/source/_posts/img/software_architecture_patterns_figure4_4.png?raw=true" title="Figure 4-4" alt="Figure 4-4" /></p>
+
+<h2>避免依赖和编排</h2>
+
+<p>微服务器架构模式中最具挑战的问题之一就是给众多服务组件定一个合理粒度的层级结构。如果这个粒度太糙，那么我们将不能从微服务架构模式中获益(可部署性、伸缩性、可测性、松耦合)。尽管粒度太糙不好，但粒度太细就需要对众多组件进行编排，那么一个很精简的微服务架构就会变为一个重量级的面向服务的架构，这将会遇到与基于SOA架构的应用程序相同的问题：复杂、混乱、开销大以及一些其它问题。</p>
+
+<p>如果你发现你需要在用户界面层或API层来编排、组织管理你的众多服务组件，那么说明这些组件的粒度太细了。同样的，如果在处理一个请求时需要在服务组件间通信，那么说明要么是这些服务组件是粒度太小，要么是这些服务组件的切割没有站在业务功能的角度来实施。</p>
+
+<p>服务间通信会迫使组件间产生耦合，而不是采用共享数据的方式来处理。比如，一个处理网络定单的服务组件需要客户信息时，可以从数据库中获取一些必要的数据而不是通过调用其它服务组件来获取数据。共享数据库可以解决数据层面的问题，但是功能共享的问题如何来解决呢？比如，当一个服务组件需要另一个被包含在其它服务组件里的功能时，有时你是可以拷贝这部分你需要的功能代码的(但是打破了DRY原则：不要出现重复的代码)。在大多实现微服务架构的商业应用程序中这是一种非常常用的共享功能代码的方式，牺牲一小部分重复冗余的逻辑来换取组件间的独立性和可部署性。那些小型的工具类功能应该就是属于这一类。</p>
+
+<p>如果你发现无论服务组件的粒度粗细，你仍然需要对这些服务组件进行编排，那么说明你的项目不适合微服务架构模式。由于微服务架构的分布式特性，所以对于那种跨服务的事务操作是很难维护的。这种操作需要一些事务补救措施来回滚事务，但是这样就增加了微服务架构的复杂性。</p>
+
+<h2>模式考量</h2>
+
+<p>微服务架构模式解决了大型应用程序和面向服务架构的应用程序中的诸多常见问题。由于主要的应用程序组件被拆分为小的且可单独部署的单元，这样基于微服务架构的应用程序就更健壮、伸缩性更强、能更好的支持持续交付。</p>
+
+<p>此架构模式的另一优点在于它提供了实时的生产环境部署，因此很大程度上减少了每月或每周末需要的生产环境来一次大部署的次数。这是因为代码的修改已经与特定的服务组件被隔离开，即只需部署修改的服务组件。如果你只有一个服务组件实例，你可以写一些用户界面来检测热部署以及重定向用户的请求到错误页面或等待页面。或者，你可以在实时部署期间置换服务组件的多个实例，以使得在部署期间服务仍然可用（然而，分层架构很难做到这一点）。</p>
+
+<p>最后一个需要考量的点是：由于微服务架构模式是一个分布式架构，所以它也会遇到一些与事件驱动架构模式相同的问题，包括对接协议的建立、维护成本、管理成本、远程系统可用性以及远程访问的鉴权和授权。</p>
+
+<h2>模式分析</h2>
+
+<p>下面的表格从常用架构特点角度出发对微服务架构进行了评级和分析。对于每一个架构特点的评级都是基于此架构在这一特点上的实际应用以及是否被大家所熟知。至于几种架构模式的并行对比，请参看附录A。</p>
+
+<p><strong>整体的敏捷性</strong></p>
+
+<pre><code>等级：高
+理由：整体敏捷性是指对不断修改的需求的适应能力。对采用微内核架构方案的系统的修改，都是可以采用插件方式来隔离和解耦的。由于
+存在单独部署单元的概念，所以任何修改都是被隔离到单独的服务组件里，这样就可以更快更简单地进行部署。同理，采用此架构搭建的
+应用程序的内部组件间都是松耦合的，从而也能促进变化的拥抱。
+</code></pre>
+
+<p><strong>部署的简易性</strong></p>
+
+<pre><code>等级：高
+理由：由于事件处理器组件的解耦特性，所以整体上此架构模式是相对容易部署的。代理拓扑结构之所以比中间者拓扑结构更易于部署，
+主要是因为事件中间者组件与事件处理器之间是紧耦合的，即：对事件处理器的修改会级联到事件中间者的修改，最终两者都需要重新
+部署。
+</code></pre>
+
+<p><strong>可测性</strong></p>
+
+<pre><code>等级：高
+理由：由于业务功能被分离和隔离到独立的应和程序中，所以测试范围是可控的，而且还可以进行一些针对性测试。回归测试特定服务组件
+比回归测试整个大型应用程序会更容易、更可行。 由于组件是解耦的，所以，从开发的角度来说对某一点的修改不会对应用程序的其它
+部分超成影响，减轻了由于一个小小的修改而需要测试整个应用的压力。
+</code></pre>
+
+<p><strong>性能</strong></p>
+
+<pre><code>等级：低
+理由：尽管你可以使用此架构模式来搭建一个应用程序并且运行正常，但由于此架构的分布式特性，所以搭建出来的应用程序并不属于
+高性能的应用程序。
+</code></pre>
+
+<p><strong>可伸缩性</strong></p>
+
+<pre><code>等极：高
+理由：由于应用程序被切分为独立的可部署单元，所以每个服务组件都可以单独进行自调整式扩展。比如，股票交易的管理操作区是
+不需要进行扩展的，这是因为使用此功能的用户量很少；然而交易区服务组件需要被扩展，这是因为大多股票交易程序都要很高的吞吐量。
+</code></pre>
+
+<p><strong>开发的简易性</strong></p>
+
+<pre><code>等级：高
+理由：由于所有功能都被隔离为单独的不同的服务组件，所以开发工作很容易在一个小的已被隔离的区域中进行。开发人员都没有机会
+由于修改一个服务组件而影响其它服务组件，所以减少了开发人员间或开发团队间协作的工作量。
+</code></pre>
+
+<h1>第五章 基于空间的架构模式</h1>
+
+<p>大多数web应用的请求流转是按照下面的流程来进行的：从浏览器发起一个请求，此请求先到达静态资源服务器(Web Server, 如Apache、nginx)，然后是应用服务器(Application Server, 如Tomcat等)，最终到达数据库服务器。这个流程对于用户量少的应用来说是没有问题的，但是一旦用户负载增加就会出现瓶颈。首先出现瓶颈的是静态资源服务器，然后是应用服务器，最后是数据库服务器。通常，对于用户负载上升导致的瓶颈都是通过对资源服务器扩展来解决，这个方案相对简单且成本低，确实有时候可以解决问题。但是，大多数时候简单对的静态资源服务器进行扩展只会把瓶颈问题转移到应用服务器。然而，对应用服务器扩展就相对较难且成本较高，同时也把瓶颈问题又转移到了数据库服务器，这就使得扩展更难，成本更高了。尽管可以对数据库服务器进行扩展，但最终你会看到一个三角形的拓扑结构，即静态资源服务器所处夹角最大，因为它容易扩展，而数据库服务器所处的夹角最小，因为它最难扩展。</p>
+
+<p>在任何一个大型的、有着用户高并发负载的应用中，最终决定并发信息处理能力的因素往往是数据库。虽然各种缓存技术和数据库产品可以解决上述问题，但是靠扩展的来解决极限负载仍是一个难题。</p>
+
+<p>所以，基于空间的架构模式主要是用于定位和解决扩展性和并发性问题，此架构模式同样适用于用户并发量不稳定的系统。那么，从架构层面来解决扩展性问题比通过扩展数据库或改进缓存技术来解决要更好些。</p>
+
+<h2>模式描述</h2>
+
+<p>空间架构模式（也被称为云架构模式）最小化了影响应用扩展的诸多因素。这种架构模式得名于元组空间的概念，分式式共享内存空间的概念。它通过去除集中式数据库约束转而使用复制型内存数据网格来达到高扩展性。应用程序的数据被保存在内存中并被复制到所有活跃的处理单元中。当用户负载量上升或下降时，这些处理单元可以被动态的开启和关闭，从而解决了变化的扩展性问题。由于没有了集中式数据库，那么数据库瓶颈就没有了，从而给应用程序提供了近乎无限扩展的能力。</p>
+
+<p>大多适合这种模式的应用都是标准的网站，接收浏览器的请求并执行一些操作。投标拍卖网站就可以作为一个案例来讲讲，这个网站就不断地接收互联网用户的投标。这个应用会接收某些条目的投标，并记录下时间信息，然后更新此条目的最新投标信息，最后把相关信息反馈给用户。</p>
+
+<p>此架构主要包含两大组件：处理单元和虚拟中间件。图5-1中描述了一个基本的空间架构模式以及它主要的组件。</p>
+
+<p><img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/software_architecture_patterns_figure5_1.png" title="Figure 5-1" alt="Figure 5-1" /></p>
+
+<p>从上图可以看到，处理单元组件包含了应用组件集（或应用组件集的一部分），它包含了基于web的组件以及后端的业务逻辑。处理单元的内容随着应用程序的类型而改变－如，基于Web的小型应用程序很有可能被部署到某一个处理单元里，而大型应用程序则很有可能根据功能模块的不同划分而被拆解到多个的处理单元里。所以，处理单元通常包含应用程序功能模块、内存级数据网格以及一个为故障恢复而准备的可选的异步持久化存储。另外，它还包含了一个复制引擎(replication engine)，是虚拟中间件用于复制处理单元间差异化的变更数据，即用于同步处理单元间的数据。</p>
+
+<p>虚拟中间件组件会处理一些清理和通信工作，它包含了很多控制数据同步和处理请求的组件。虚拟中间件包含了消息网格、数据网格、处理网格以及部署管理器。在接下来的章节中会详细介绍它们，而且它们可以被作为第三方产品进行定制化的开发或购买。</p>
+
+<h2>模式结构</h2>
+
+<p>空间架构模式的神奇之处就在于虚拟中间件组件集以及被包含在处理单元中的内存级数据网格。如图5-2所示，它展示了一个典型的处理单元架构，包含了程序模块、内存数据网格、用于为故障恢复而准备的可选的异步持久化存储以及数据复制引擎。</p>
+
+<p><img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/software_architecture_patterns_figure5__2.png" title="Figure 5-2" alt="Figure 5-2" /></p>
+
+<p>本质上说，虚拟中间件是此架构的控制器，负责管理请求、会话、数据复制、分布式请求处理以及部署处理单元。在虚拟中间件内部有四个主要的组件：消息网格、数据网格、处理网格以及部署管理器。</p>
+
+<h3>消息网格</h3>
+
+<p>如图5-3所示，消息网格的消息输入是用户请求和会话信息。当一个用户的请求进入虚拟中间件内后，消息网格组件来决定哪一个处于活跃状态的处理单元可以处理这个请求并把这个请求转发给相应的处理单元进行处理。消息网格的复杂度范围从一个简单的“循环算法”到一个更复杂的“下一个可用算法”，这些算法用于计算应该哪个处理单元来处理哪个请求。</p>
+
+<p><img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/software_architecture_patterns_figure5_3.png" title="Figure 5-3" alt="Figure 5-3" /></p>
+
+<h3>数据网格</h3>
+
+<p>数据网格组件可能是此架构模式中最为重要的组件。它直接与每个处理单元里的数据复制引擎打交道，当有数据更新时在处理单元间进行数据复制即数据同步。由于消息网格可以转发请求到任何一个可用的处理单元，所以每一个处理单元包含的数据必须一致。尽管图5-4中示意了一个处理单元间的同步数据复制过程，但是事实上这个过程在并行的异步操作下很快就完成了，有时数据同步的耗时已在微秒级。</p>
+
+<p><img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/software_architecture_patterns_figure5_4.png" title="Figure 5-4" alt="Figure 5-4" /></p>
+
+<h3>处理网格</h3>
+
+<p>如图5-5所示，处理网格是虚拟中间件中的一个可选的组件。当有多个处理单元来处理应用程序的每一部分工作时，它负责管理分布式请求处理。举例，假如有一个请求来了，然后需要在不同处理单元间流转(比如，订单处理单元和客户信息处理单元)，那么处理网格就负责为这个请求协调和调度这两个处理单元。</p>
+
+<p><img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/software_architecture_patterns_figure5__5.png" title="Figure 5-5" alt="Figure 5-5" /></p>
+
+<h3>部署管理器</h3>
+
+<p>部署管理器负责根据一些加载条件来动态地开启和关闭处理单元。这个组件还会持续监测响应时长、用户负载量以及根据用户负载量来启动和关闭处理单元。它是应用程序具备可变扩展性的重要组件。</p>
+
+<h2>模式考量</h2>
+
+<p>空间架构模式是一个既复杂而且实现成本又高的架构模式。对于有一定可变负载需求的小型Web应用程序来说它是一个合适的架构选择（比如，社交媒体网站，投标拍卖网站）。但是，它不适合传统的基于大型关系型数据库的且有大量操作数据的应用程序。</p>
+
+<p>虽然空间架构模式不需要一个集中的数据存储，但是在处理单元中通常包含了一个数据存储，用于内存数据网格的初始化加载和数据变更的异步持久化。这也是一个常见的做法，即通过创建单独的分区来把广泛使用的事务数据从稳定的数据中隔离出来，这是为了减少每个处理单元中内存级数据网格的内存占用。</p>
+
+<p>需要非常注意的是，虽然这种架构模式的替代名称是基于云计算的架构，但是处理单元不需要驻留在云托管服务或PaaS(平台即服务)。这些处理单元可以很容易的被驻留在本地服务器，这也是我给这种架构模式起名“基于空间的架构模式”的原因。</p>
+
+<p>从产品实现的角度来说，此架构中的很多组件你都可以通过第三方产品来实现，比如：GemFire、JavaSpaces、GigaSpaces、IBM对象网格、nCache以及Oracle Coherence。由于实现此架构模式的成本和功能差异很大(特别是数据复制的需要的时长)，所以作为架构师，在选择使用哪个产品来实现架构中的组件前，你首先需要做的是明确你的目标和指标。</p>
+
+<h2>模式分析</h2>
+
+<p>下面对空间架构模式的特点进行了评级和分析。对于每一个架构特点的评级都是基于此架构在这一特点上的实际应用以及是否被大家所熟知。至于几种架构模式的并行对比，请参看附录A。</p>
+
+<p><strong>整体的敏捷性</strong></p>
+
+<pre><code>等级：高
+理由：整体敏捷性是指对不断修改的需求的适应能力。由于处理单元(应用程序或应用程序模块的部署实例)可以被快速的启动和关闭，
+那么应用程序就能对用户负载量的上升和下降作为很好的处理。采用此模式的架构通常对代码的变化也能作出很好的处理，因为此类应用
+程序规模较小而且此架构模式具有动态的特性。
+</code></pre>
+
+<p><strong>部署的简易性</strong></p>
+
+<pre><code>等级：高
+理由：通常，虽然空间架构模式不是解耦和分布式的，但是它具备动态性，而且很多基于云的工具都可以很容易的插拔。
+</code></pre>
+
+<p><strong>可测性</strong></p>
+
+<pre><code>等级：低
+理由：在测试环境中要模拟高用户负载的情况是高成本且很耗时的，这使得对应用程序的可扩展性方面的测试变得困难。
+</code></pre>
+
+<p><strong>性能</strong></p>
+
+<pre><code>等级：高
+理由：在此架构模式中采用内存数据访问和缓存机制的方式，使得应用程序达到了高性能。
+</code></pre>
+
+<p><strong>可伸缩性</strong></p>
+
+<pre><code>等极：高
+理由：高扩展性源于一个事实，即此架构模式几乎没有或根本没有对集中式数据库的依赖，所以从根本上铲除了这个瓶颈。
+</code></pre>
+
+<p><strong>开发的简易性</strong></p>
+
+<pre><code>等级：低
+理由：复杂的缓存和内存数据网格产品让这种模式的实现相对复杂，主要是因为缺乏对用于创建这类的架构的工具和产品的熟悉。
+此外，必须特别注意在开发此类架构时，要确保源代码不会影响性能和可伸缩性。
+</code></pre>
+
+<h1>附录A-各大架构模式的分析总结</h1>
+
+<p>图A-1中总结了各个模式的得分情况。这个总结将会帮你选择一个合适的架构模式。比如，如果你的架构关注点是可伸缩性，那么你可以从此图中得知事件驱动架构模式、微服务架构模式以及空间架构模式都是合适的选择。同样，如果你选择分层架构模式，那么你可以从图中得知，此架构的部署简易性、性能和可伸缩性将会是此架构中比较有风险的部分。</p>
+
+<p><img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/software_architecture_patterns_figureA___1.png" title="Figure A-1" alt="Figure A-1" /></p>
+
+<p>虽然此图可以辅助你选择一种相对合适的架构模式，但是当你真正在选择一个架构模式时还是要仔细思考思考。你必须分析实际场景的方方面面，包括基础设施维护、开发人员的技术水平、项目预算、项目交付日期以及应用程序的大小。选择一个合适的架构模式是至关重要的，因为一旦生根就很难改变了。</p>
+
+<p>感谢 @磊哥 贡献了第二章的翻译。</p>
+<div class="footnotes">
+<hr/>
+<ol>
+<li id="fn:1">
+<p><a href="https://docs.oracle.com/javaee/5/tutorial/doc/bnagx.html">JSP详细资料</a><a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
+<li id="fn:2">
+<p><a href="http://docs.oracle.com/javaee/6/tutorial/doc/bnaph.html">JSF详细资料</a><a href="#fnref:2" rev="footnote">&#8617;</a></p></li>
+<li id="fn:3">
+<p><a href="http://www.oracle.com/technetwork/developer-tools/eclipse/springtutorial-087561.html">Spring详细资料</a><a href="#fnref:3" rev="footnote">&#8617;</a></p></li>
+<li id="fn:4">
+<p><a href="https://docs.oracle.com/cd/E24329_01/web.1211/e24446/ejbs.htm#INTRO255">EJB详细资料</a><a href="#fnref:4" rev="footnote">&#8617;</a></p></li>
+<li id="fn:5">
+<p><a href="http://baike.baidu.com/view/40591.htm?fromtitle=%E4%BA%8C%E5%85%AB%E5%8E%9F%E5%88%99&amp;fromid=3689905&amp;type=syn">28原则资料</a><a href="#fnref:5" rev="footnote">&#8617;</a></p></li>
+<li id="fn:6">
+<p><a href="http://www.kankanews.com/a/2013-03-26/004892183.shtml">康威定律</a><a href="#fnref:6" rev="footnote">&#8617;</a></p></li>
+<li id="fn:7">
+<p><a href="https://docs.oracle.com/cd/E23943_01/doc.1111/e10807/c25_wsdl_and_soap.htm">SOAP</a><a href="#fnref:7" rev="footnote">&#8617;</a></p></li>
+<li id="fn:8">
+<p><a href="https://docs.oracle.com/cd/E23943_01/doc.1111/e10807/c25_wsdl_and_soap.htm">WSDL</a><a href="#fnref:8" rev="footnote">&#8617;</a></p></li>
+<li id="fn:9">
+<p><a href="https://www.osgi.org/">OSGi</a><a href="#fnref:9" rev="footnote">&#8617;</a></p></li>
+<li id="fn:10">
+<p><a href="http://www.jboss.org/">JBoss</a><a href="#fnref:10" rev="footnote">&#8617;</a></p></li>
+<li id="fn:11">
+<p><a href="http://docs.oracle.com/javaee/6/tutorial/doc/bncdq.html">JMS</a><a href="#fnref:11" rev="footnote">&#8617;</a></p></li>
+<li id="fn:12">
+<p><a href="https://www.amqp.org/">AMQP</a><a href="#fnref:12" rev="footnote">&#8617;</a></p></li>
+<li id="fn:13">
+<p><a href="http://www.oracle.com/technetwork/articles/javase/index-137171.html">REST</a><a href="#fnref:13" rev="footnote">&#8617;</a></p></li>
+<li id="fn:14">
+<p>RM<a href="#fnref:14" rev="footnote">&#8617;</a></p></li>
+<li id="fn:15">
+<p><a href="http://activemq.apache.org/">ActiveMQ</a><a href="#fnref:15" rev="footnote">&#8617;</a></p></li>
+<li id="fn:16">
+<p><a href="http://hornetq.jboss.org/">HornetQ</a><a href="#fnref:16" rev="footnote">&#8617;</a></p></li>
+</ol>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[2015年我都干嘛了]]></title>
+    <link href="http://blog.handy.wang/blog/2015/12/06/2015nian-wo-du-gan-ma-liao/"/>
+    <updated>2015-12-06T11:33:18+08:00</updated>
+    <id>http://blog.handy.wang/blog/2015/12/06/2015nian-wo-du-gan-ma-liao</id>
+    <content type="html"><![CDATA[<p>2015年即将结束，那这一年我到底都干嘛了？</p>
+
+<pre><code>从去年(2014)的12月份就开始暗无天日的加班忙碌，直到今天下半年才好了很多，眼看这就要要2016了，
+也该回顾一下2015年的工作了。
+</code></pre>
+
+<h4>AutoLayout</h4>
+
+<p>2015年12月，加入了一个新团队－嗨购，仍然是负责iOS项目开发，人员上加上我两人，版本处于0.0.1版本。</p>
+
+<p>当时接收项目后，发现这个项目的界面采用storyboard+autolayout开发，另外那个哥们去AutoLayout的使用也处于学习阶段，所以遇到的主要问题就是修改界面的Bug。由于我之前没有使用过storyboard和autolayout，再加上UI设计师对界面的细节控制要求很高，所以有些应付不了了。在另一个哥们儿的辅助下，将就着开发了0.1.0版本(仍采用storyboard+autolayout)，其实这个过程非常苦恼，“是好好学习一下AutoLayout，然后在项目里继续使用AutoLayout呢？” 还是 “采用自己熟悉的纯代码方式来编写？”</p>
+
+<!--more-->
+
+
+<p>最后，综合考虑项目的进度压力、质量的可控性、学习的时间成本后，决定还是暂时放弃Storyboard+AutoLayout，转而使用保守的纯代码方式开发。</p>
+
+<p>在0.1.0版本后，恰逢元旦，另外那个哥们儿休假半个月左右，回家结婚去了。我就逮着这个时机，在项目0.2.0时把项目界面实现方式、网络层、数据库等进行了大重构。</p>
+
+<p>现在相对不忙碌了，计划补补 Todo: <a href="https://developer.apple.com/library/mac/documentation/UserExperience/Conceptual/AutolayoutPG/index.html">AutoLayout</a>以及 Todo: <a href="https://github.com/SnapKit/Masonry">Masonry</a>.</p>
+
+<h4>CocoaPods</h4>
+
+<p>其实，上面提到AutoLayout被我弃用后，就感觉比较反人类了，然后我仍然还要反人类一次。</p>
+
+<p>嗨购项目在0.2.0及之前，对第三方库的依赖方式是通过CocoaPods来管理的，但是为什么这之后我把CocoaPods去掉了呢？这就不得不提到Jenkins(我会在后面聊聊Jenkins)和CocoaPods的代码管理。</p>
+
+<p>本来采用Jenkins对iOS项目打包发布是一件很NB的事情，但是对通过CocoaPods管理第三库的iOS项目打包是一件非常痛苦的事情。说起痛苦，主要是集中在Jenkins上的配置以及项目本身的一些配置，如：Jenkins里build目录的指定、项目中schema的share等问题。这一系列问题我都有记录，这里就不细说了。虽然痛若，但是经过两三天的努力，可以通过Jenkins打包CocoaPods管理的项目。</p>
+
+<p>感觉这一点还好，但是，没有想到最后让我放弃CocoaPods的原因尽是它的优点：无感知管理项目的第三方库依赖。
+因为，</p>
+
+<ol>
+<li>第三方库难免有Bug，所以我也经常修改这些源码里Bug，修改地方多了后也就忘了修改过哪些地方了。然后有一天我pod update了一下，如果本地的源码修改没有了，我得从项目的SVN上对比着再被回来，当时非常恼怒。。。</li>
+<li>由于天国的各种墙，安装cocoapods时我修改了gem源为<a href="https://rubygems.org/">https://rubygems.org/</a> . 但是，没有想到在某几天pod update和pod install根本用不了，导致严重影响了我预期的开发进度。</li>
+</ol>
+
+
+<p>所以，我又选择了保守的方案，删除cocoapods，转而采用源代码依赖的方式，这样一来Jenkins打包也简化了。</p>
+
+<pre><code>现在回想，关于那段配置Jenkins打包CocoaPods项目的经历非常可贵，那是对意志的磨砺。
+</code></pre>
+
+<ul>
+<li><strong>相关知识</strong></li>
+<li><a href="https://www.evernote.com/l/AFkw93ypG4JB9Ka-cwCPgU-xtTWZx9RTEa4">Jenkins打包CocoaPods项目</a></li>
+<li><a href="http://blog.devtang.com/blog/2014/05/25/use-cocoapod-to-manage-ios-lib-dependency/">更换CocoaPods的镜像</a></li>
+</ul>
+
+
+<h4>Jenkins</h4>
+
+<p>刚到嗨购的时候，发布安装包的方式是archive ipa文件并上传到fir.im进行发布，以供其它人员进行安装试用或测试。随着项目的推进，期望把这种Inhouse Release的方式自动化，所以引入之前在搜狐时就一直采用的Jenkins进行自动打包发布。</p>
+
+<p>关于Jenkins的安装我简要提一下，主要还是回顾一下使用过程中遇到的问题</p>
+
+<p><strong>Jenkins环境</strong></p>
+
+<ul>
+<li>下载Jenkins.war，然后启动java -jar jenkins.war</li>
+<li>Jenkins的相关目录
+
+<ul>
+<li>/Applications/Jenkins &ndash; which is having the jenkins.war alone.</li>
+<li>/Users/Shared/Jenkins &ndash; with all the plugins, war, jobs, usercontent, etc.</li>
+<li>/Users/Shared/Jenkins/Home &ndash; JENKINS_HOME</li>
+<li>/Library/LaunchDaemons/org.jenkins-ci.plist &ndash; Jenkins自启动文件</li>
+<li>/Library/Application Support/Jenkins/jenkins-runner.sh &ndash; 自启动shell脚本</li>
+</ul>
+</li>
+</ul>
+
+
+<p><strong>Jenkins+CocoaPods项目</strong></p>
+
+<ul>
+<li>参见<a href="https://www.evernote.com/l/AFkw93ypG4JB9Ka-cwCPgU-xtTWZx9RTEa4">我的Evenote Sharing</a></li>
+</ul>
+
+
+<p><strong>七牛空间</strong></p>
+
+<ul>
+<li>参见<a href="https://www.evernote.com/l/AFkw93ypG4JB9Ka-cwCPgU-xtTWZx9RTEa4">我的Evenote Sharing</a></li>
+</ul>
+
+
+<p><strong>打包状态邮件通知</strong></p>
+
+<ul>
+<li>在Jenkins里安装Mail Notification Plugin</li>
+<li>以126邮件为例，配置SMPT服务器及端口</li>
+<li>注意：Jenkins管理员邮箱要与发送邮件的账号一致，不然会发送邮件失败。</li>
+<li>在具体项目中，可以配置相应的收件人、trigger等。</li>
+</ul>
+
+
+<h4>Redmine</h4>
+
+<p>在2008年刚参加工作的时候，老东家就有搭建Redmine用于项目管理、issue跟踪、Wiki书写。在搜狐的时候，是由服务器同学搭建的trac来写wiki。由于刚到嗨购团队的时候，接口文件都是服务器同学通过word文档来记录并分发给相关开发人员。我觉得这样非常的不方便，不但不方便更改，也不便于分发。所以，我偷摸地在公司内网搭建了Redmine，给相关技术人员分发了账号和权限，从而以后<strong>“妈妈再也不用担心我们的接口文档了”</strong>。</p>
+
+<pre><code>Todo: 也有朋友在git上写项目的wiki，改天一定要试下
+</code></pre>
+
+<p>到目前为止，我采用过三种搭建Redmine的方法：</p>
+
+<ol>
+<li>纯手工24K金方式打造Apache+MySQL+ROR
+
+<ul>
+<li>完全手工地安装Apache、MySQL、RubyOnRails环境</li>
+<li>此法太虐心，会遇到各种东西没有安装，非常煎熬</li>
+</ul>
+</li>
+<li>采用BitNami一键式安装Redmine
+
+<ul>
+<li>采用BitNami安装的Redmine，在一个单独的目录下安装了Apache、MySQL等环境。</li>
+<li>BitNami安装Redmine后，操作系统里安装的Apache、MySQL的环境变量被修改了</li>
+<li>为了安装一个Redmine，把操作系统里本身配置的一些环境变量给搞乱，不好不好。</li>
+</ul>
+</li>
+<li>布署Redmine项目源码
+
+<ul>
+<li>Redmine本身是一个ROR项目，再加上09年左右的时候做过一个ROR项目，所以此法可试。</li>
+<li>下载Redmine源码: <a href="http://www.redmine.org/projects/redmine/wiki/Download">http://www.redmine.org/projects/redmine/wiki/Download</a></li>
+<li>解压Redmine到某个目录</li>
+<li>配置数据库连接，并创建或导入Redmine数据库表</li>
+<li>在Redmine项目运行sudo ruby bin/rails server webrick -e production来启动项目，从而抛弃Apache</li>
+<li><strong>此法最好，对于我来说最简单直接，也符合程序思维(建立数据库、配置数据连接、部署项目源码并运行)</strong></li>
+</ul>
+</li>
+</ol>
+
+
+<h4>Push Notification Simulator</h4>
+
+<p>早在搜狐的时候，就遇到推送调试非常不方便的问题。试用了一些方案，但最终于我还是搭建了一套更好的方案，并运用到了搜狐新闻和嗨购项目中。</p>
+
+<p>最开始的方案是采用PushMeBaby，这是一个Mac版的源代码项目，把项目需要收到推送的Dev或Release的push certification导入项目，并设置好相应的宏就可以运行一个Mac App，然后输入相应手机的Token就可以发推送了。</p>
+
+<p>随着我对PushMeBaby的使用，非常想把推送模拟发送机制进行改进，因为我发现它有几个弊端：</p>
+
+<ul>
+<li>PushMeBaby的环境建立不方便，因为它是一个Mac环境，需要在开发人员自己的电脑各位持有一位源码并运行。完全没有必要。</li>
+<li>PushMeBaby需要配置Push Certificate，这一点估计会难倒不少对iOS开发的PrivateKey、Certificate、Provisioning Profile等授权概念比较混淆的人。门槛有点高。</li>
+<li>PushMeBaby只能给某一个PushCertificate发推送。非常不灵活。</li>
+<li>PushMeBaby只能输入Token。非常不灵活。</li>
+<li>PushMeBaby的推送内容修改只能修改源码。非常不方便。</li>
+</ul>
+
+
+<p>终于，在开发搜狐新闻的<strong>推送打开Navtive页面</strong>这一功能时，由于要反复调试推送内容，所以我决定自己搭一个即保留PushMeBaby已有功能，也可以解决以上问题的推送环境，我给它起了个名字－Push Notification Simulator。</p>
+
+<p><strong>Push Notification Simulator</strong></p>
+
+<ul>
+<li>找一台做CI的服务器(肯定是Mac嘛)</li>
+<li>Mac自带Apache+PHP环境。大环境就这么轻松的满足了。</li>
+<li>开发一个简单的H5页面作为首页
+
+<ul>
+<li>具备推送内容的配置功能</li>
+<li>具备Push Certificate的选择功能，只需要由一人来上传各Push Certificate即可。</li>
+<li>具备Token的选择和手动输入功能</li>
+</ul>
+</li>
+<li>开发一个可以把H5页可编辑内容作为参数来发送推送的PHP文件</li>
+<li>运行，测试，好使。</li>
+</ul>
+
+
+<p>在一个团队里，这是一个非常省心的方案。</p>
+
+<h4>Crashlytics &amp; App Log</h4>
+
+<p>App crash给人一种非常重大的事件的感觉，所以早期遇到App crash总是有些菊花一紧的感觉。倒不是说害怕App crash，而是因为环境的限制或者低概念crash而查不到App crash的原因，尤其是在线上版本crash的时候。</p>
+
+<p>目前，友盟、TalkingData等第三方统计平台也都可以借助其SDK上报Crash Log了，但毕竟它们的核心是做统计，其实Crash Log分析远远比不上Crashlytics.</p>
+
+<p><strong>Crashlytics</strong></p>
+
+<p>最开始，Crashlytics作为一个独立项目存在，后被Twitter收购作为Fabric下的一个子项目了。</p>
+
+<p>现在，集成Crashlytics挺方便的：</p>
+
+<ul>
+<li>注册 Fabric 账号</li>
+<li>安装 Fabric 客户端</li>
+<li>按 Fabric 客户端的指引导入 Fabric 和 Crashlitics Framework</li>
+<li>在 AppDelegate 中 import Crashlytics，并初始化 SDK</li>
+<li>添加 RunScript。我会判断不是 Debug Configuration 时才上报 Crash Log。Debug Configuration 下的crash 一般都好解决，因为这时还处于开发环境；而 Release 或 Release-Inhouse 已处于 Distribution 环境了。</li>
+</ul>
+
+
+<p>在 Crashlytics 网站后台可以很方便的分App、分版本的查看不同时间段的 Crash Log，并且还可以在 App 内使用Crashlytics 来输出特定的日志或标记，以便在Crashlytics 网站后台查看 Crash Log 时可以更好的跟踪 Crash 原因。</p>
+
+<p><strong>App Log</strong></p>
+
+<p>Crashlytics偏技术，重点在于解决Crash。</p>
+
+<p>但是，App发版以后，可能仍存在一些逻辑漏洞没有被测试出来，比如页面上的数据展现效果很奇怪、页面间某些衔接逻辑有些混乱了，类似的这一类问题属于业务问题。当在App发版后，发生业务Bug且开发人员很难通过Review自己的代码来查找Bug时，就需要借助服务器日志或App日志。</p>
+
+<p>我在嗨购项目里尝试写一个上传代码日志的逻辑，原理很简单：</p>
+
+<ul>
+<li>把App内的NSLog输出的日志重定向输出到一个文件并保存起来</li>
+<li>每次App EnterBackground时，启动一个BackgroundTask线程检查日志文件是否大于1M了，如果大于1M则上传到服务器，上传成功则删除日志文件</li>
+<li>此日志文件不纳入App缓存管理的范畴</li>
+</ul>
+
+
+<p>另看，这一小小的机制，在后来辅助修改业务Bug起到了大作用。</p>
+
+<pre><code>Crashlytics &amp; App Log已作为我经手的项目的常规架构支持。
+</code></pre>
+
+<h4>嗨购项目架构演进概要</h4>
+
+<p>技术架构，这一词给我的印象一直是既清晰又模糊，并不断地刷新它在我心目中的概念。</p>
+
+<h6>何谓清晰</h6>
+
+<p>从08年工作至今，同事经常会聊天技术架构、网络上经常看到技术架构各种概念，有些人或网站能说得头头是道，有些却说个大概，总之，耳濡目染地能清晰地感受到技术架构是一件很NB的事儿。</p>
+
+<h6>何谓模糊</h6>
+
+<p>从刚工作几年时，在内心就萌芽了架构师的梦想，但是真正在向这个方向努力的时候我却在问自己一个问题：“什么是架构？什么是架构师？好的架构师如何来做好的架构？”，所以，架构一词就像隐形的空气里，明明能感觉到离你很近，但是却摸不着看不见，有一种无从下手的感觉。</p>
+
+<h6>学习之路</h6>
+
+<p>这几年工作下来，通过自我的学习，与同事、朋友的交流，工作的实践，以及阶段性的总结，有了自己一个循序渐进地对架构的理角：</p>
+
+<p><strong>重构</strong> － 从在搜狐工作开始，我开始培养自己的程序设计能力，以及对程序结构的理解。那时，我对架构的理解是从代码重构过渡过去的，即，好的架构就是代码整洁、逻辑清晰。所以，那时我必须让自己按这个要求去做，以致于现在都有了代码洁癖之类的强迫证。</p>
+
+<p><strong>抽像模块</strong> － 随着开发工作的进展，我发现很多功能、逻辑模块是可以复用地，但是好像很多人愿意Copy &amp; Paste代码，因为这样写代码很快。其实，到最后得不偿失，你会发现最后代码失控了、到处打补丁、一个很小的Bug都要费九牛二虎之力才能Fix。所以，我必须多花一两个小时或一两天的时间把我觉得应该重构、抽像、解耦的模块进行修改，然后再在此基础上做相应的业务。</p>
+
+<p><strong>分层、职责专一</strong> － 后来，打算从搜狐离职了，去腾讯面试，我现在都还清楚地记得人家问了我一个问题：“搜狐新闻App iOS版里有没有你们自己设计的一些架构？”，我当然说有啊，但是经过我描述我所理解地以及在搜狐新闻App中看到的所谓的架构后，人家说他想要的不是这个。</p>
+
+<blockquote><h6>我当时大致是这样描述搜狐新闻App的架构的：UIViewController作为控制器发起网络请求，网络请求由Service负责，Service另还负责网络请求获取到的JSON数据解析，最后把解析好的数据返回给上层。其实，现在再回过头去Review之前的代码，还有诸多设计问题。</h6></blockquote>
+
+<p>我例举此经历其实是为了举出这个反例。因为后来我对架构有了新的理解－分层设计以及专一职责这两大概念。经过，后来我的反思、反问自己：“这个哥们儿期望的架构应该是怎样的？什么叫自己设计过的架构？”，我有了对架构新的理解：App架构(以及别的领域)不是把诸多纯粹的代码模块、第三方库、数据等像堆积木一样简单直接地拼凑而成（尽管可能它们之间是独立的、解耦的、易用的），也不是简单地套用被大家都说烂了的MVC（就如上面我在腾讯面试时陈述的那样）。后来，我又review了之前搜狐新闻App的代码，确实发现了诸多问题，如：（只列举一二，开始自己扇自己脸了）</p>
+
+<ul>
+<li>过渡依赖TT框架</li>
+<li>View里居然发起网络请求</li>
+<li>过渡依赖数据库，以致数据库迁移方案同样不简单</li>
+<li>数据库操作需要写SQL（对于之前不会SQL的同事来说是灭顶之灾，哈哈哈）</li>
+<li>等等，我狠狠的扇了自己几下，算了不说了。</li>
+<li><strong>BTW：我这是过于自惭形秽了，其搜狐新闻客户端App里很多我现在在用以及非常受益的思考和代码。</strong></li>
+</ul>
+
+
+<p>在我加入嗨购后，我仍然在反思那哥们儿的问题，同时更激进地去查阅别人对App架构的观点或理解，慢慢地我有一了一套我自己设计的<strong>基于Layered Architecture的iOS App架构</strong>：（简单描述如下，而后我会<a href="">另起一文来阐述我的理解－待续</a>）</p>
+
+<ul>
+<li>View Layer</li>
+<li>URLPath Based Controller Layer</li>
+<li>DataCenter Layer</li>
+<li>APIManager Layer</li>
+<li>PersistenceManager Layer</li>
+</ul>
+
+
+<p>同时，从跨业务、跨App的角度，我把这套架构设计又划分为：</p>
+
+<ul>
+<li>Business Layer －开发人员主要关心的</li>
+<li>Business Support －开发人员大部分不用关心的</li>
+<li>Tech Support －开发人员完全不用关心的</li>
+</ul>
+
+
+<p>以上两种分层的方式都涉及到里面非常多的技术点和坑，我还是<a href="">另起一文来阐述我的理解－待续</a></p>
+
+<p><strong>跨业务/跨App</strong></p>
+
+<p>目前，在嗨购团队开发出来三个App基本都采用了上面我设计的这种架构，而且对于某些类我已配置了Xcode代码模板，用起来非常方便。这套架构设计最大的益处就是开发人员可以把主要的精力集中在业务层面，对于技术以及可复用的业务层面代码基本上都已经被抽离出来了。当然，它仍然还在改进中、细化中，比如：View层的事件驱动，持久层的泛化等等。</p>
+
+<p><strong>可约定地、可传承地、固定且逐渐演进的开发模式</strong></p>
+
+<p>从在搜狐期间工作到现在来到创业团队奋斗，我一直在不断的摸索、学习、反问自己什么是架构，什么是好的架构，没有人来手把手的教你、告诉你从哪儿学习、该怎么做，不过没有关系，我想说的是即使别人在你的头上开个孔，然后把他知道的一切灌进去也是无用的，因为很多细节需要积累、需要自己反思和总结。只有你经过摸索、学习、总结后，尽管自己的设计、观点是错的，但是在与别人切磋、讨论时很容易理解别人的观点，以及辩证地看待优劣、好坏。</p>
+
+<p>所以，如果我觉得我的程序或架构设计成果还行，那么我会第一时间把它分享给我的队友，首先是阐述我的思想、然后说服他们接受我的架构，如果说服了那么在思想上就达成一致了，那么在以后的执行层面就不是问题了，队友们就可以帮我传递这些设计并且会即时反馈缺点以便我修正。</p>
+
+<p>现在，我们队员间相互Review代码时，只需关注在业务层面以及一些新增的有意义的技术点，而不是纠结在队员对技术观点、代码风格等等无休止的争论上。</p>
+
+<p>最后，我建议：作为一名软件技术人员，我们要不断的探索、学习、实践，最后一定不要忘了总结，把自己的切身体会和理解抽象成一套属于自己原创的有体系结构的技术方法论。</p>
+
+<p>所以，越学习越发现自己的知识很贫瘠，我仍需要大量的学习，也正在学习中&hellip;..Fighting!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[UIView与CALayer中动画的创建和执行过程]]></title>
+    <link href="http://blog.handy.wang/blog/2015/10/11/uiviewyu-calayerzhong-dong-hua-de-chuang-jian-he-zhi-xing-guo-cheng/"/>
+    <updated>2015-10-11T22:49:40+08:00</updated>
+    <id>http://blog.handy.wang/blog/2015/10/11/uiviewyu-calayerzhong-dong-hua-de-chuang-jian-he-zhi-xing-guo-cheng</id>
+    <content type="html"><![CDATA[<h2>写在最前面</h2>
+
+<p>本文假设您已有RunLoop和CAAnimation的相关知识，所以这里不对<a href="http://blog.handy.wang/blog/2014/05/26/runloopxue-xi-bi-ji-1/">RunLoop</a>和CAAnimation的细节进行介绍。但是，这里仍然要提前提及几个知识点：CFRunLoopActivity、CAAction、CAAnimation、CATransaction</p>
+
+<p><strong>RunLoop的6个CFRunLoopActivity</strong></p>
+
+<pre><code>typedef CF_OPTIONS(CFOptionFlags, CFRunLoopActivity) {
+    kCFRunLoopEntry = (1UL &lt;&lt; 0),//即将进入RunLoop
+    kCFRunLoopBeforeTimers = (1UL &lt;&lt; 1),//Timer即将触发
+    kCFRunLoopBeforeSources = (1UL &lt;&lt; 2),//Source0即将触发
+    kCFRunLoopBeforeWaiting = (1UL &lt;&lt; 5),//RunLoop即将休眠
+    kCFRunLoopAfterWaiting = (1UL &lt;&lt; 6),//RunLoop已被唤醒
+    kCFRunLoopExit = (1UL &lt;&lt; 7),//RunLoop已结束
+    kCFRunLoopAllActivities = 0x0FFFFFFFU
+};
+</code></pre>
+
+<p><strong>CAAction</strong>
+CAAction即动画行为，它是一个protocol(CAAnimation实现了此protocol)，即定义一个动画要做的事情。比如，我们平时无论是否在Animaiton block里修改View的属性时，都会触发Core Animation回调CALayer，再回调UIView来获取CAAction(如：CABasicAnimation)，如果不在Animaiton block里修改View的属性时获取到的是[NSNull null]，在Animaiton block里修改View的属性时获取到的是CABasicAnimation等(后面有图标这个过程)，也可以返回自定义的动画(实现了CAAction的动画)。</p>
+
+<p><strong>CAAnimation的继承结构</strong></p>
+
+<p><img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/uiview_calayer_animation_creation_caanimation_hierarchy.jpg" alt="CAAnimation.jpg" /></p>
+
+<p><strong>CATransaction</strong>
+CATransacton是一个与动画相关的概念，它负责把多个对Layer或View的可动画属性的修改集中在一起一次性提交并执行，所以Animation应该需要被包含在CATransaction中的。CATransaction分为<strong>隐式</strong>和<strong>显示</strong>。
+如下，这就是一个<strong>显示的CATransaction</strong>代码片断，即由开发人员来begin和commit。</p>
+
+<pre><code>[CATransaction begin];
+[CATransaction setValue:@(NO) forKey:kCATransactionDisableActions];
+[CATransaction setValue:@(0.5) forKey:kCATransactionAnimationDuration];
+[CATransaction setValue:^() {NSLog(@"Completion...");} forKey:kCATransactionCompletionBlock];
+_animLayer.position = CGPointMake(_animLayer.position.x, _animLayer.position.y - 10);
+[CATransaction commit];
+</code></pre>
+
+<p>从代码片断中可见虽然只是修改了layer的position，但是最终动画的duration、动画回调都可能通过CATransaction来提供。当不是简单的修改position，而是给layer加一个CAAnimation时，最终动画的duration等参数则是以CAAnimation的内容为主。同时，CATransaction支持嵌套，以最外层commit为准。这里还需要关注一下对kCATransactionDisableActions的修改，kCATransactionDisableActions表示是否禁用CAAction的检索：若为YES则禁用，即无论在动画代码块里的UI属性修改都不会有动画效果，actionForKey:方法不会回调；若为NO则开启CAAction的检索。</p>
+
+<p>关于<strong>隐式的CATransaction</strong>，有<a href="http://blog.csdn.net/yaozhuoyu/article/details/9533909">资料</a>说是</p>
+
+<pre><code>在大多数情况下，我们并不需要去创建自己的transaction。
+当我们给layer添加一个显式或者隐式的动画的时候，core animation会自动的为我们创建一个隐式的
+transaction。
+</code></pre>
+
+<p>也有<a href="http://geeklu.com/2012/09/animation-in-ios/">资料</a>说是</p>
+
+<pre><code>CATransaction也分两类,显式的和隐式的,当在某次RunLoop中设置一个animatable属性的时候,
+如果发现当前没有事务,则会自动创建一个CA事务
+</code></pre>
+
+<p>但是，无论通过修改Layer的position属性来达到隐式动画效果时，还是通过修改View的center属性达到显式动画效果时断点+[CATransaction begin]、CA::Transaction::create()方法都没有被调用，说明没有新创建CATransaction.</p>
+
+<pre><code>隐式动画
+_animLayer.position = CGPointMake(_animLayer.position.x, _animLayer.position.y - 10);
+
+显式动画
+[UIView animateWithDuration:0.5 animations:^{
+    _animView.center = CGPointMake(_animView.center.x, _animView.center.y - 10);
+}];
+</code></pre>
+
+<p>但是前面我们提到Animation是要依附于CATransaction的commit才得以执行的，而且我们在实验隐式动画和显式动画时，当CAAction被查找(后面会图示)完成后CA::Transaction:commit会被调用到，所以RunLoop回调进行创建动画的过程时应该事先已创建了一个根Transaction，再次通过断点CA::Transaction::create方法也证明了Main RunLoop通过回调<strong><strong>CFRUNLOOP_IS_CALLING_OUT_TO_A_SOURCE0_PERFORM_FUNCTION</strong></strong>只调用了一次CA::Transaction::create方法来创建了一个根Transaction，所以这就能解释能为什么隐式动画和显式动画时Core Animation内部没有新创建CATransaction而只是在动画CAAction返回后调用CA::Transaction:commit就可以执行动画了。所以，我理解的隐式CATransaction是指前面提到的根Transaction。</p>
+
+<h2>正文</h2>
+
+<p>在了解了以上知识后，我才会告诉你，本文主要是介绍我们在UIView或CALayer中通过动画块或不通过动画块来修改其属性时的动画创建和执行过程。先看一段代码，如下：</p>
+
+<pre><code>代码一：隐式动画
+_animLayer = [IDCAAnimationTestLayer new];
+_animLayer.position = CGPointMake(_animLayer.position.x, _animLayer.position.y - 10);
+
+代码二：无动画效果
+_animView.layer.position = CGPointMake(_animView.layer.position.x, _animView.layer.position.y - 10);
+
+代码三：无动画效果
+[CATransaction begin];
+[CATransaction setValue:@(NO) forKey:kCATransactionDisableActions];
+[CATransaction setValue:@(0.5) forKey:kCATransactionAnimationDuration];
+_animView.layer.position = CGPointMake(_animView.layer.position.x, _animView.layer.position.y - 10);
+[CATransaction commit];
+
+代码四：显式动画
+[UIView animateWithDuration:0.5 animations:^{
+    _animView.center = CGPointMake(_animView.center.x, _animView.center.y - 10);
+}];
+
+代码五：无动画效果
+_animView.center = CGPointMake(_animView.center.x, _animView.center.y - 10);
+</code></pre>
+
+<p>从以上代码中可以看到：为什么同样是对CALayer或UIView的相同属性作修改，而有些有动画而有些没有动画呢？带着这个疑问，我们接下来看下面这张图。</p>
+
+<p><img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/uiview_calayer_animation_creation_callprocess.jpg" alt="E_UIView:CALayer的动画创建及执行过程.jpg" />
+如上图，我来分别梳理一个修改CALayer和UIView属性时的动画创建过程(没错，其实不在动画块里修改属性也有动画创建过程存在的)。</p>
+
+<h5>CALayer的动画创建和执行过程(如图中黑实线箭头及序号)</h5>
+
+<ol>
+<li>RunLoop触发两类回调事件：BeforeWaiting、点击事件、ExitRunLoop</li>
+<li>RunLoop回调事件回调到开发人员写的修改CALayer属性的代码</li>
+<li>当修改CALayer的animatable属性时会触发CALayer自己的actionForKey:方法来查找相应的CAAction，CALayer的actionForKey方法的默认实现会返回一个实现了CAAction protocol的CAAnimation，如CABasicAnimation</li>
+<li>开发人员的修改CALayer属性的代码执行完毕后，在RunLoop的回调函数的后续逻辑会调用CA::Transaction:commit()来提交之前修改CALayer属性而生成的CAAction.</li>
+<li>最后相应的动画效果显示到屏幕上(TODO:这里的细节还有待调研)</li>
+</ol>
+
+
+<h5>UIView的动画创建和执行过程(如图中虚线箭头及序号)</h5>
+
+<ol>
+<li>RunLoop触发两类回调事件：BeforeWaiting、点击事件、ExitRunLoop</li>
+<li>RunLoop回调事件回调到开发人员写的修改UIView几何或透明度等UI属性的代码，这里修改有两种情况如下：
+2.1.1 不在动画代码块里修改UIView属性：修改UIView的几何、透明度等UI属性实际上最终是通过CALayer的对应属性修改来体现的，如修改UIView的center实际上最终是通过CALayer的position来体现的。
+2.1.2 在动画代码块里修改UIView属性
+2.2 如2.1.1所说，无论是否在动画代码块里修改UIView的几何、透明度等UI属性，实际上是通过CALayer修改对应属性来完成的，这是因为UIView与CALayer的关系是平行的，且UIView是CALayer的Delegate。</li>
+<li>与<strong>CALayer的动画创建和执行过程</strong>的流程一致。但是需要注意的是：如果是2.1.1触发这一步，那么返回的是[NSNull null]，即没有动画(表示停止对CAAction的检索)；如果是2.1.2触发这一步，那么返回的结果与<strong>CALayer的动画创建和执行过程</strong>第3步一样，即实现了CAAction protocol的CAAnimation子类。从这两种情况我们就不难明白，为什么不在动画代码块里修改UIView的UI属性没有动画，反之有动画，这都是由actionForKey:是否有确切的CAAction值决定的。顺带讲一下，actionForKey:有三种返回值情况：id<CAAction>、nil，nil表示没有没有任何动画行为。</li>
+<li>同<strong>CALayer的动画创建和执行过程</strong></li>
+<li>同<strong>CALayer的动画创建和执行过程</strong></li>
+</ol>
+
+
+<p>讲到这里，我再来回顾前面的问题<strong>“为什么同样是对CALayer或UIView的相同属性作修改，而有些有动画而有些没有动画呢？”</strong>，再来看一下代码并作相应解释：</p>
+
+<pre><code>代码一：隐式动画
+_animLayer = [IDCAAnimationTestLayer new];
+_animLayer.position = CGPointMake(_animLayer.position.x, _animLayer.position.y - 10);
+解释：这里首先解释一个名词叫Root Layer和非Root Layer。很简单，Root Layer就是指有对应UIView的Layer，
+非Root Layer就是指没有对应UIView的Layer，在CALayer里只有对非Root Layer的UI属性修改才会有隐式动画效果。
+其实，不难理解，因为Root Layer有UIView，且修改UI属性的代码没有写到动画代码块里，
+所以CAAction的返回被UIView的actionForLayer:forKey:方法返回为[Null null]，进一步回调到CALayer里actionForKey:的返回值为nil。
+但是，如果在动画代码块里修改Root Layer的UI属性是会有动画效果的。
+显然，_animLayer是一个非Root Layer，修改position属性后会按照上面的“CALayer的动画创建和执行过程”来执行，所以有动画效果。
+
+代码二：无动画效果
+_animView.layer.position = CGPointMake(_animView.layer.position.x, _animView.layer.position.y - 10);
+解释：显然_animView.layer是一个Root Layer，而且没有写在动画代码块里，所以不会有隐式动画。
+
+代码三：无动画效果
+[CATransaction begin];
+[CATransaction setValue:@(NO) forKey:kCATransactionDisableActions];
+[CATransaction setValue:@(0.5) forKey:kCATransactionAnimationDuration];
+_animView.layer.position = CGPointMake(_animView.layer.position.x, _animView.layer.position.y - 10);
+[CATransaction commit];
+解释：同**代码二**
+
+代码四：显式动画
+[UIView animateWithDuration:0.5 animations:^{
+    _animView.center = CGPointMake(_animView.center.x, _animView.center.y - 10);
+}];
+解释：参见**UIView的动画创建和执行过程**及其中的2.1.2点，所以有动画效果。
+
+代码五：无动画效果
+_animView.center = CGPointMake(_animView.center.x, _animView.center.y - 10);
+解释：参见**UIView的动画创建和执行过程**及其中的2.1.1点，所以没有动画效果。
+</code></pre>
+
+<p>以上内容就是本章的全部内容，欢迎邮件到nnnwjs@126.com讨论。</p>
+
+<h2>参考</h2>
+
+<ul>
+<li><a href="http://blog.handy.wang/blog/2014/05/26/runloopxue-xi-bi-ji-1/">RunLoop学习笔记(一) 基本原理介绍</a></li>
+<li><a href="http://blog.csdn.net/yaozhuoyu/article/details/9533909">Core Animation 高级动画技巧</a></li>
+<li><a href="http://geeklu.com/2012/09/animation-in-ios/">谈谈iOS Animation</a></li>
+<li><a href="http://www.jianshu.com/p/8c1c1697c0ce">iOS开发基础知识：Core Animation(核心动画)</a></li>
+<li><a href="http://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&amp;mid=400417748&amp;idx=1&amp;sn=0c5f6747dd192c5a0eea32bb4650c160&amp;scene=4#wechat_redirect">iOS 事件处理机制与图像渲染过程</a></li>
+<li>参考以上资料的过程一定要做实验</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[UIView与CALayer协作渲染界面的过程]]></title>
+    <link href="http://blog.handy.wang/blog/2015/10/03/uiviewyu-calayerxie-zuo-xuan-ran-jie-mian-de-guo-cheng/"/>
+    <updated>2015-10-03T01:38:49+08:00</updated>
+    <id>http://blog.handy.wang/blog/2015/10/03/uiviewyu-calayerxie-zuo-xuan-ran-jie-mian-de-guo-cheng</id>
+    <content type="html"><![CDATA[<h2>预热</h2>
+
+<p>在聊这个话题前，我先简单的说说与本文相关的几个iOS核心Framework及它们之间的关系：UIKit Framework、QuartzCore Framework(CoreAnimation)、CoreGraphics Framework.</p>
+
+<p>另外，为了能更好的理解本文要讲解的逻辑机制，建议先熟悉一下RunLoop机制，我<a href="http://blog.handy.wang/blog/2014/05/26/runloopxue-xi-bi-ji-1/">在这里</a>有作讲解。</p>
+
+<p><strong>注意1</strong>：可以看到上面提到的技术点中的CoreAnimation没有叫 <del>CoreAnimation Framework</del> 。为什么呢？因为CoreAnimation不是被单独地打包到一个Framework里的，而是属于QuartzCore Framework的一部分，奇怪的是QuartzCore.h里只引用了CoreAnimation.h。</p>
+
+<pre><code>  /* QuartzCore.h
+   Copyright (c) 2004-2015, Apple Inc.
+   All rights reserved. */
+
+#ifndef QUARTZCORE_H
+#define QUARTZCORE_H
+
+#include &lt;QuartzCore/CoreAnimation.h&gt;
+
+#endif /* QUARTZCORE_H */
+</code></pre>
+
+<p><strong>注意2</strong>：提前了解这几个Framework非常重要，可以辅助我们理解它们各自的职责，以便进一步理解后面会讲解的UIView与CALayer的协作时为什么不同的协作点是相应Framework来参与。</p>
+
+<!-- more -->
+
+
+<p><img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/UIKit-QuarzCore-CoreGraphics-relations.jpg" title="UIKit|QuarzCore|CoreGraphics关系图" alt="UIKit|QuarzCore|CoreGraphics关系图" /></p>
+
+<ul>
+<li><p><strong>UIKit Framework</strong>
+正如Apple官方文档对<a href="http://www.baidu.com">UIKit Framework</a>的介绍，它主要提供了：界面呈现能力、事件响应能力、驱动RunLoop运行和与系统内核通信的数据。简单来说就是：主要负责界面展示、事件响应以及RunLoop运转动力。<em>UIView当然是属于UIKit Framework</em>。</p></li>
+<li><p><strong>QuartzCore Framework 与 CoreAnimation</strong>
+正如Apple官方文档对<a href="https://developer.apple.com/library/mac/documentation/GraphicsImaging/Reference/QuartzCoreRefCollection/">Quarz Core Framework</a>的介绍，它提供了图形处理和视频图像处理的能力。简单来说就是：QuartzCore Framework负责把图形图像最终显示到屏幕上，这里我觉得应该是特指CoreAnimation。不要从字面上去理解CoreAnimation的职责，因为它的核心工作不单是负责动画的创建和执行，它还负责把我们用代码构建的界面显示到屏幕上，实际上是OpenGLES做的。（别急，虽然这里面的机理很复杂，但是在后面会提到）。<em>CALayer当然是属于QuarzCore Framework下的CoreAnimation</em></p></li>
+<li><p><strong>CoreGraphics Framework</strong>
+如Apple官方文档对<a href="https://developer.apple.com/library/prerelease/ios/documentation/CoreGraphics/Reference/CoreGraphics_Framework/index.html">Core Graphics Framework</a>的介绍。CoreGraphics Framework一个基于C库函数的高级绘画引擎，它提供了非常强大的轻量级2D渲染能力。可以使用CoreGraphics处理基于path的绘图工作(如，CGPath)、变形操作(如，CGAffineTransform)、颜色管理(如，CGColor)、离屏渲染(如，CGBitmapContextCreateImage)、渲染模式(patterns)、渐变(gradients)、阴影效果、图形数据管理、图形创建、蒙版以及PDF文档的创建、显示和解析。
+<strong>千万别和QuartzCore混淆，CoreGraphics负责创建显示到屏幕上的数据模型，QuartzCore(CoreAnimation &ndash;> OpenGLES)负责把CoreGraphics创建的数据模型真正显示到屏幕上。</strong> <em>CG打头的类都是属于CoreGraphics Framework</em></p></li>
+<li><p><strong>以上三者的关系</strong>
+三者的关系是通过界面展示以及动画的创建和执行关联起来的，所以它们之间<strong>是协作而不是从属的关系</strong>。在接下来的部分我会从几个方面来阐述以上几个Framework是怎样游游走与UIView与CALayer之间的。</p></li>
+</ul>
+
+
+<h2>正文</h2>
+
+<p>UIView与CALayer-界面渲染(Rendering)</p>
+
+<p><img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/uiview_rendering_process.jpg" title="UIView的显示流程图" alt="UIView的显示流程图" /></p>
+
+<p>如图所示，RunLoop/CALayer/UIView之间的协作流程就非常清楚了。下面按图中步骤对流程作下讲解：</p>
+
+<ol>
+<li>目前，我通过代码跟踪总结了两种触发界面渲染的情况
+
+<ol>
+<li><p>通过在loadView过程中debug子view的drawRect:方法得知：RunLoop处于kCFRunLoopBeforeWaiting状态时会触发CoreAnimation监听的kCFRunLoopBeforeWaiting的observer，从而通过observer回调来调用CoreAnimation内部的CA::Transaction::commit() ();方法，进而一步一步的调用drawRect方法。</p>
+
+<pre><code> 调用流程是：由下至上
+ Triggered by BeforeWaiting Observer Callback
+
+ #0  0x00000001055825d0 in -[DMQView drawRect:] at /Users/xiaoshan/Home/iOS/SoucesCode/DispatchMainQueue/DispatchMainQueue/DMQView.m:16
+ #1  0x0000000106471f08 in -[UIView(CALayerDelegate) drawLayer:inContext:] ()
+ #2  0x0000000109f7c183 in -[CALayer drawInContext:] ()
+ #3  0x0000000109e7133d in CABackingStoreUpdate_ ()
+ #4  0x0000000109f7c002 in ___ZN2CA5Layer8display_Ev_block_invoke ()
+ #5  0x0000000109f7be80 in CA::Layer::display_() ()
+ #6  0x0000000109f70c69 in CA::Layer::display_if_needed(CA::Transaction*) ()
+ #7  0x0000000109f70cf9 in CA::Layer::layout_and_display_if_needed(CA::Transaction*) ()
+ #8  0x0000000109f65475 in CA::Context::commit_transaction(CA::Transaction*) ()
+ #9  0x0000000109f92c0a in CA::Transaction::commit() ()
+
+ #10 0x0000000109f9337c in CA::Transaction::observer_callback(__CFRunLoopObserver*, unsigned long, void*) ()
+ #11 0x0000000105f39367 in __CFRUNLOOP_IS_CALLING_OUT_TO_AN_OBSERVER_CALLBACK_FUNCTION__ ()
+ #12 0x0000000105f392d7 in __CFRunLoopDoObservers ()
+ #13 0x0000000105f2ef2b in __CFRunLoopRun ()
+ #14 0x0000000105f2e828 in CFRunLoopRunSpecific ()
+ #15 0x0000000109806ad2 in GSEventRunModal ()
+ #16 0x00000001063bb610 in UIApplicationMain ()
+ #17 0x00000001055828ef in main at /Users/xiaoshan/Home/iOS/SoucesCode/DispatchMainQueue/DispatchMainQueue/main.m:14
+ #18 0x000000010876192d in start ()
+</code></pre></li>
+<li><p>通过在VC里添加一个按钮的点击事件并在事件对应的selector中修改子view的背景色，debug子view的drawRect:方法得知：RunLoop被iOS系统传递来的点击事件唤醒并由source1处理(<em>_IOHIDEventSystemClientQueueCallback)，并且进一步由在下一个runloop里的source0转发给UIApplication(</em>UIApplicationHandleEventQueue)，从而能过source0里的事件队列来调用CoreAnimation内部的CA::Transaction::commit() ();方法，进而一步一步的调用drawRect方法。</p>
+
+<pre><code> 调用流程是：由下至上
+ Triggered by Source1 [Click Event] -&gt; Source0
+
+ #0  0x00000001055825d0 in -[DMQView drawRect:] at /Users/xiaoshan/Home/iOS/SoucesCode/DispatchMainQueue/DispatchMainQueue/DMQView.m:16
+ #1  0x0000000106471f08 in -[UIView(CALayerDelegate) drawLayer:inContext:] ()
+ #2  0x0000000109f7c183 in -[CALayer drawInContext:] ()
+ #3  0x0000000109e7133d in CABackingStoreUpdate_ ()
+ #4  0x0000000109f7c002 in ___ZN2CA5Layer8display_Ev_block_invoke ()
+ #5  0x0000000109f7be80 in CA::Layer::display_() ()
+ #6  0x0000000109f70c69 in CA::Layer::display_if_needed(CA::Transaction*) ()
+ #7  0x0000000109f70cf9 in CA::Layer::layout_and_display_if_needed(CA::Transaction*) ()
+ #8  0x0000000109f65475 in CA::Context::commit_transaction(CA::Transaction*) ()
+ #9  0x0000000109f92c0a in CA::Transaction::commit() ()
+
+ #10 0x00000001063b5f7c in _UIApplicationHandleEventQueue ()
+ #11 0x0000000105f39a31 in __CFRUNLOOP_IS_CALLING_OUT_TO_A_SOURCE0_PERFORM_FUNCTION__ ()
+ #12 0x0000000105f2f95c in __CFRunLoopDoSources0 ()
+ #13 0x0000000105f2ee13 in __CFRunLoopRun ()
+ #14 0x0000000105f2e828 in CFRunLoopRunSpecific ()
+ #15 0x0000000109806ad2 in GSEventRunModal ()
+ #16 0x00000001063bb610 in UIApplicationMain ()
+ #17 0x00000001055828ef in main at /Users/xiaoshan/Home/iOS/SoucesCode/DispatchMainQueue/DispatchMainQueue/main.m:14
+ #18 0x000000010876192d in start ()
+</code></pre></li>
+<li>可见，上面两种情况都是触发CoreAnimation的CA::Transaction::commit() ();方法来达到触发CALayer/UIView的渲染，所以这个CA::Transaction机制很关键。</li>
+</ol>
+</li>
+<li><p>其实一步已经进入到了Quarz Core的内部(Core Animation)，即调用CA::Transaction::commit() ();来创建CATrasaction，然后进一步调用-[CALayer drawInContext:] ()</p>
+
+<pre><code> #2  0x0000000109f7c183 in -[CALayer drawInContext:] ()
+ #3  0x0000000109e7133d in CABackingStoreUpdate_ ()
+ #4  0x0000000109f7c002 in ___ZN2CA5Layer8display_Ev_block_invoke ()
+ #5  0x0000000109f7be80 in CA::Layer::display_() ()
+ #6  0x0000000109f70c69 in CA::Layer::display_if_needed(CA::Transaction*) ()
+ #7  0x0000000109f70cf9 in CA::Layer::layout_and_display_if_needed(CA::Transaction*) ()
+ #8  0x0000000109f65475 in CA::Context::commit_transaction(CA::Transaction*) ()
+ #9  0x0000000109f92c0a in CA::Transaction::commit() ()
+</code></pre></li>
+<li>回调CALayer的Delegate(UIView)，问UIView没有需要画的的内容，即回调到drawRect:方法。</li>
+<li>在drawRect:方法里可以通过CoreGraphics函数或UIKit中对CoreGraphics封装的方法进行画图操作，这些画图的操作内容都是以Off-Screen离屏(广义的离屏，因为没有在GPU中进行)方式进行画图。<a href="http://objccn.io/issue-3-1/">在这里</a>可以了解离屏绘图及CPU/GPU的工作。 另，注意图中虚线部分的3|4步骤的情况：因为CALayer可以单独存在进行界面渲染，所以CALayer也可以直接操作CoreGraphics。</li>
+<li>无论是有UIView参与的或是直接采用CALayer渲染的操作都会体现在CALayer上(在没有CoreGraphics参与的情况下，UIView或CALayer本身也有一些在业务层面需要显示的内容，所以这里说的“体现在CALayer上”，是泛指UIView或CALayer的子视图子图层以及CoreGraphics参与的内容)。</li>
+<li>CoreAnimation(CALayer)把它的内容转成位图(纹理)，然后通过OpenGL ES把位图内容传送到GPU的帧缓冲区。</li>
+<li>等到由iOS显示屏时钟信号驱动的VSync信号来临时，则把GPU帧缓冲区里的内容显示到iOS显示屏上。<a href="http://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&amp;mid=400417748&amp;idx=1&amp;sn=0c5f6747dd192c5a0eea32bb4650c160&amp;scene=4#wechat_redirect">在这里</a>的<strong>iOS 渲染过程</strong>一节可以了解得更详细。</li>
+</ol>
+
+
+<p>以上内容就是本章的全部内容，欢迎邮件到nnnwjs@126.com讨论。</p>
+
+<h2>参考</h2>
+
+<ul>
+<li>Getting Pixels onto the Screen   <a href="https://www.objc.io/issues/3-views/moving-pixels-onto-the-screen/">英文</a>   |   <a href="http://objccn.io/issue-3-1/">中文</a></li>
+<li><a href="http://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&amp;mid=400417748&amp;idx=1&amp;sn=0c5f6747dd192c5a0eea32bb4650c160&amp;scene=4#wechat_redirect">iOS 事件处理机制与图像渲染过程</a></li>
+<li><a href="https://github.com/ming1016/study/wiki/CFRunLoop">CFRunLoop</a></li>
+<li><a href="http://blog.ibireme.com/2015/05/18/runloop/">深入理解RunLoop</a></li>
+<li><a href="http://objccn.io/issue-2-4/">线程安全类的设计</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[RunLoop学习笔记(二) AFNetworking中的应用]]></title>
+    <link href="http://blog.handy.wang/blog/2014/06/11/runloopxue-xi-bi-ji-ren-er-afnetworkingzhong-de-ying-yong/"/>
+    <updated>2014-06-11T11:16:27+08:00</updated>
+    <id>http://blog.handy.wang/blog/2014/06/11/runloopxue-xi-bi-ji-ren-er-afnetworkingzhong-de-ying-yong</id>
+    <content type="html"><![CDATA[<p>如果理解了上一篇RunLoop原理的内容，那么再来看AFNetworking的核心网络请求部分就很简单了。</p>
+
+<!--more-->
+
+
+<p>对于AFNetworking来说核心的有两大部分：网络请求和缓存。</p>
+
+<p>本文只讲AFNetworking的网络请求部分，以及是如何与RunLoop产生关系的。</p>
+
+<p>在类AFURLConnectionOperation.m的163行左右有以下代码</p>
+
+<pre><code>+ (void)networkRequestThreadEntryPoint:(id)__unused object {
+@autoreleasepool {
+    [[NSThread currentThread] setName:@"AFNetworking"];
+
+    NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
+    [runLoop addPort:[NSMachPort port] forMode:NSDefaultRunLoopMode];
+    [runLoop run];
+}
+}
+
++ (NSThread *)networkRequestThread {
+    static NSThread *_networkRequestThread = nil;
+    static dispatch_once_t oncePredicate;
+    dispatch_once(&amp;oncePredicate, ^{
+        _networkRequestThread = [[NSThread alloc] initWithTarget:self selector:@selector(networkRequestThreadEntryPoint:) object:nil];
+        [_networkRequestThread start];
+    });
+
+    return _networkRequestThread;
+}
+</code></pre>
+
+<p>此代码片断创建了一个名为AFNetworking单例的线程，给这个线程的RunLoop设定了一个[NSMachPort port]，让RunLoop一直监听NSMachPort实例上的消息，但是，可以看到这个port实例没有被保存，所以在整个AFNetworking源代码里是不会有线程给这个port实例发消息的，也就是变相的将此线程一直维持住，即这个线程的RunLoop是“死循环”。</p>
+
+<p>我们在这个类里再搜下networkRequestThread的调用时，可以看到下面的代码：</p>
+
+<pre><code>- (void)operationDidStart {
+    [self.lock lock];
+    if (![self isCancelled]) {
+        self.connection = [[NSURLConnection alloc] initWithRequest:self.request delegate:self startImmediately:NO];
+
+        NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
+        for (NSString *runLoopMode in self.runLoopModes) {
+            [self.connection scheduleInRunLoop:runLoop forMode:runLoopMode];
+            [self.outputStream scheduleInRunLoop:runLoop forMode:runLoopMode];
+        }
+
+        [self.outputStream open];
+        [self.connection start];
+    }
+    [self.lock unlock];
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:AFNetworkingOperationDidStartNotification object:self];
+    });
+}
+</code></pre>
+
+<p>这是发起网络请求的代码。创建了一个NSURLConnection并将它加入到刚才的单线程中执行。同时，在AFURLConnectionOperation.m文件中还可以看到其它围绕networkRequestThread这个线程展开的逻辑，比如operationDidPause、cancelConnection。所以，这个单例线程以及采用NSMachPort的方式维持RunLoop的方式才是核心。</p>
+
+<p><strong>综上</strong>，AFNetoworking的网络请求的核心是：<strong>单例线程</strong> + <strong>NSRunLoop</strong> + <strong>NSMachPort</strong> + <strong>NSURLConnection</strong>。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[RunLoop学习笔记(一) 基本原理介绍]]></title>
+    <link href="http://blog.handy.wang/blog/2014/05/26/runloopxue-xi-bi-ji-1/"/>
+    <updated>2014-05-26T17:20:41+08:00</updated>
+    <id>http://blog.handy.wang/blog/2014/05/26/runloopxue-xi-bi-ji-1</id>
+    <content type="html"><![CDATA[<p>在iOS实际开发中，大家一定遇到过以下问题：</p>
+
+<ul>
+<li>在一个线程里启动一个timer，但是这个timer一次也不会被调用？</li>
+<li>在一个线程里发起一个NSURLConnection网络数据请求，但是NSURLConnection的delegate没有回调？</li>
+<li><p>在主线程环境下的一个方法体里的第一行调用performSelector:withObject:afterDelay:这种带afterDelay的方法簇时，这一行代码实际执行时机往往是在方法体执行过程的最后，为什么呢？如下：</p>
+
+<pre><code>  - (void)testPerformSelectorAfterDelay {
+      [self performSelector:@selector(printMyName) withObject:nil afterDelay:0];
+      for (int i=0; i &lt; 10; i++) {
+          NSLog(@"index is %d", i);
+      }
+  }
+
+  - (void)printMyName {
+      NSLog(@"My name is Handy.Wang ...");
+  }
+
+  输出结果是：
+  2016-02-21 16:40:25.880 RunLoopXX[3782:200607] index is 0
+  2016-02-21 16:40:25.880 RunLoopXX[3782:200607] index is 1
+  2016-02-21 16:40:25.880 RunLoopXX[3782:200607] index is 2
+  2016-02-21 16:40:25.880 RunLoopXX[3782:200607] index is 3
+  2016-02-21 16:40:25.881 RunLoopXX[3782:200607] index is 4
+  2016-02-21 16:40:25.881 RunLoopXX[3782:200607] index is 5
+  2016-02-21 16:40:25.881 RunLoopXX[3782:200607] index is 6
+  2016-02-21 16:40:25.881 RunLoopXX[3782:200607] index is 7
+  2016-02-21 16:40:25.881 RunLoopXX[3782:200607] index is 8
+  2016-02-21 16:40:25.881 RunLoopXX[3782:200607] index is 9
+  2016-02-21 16:43:03.736 RunLoopXX[3782:200607] My name is Handy.Wang ...
+</code></pre></li>
+</ul>
+
+
+<p>下面，我就从实际问题出发，来分享一下关于RunLoop的基本知识，同时解决上面三个问题。</p>
+
+<!-- more -->
+
+
+<h2>什么是RunLoop</h2>
+
+<p>顾名思义，RunLoop就是一个一直在运行着的(带条件的)循环。从用户在iPhone上点开一个App开始，这个App就可以接收用户的操作、可以向远程的服务器发起数据请求、在App里展示各种数据列表，所以这个App给用户的感觉就是它是一直活着的，一直在手机上运行的着，这就是RunLoop起到的作用。即，保持住App主线程，同时接收用户的事件，让用户可以一直在App里进行操作并得到在界面上的反馈。</p>
+
+<p>那么没有这个RunLoop的话，可以想像得到启动一个App后，手机屏幕上闪现一下App界面后，App的生命周期就结束了。这就好比执行了一段顺序逻辑的代码，而不是执行了一段循环逻辑的代码。</p>
+
+<p>所以，iOS App的主线程内部就有一个RunLoop存在，只要用户不kill App或App在后台时不被回收，那么这个RunLoop就会一直Run.</p>
+
+<p>从上面我们可以看到RunLoop是与(主)线程相关的，但是线程中不是必须有RunLoop，也就是说创建并启动一个线程后，如果确实需要在线程中运行一个RunLoop来维持线程，那么就需要在线程里创建一个RunLoop.</p>
+
+<p>这里有一个疑问：为什么非得要创建RunLoop来维持线程？按理说，在线程内部创建一个(带条件的)循环也可以维持住线程，线程内部会一直循环执行，但是这无数次的循环过程中很有可能没有执行任何逻辑，因为循环里期待的条件还没有发生，照这样下去会一直消耗CPU资源，这完全没有必要。所以，RunLoop解决了CPU的空转问题，即当线程内部的逻辑在没有达到某种条件而不需要执行时，这个RunLoop就会休眠；当条件满足时，RunLoop会被唤醒，线程内就执行相应的逻辑。好智能的样子。</p>
+
+<h2>RunLoop细节</h2>
+
+<p>在Foundation Framework中有相应的NSRunLoop API来操作RunLoop，其实它是对CoreFoundation Framework中的CFRunLoop的封装。CFRunLoop的底层实现用到了machkernel、block、pthread等技术。这里核心的是machkernel，RunLoop依靠它实现了休眠和唤醒而避免了CPU的空转。</p>
+
+<p>在XCode中Debug主线程时，从调用栈里可以看到类似下面的某一个函数的调用，如对__CFRUNLOOP_IS_CALLING_OUT_TO_A_SOURCE0_PERFORM_FUNCTION__的调用。</p>
+
+<pre><code>__CFRUNLOOP_IS_CALLING_OUT_TO_AN_OBSERVER_CALLBACK_FUNCTION__
+__CFRUNLOOP_IS_CALLING_OUT_TO_A_BLOCK__
+__CFRUNLOOP_IS_SERVING_THE_MAIN_DISPATCH_QUEUE__
+__CFRUNLOOP_IS_CALLING_OUT_TO_A_TIMER_CALLBACK_FUNCTION__
+__CFRUNLOOP_IS_CALLING_OUT_TO_A_SOURCE0_CALLBACK_FUNCTION__
+__CFRUNLOOP_IS_CALLING_OUT_TO_A_SOURCE1_CALLBACK_FUNCTION__
+</code></pre>
+
+<p>从上面的函数命名上可以知道，它们是RunLoop从内部回调到外部或外部Observer的函数，这些函数对应到相应RunLoop的Activity状态。其实，无论主线程或子线程的RunLoop的回调，都是通过类似以上的这些函数来完成的。讲这个点，只是为了让同学们离RunLoop的机制近一点，以便于对后面内容的理解。</p>
+
+<h4>与RunLoop相关的技术</h4>
+
+<p>其实，与RunLoop相关的技术我们经常用到，它们是，UI层相关的NSTimer、UIEvent、Autorelease；NSObject相关的NSObject (NSDelayedPerforming)方法簇、NSObject (NSThreadPerformAdditions)方法簇；CA相关的CADisplayLink、CATransition、CAAnimation；GCD中的dispatch_get_main_queue()；NSURLConnection。</p>
+
+<h4>RunLoop的构成</h4>
+
+<ul>
+<li><p><strong>RunLoop与线程是一一对应的且可以嵌套 <br/></strong>
+首先，RunLoop与线程是一一对应的且可以嵌套，即在RunLoop里可以再创建RunLoop。 虽然RunLoop与线程一一对应，但是线程里的RunLoop不是必须存在的，开发过程中需要RunLoop时，则需要手动创建和运行RunLoop(尤其是在子线程中, Main RunLoop除外)，下面我举个例子：</p>
+
+<pre><code>  调用[NSTimer scheduledTimerWithTimeInterval:target:selector:userInfo:repeats:]带有schedule的方法簇来启动Timer.
+
+  此方法会创建Timer并把Timer放到当前线程的RunLoop中，然后RunLoop会在Timer设定的时间点回调到Timer设定的selector或Invocation。但是，在主线程和子线程中调用此方法的效果是有差异的，即在主线程中调用scheduledTimer方法时timer可以在设定的时间点触发，但是在子线程里则不能触发。这是因为子线程中没有创建RunLoop且也没有启动RunLoop，而主线程中的RunLoop默认是创建好的且一直运行着。所以，子线程中需要像下面这样调用。
+
+  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+      [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(doTimer) userInfo:nil repeats:NO];
+      [[NSRunLoop currentRunLoop] run];
+  });
+
+  那为什么下面这样调用同样不会触发Timer呢？
+  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+      [[NSRunLoop currentRunLoop] run];
+      [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(doTimer) userInfo:nil repeats:NO];
+  });
+
+  我的分析是：scheduledTimerWithTimeInterval内部在向RunLoop中传递Timer时是调用与线程实例相关的单例方法[NSRunLoop currentRunLoop]来获取当RunLoop的，即RunLoop实例不存在就创建一个与当前线程相关的RunLoop并把Timer传递到RunLoop中，存在则直接传Timer到RunLoop中即可。而在RunLoop开始运行后再向其传递Timer时，由于dispatch_async代码块里的两行代码是顺序执行，RunLoop里的Timer一直Repeat没有运行完所以RunLoop这个死循环也没有结束就无法执行到“[NSTimer scheduledTimerWithTimeInterval:...”，自然也就没有时机把Timer加到当前RunLoop，所以更不会触发Timer了。
+</code></pre></li>
+<li><p><strong>RunLoop的RunLoopModes</strong> <br/>
+其次，RunLoop有不同的Mode(NSRunLoop/CFRunLoopMode)。</p>
+
+<ul>
+<li>一个RunLoop可以运行不同的RunLoopMode下，但是同一时间段内只能运行中一个RunLoopMode下。</li>
+<li>如果要切换RunLoopMode，需要先停止RunLoop，修改RunLoopMode，再重启新RunLoop。<br/><br/></li>
+</ul>
+
+
+<p>  举例：App的Main RunLoop，在App启动的时运行在NSInitializationRunLoopMode下，App启动后运行在NSDefaultRunLoopMode下，有用户操作时App运行在NSTrackingRunLoopMode下。</p>
+
+<p>  常用的RunLoopMode:</p>
+
+<ul>
+<li><strong>NSDefaultRunLoopMode</strong>: RunLoop的默认Mode，空闲状态。</li>
+<li><strong>UITrackingRunLoopMode</strong>: 有滑动等其它需要追踪的事件发生时，RunLoop处于此Mode。</li>
+<li><strong>NSInitializationRunLoopMode</strong>: 这是一个Private RunLoopMode，App启动时处于此Mode，启动完成进入App主界面后App处于NSDefaultRunLoopMode。</li>
+<li><strong>NSRunLoopCommonModes</strong>: 此Mode默认包含了NSDefaultRunLoopMode和UITrackingRunLoopMode。所以，当RunLoop运行在NSDefaultRunLoopMode或UITrackingRunLoopMode时，监听NSRunLoopCommonModes的Observer都被回调。另外，还可以向NSRunLoopCommonModes里添加其它自定义的Mode.</li>
+</ul>
+</li>
+<li><p><strong>RunLoop的InputSource、Timer、Observer</strong> <br/>到这里，我们知道RunLoop不只是为了维持线程的持续运转，更重要的是为了在线程里面接收RunLoop外部的一些逻辑请求，我把这些描述逻辑请求的数据结构(InputSource、Timer)统称为RunLoop的数据源，RunLoop根据数据源里设定的条件处理完数据源后会回调到数据源的Observer.<br /><br />
+那么结合RunLoop的不同模式以及App运行时有很多RunLoop，所以在RunLoop内部肯定是有一个RunLoopMode与InputSource/Timer的一对多的关系，即每个RunLoopMode都对应了多个不同的数据源(InputSource/Timer)。也就是说，一个RunLoop运行在某个RunLoopMode时，只会触发此模式下的InputSource、Timer集合，进而再回调到对应的Observer。至于RunLoopMode里的InputSource、Timer集合元素的执行先后顺序取决于InputSource、Timer的自身描述，比如InputSource的UIEvent触发时机不一样、Timer的时间间隔不一样。</p>
+
+<ul>
+<li><p><strong>InputSource(CFRunLoopSource)</strong><br/>
+InputSource就是RunLoop数据源的一种，它是一个抽象概念，它有具体的实现，如后面会提到的UIEvent、CFSocketRef, NSMachPort(CFMachPortRef)、NSMessagePort(CFMessagePortRef)、NSSocketPort。在RunLoop里InputSource分为：source0、source1、自定义source(也是source0或source1中的一种)。<strong>注意：NSMachPort支持iOS真机和iOS模拟器，NSMessagePort和NSSocketPort支持Mac设备和iOS/Mac模拟器。</strong></p>
+
+<ul>
+<li><strong>source0</strong>: 处理App内部事件(特指non-port-based事件，这里的事件是一个广义的事件，包括但不限于UI事件)，App负责管理自己的事件触发，如：UIEvent(Touch事件等，GS发起到RunLoop运行再到事件回调到UI)、CFSocketRef.</li>
+<li><strong>source1</strong>: 由RunLoop和内核管理，由Mach port驱动（特指port-based事件），如CFMachPort、CFMessagePort、NSSocketPort。特别要注意一下Mach port的概念，它是一个轻量级的进程间通讯的方式，可以理解为它是一个通讯通道，假如同时有几个进程都挂在这个通道上，那么某些进程向这个通道发送消息后，这些挂在这个通道上的进程就可以收到相应的消息。这个Port的概念非常重要，因为它是RunLoop休眠和被唤醒的关键，它是RunLoop与系统内核进行消息通讯的窗口。</li>
+<li><p><strong>自定义source</strong>: 这里指的是广义上的手动创建的non-port-based和port-based source，而不只是Apple在<a href="https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/Multithreading/RunLoopManagement/RunLoopManagement.html#//apple_ref/doc/uid/10000057i-CH16-SW20">文档</a>中提到的Input Sources包含的Port-based input sources和Custom input sources中的Custom input sources，所以我叫它广义的自定义source，所以这里提到的自定义source是source0和source1中的一种，然后可以被添加到RunLoop里运行。</p>
+
+<pre><code>  Input sources deliver events asynchronously to your threads. The source of the event depends on the type of the input source, which is generally one of two categories. Port-based input sources monitor your application’s Mach ports. Custom input sources monitor custom sources of events. As far as your run loop is concerned, it should not matter whether an input source is port-based or custom. The system typically implements input sources of both types that you can use as is. The only difference between the two sources is how they are signaled. Port-based sources are signaled automatically by the kernel, and custom sources must be signaled manually from another thread.
+</code></pre></li>
+</ul>
+
+
+<p>  在CFRunLoopSource的源码里，source0、source1是以一个union的数据结构存在的</p>
+
+<pre><code>  union {
+      CFRunLoopSourceContext version0;
+      CFRunLoopSourceContext version1;
+  } _context;
+
+  typedef stuct {
+      ......
+  } CFRunLoopSourceContext
+</code></pre></li>
+<li><p><strong>Timer(NSTimer/CFRunLoopTimer)</strong><br/>涉及到Timer的技术点有:</p>
+
+<ul>
+<li><strong>NSTimer</strong>: +(NSTimer <em>)timerWithTimeInterval:&hellip;、+(NSTimer </em>)scheduledTimerWithTimeInterval:&hellip;，前一个方法创建的timer需要手动的添加到RunLoop里、后一个方法创建的timer会被自动的添加到当前RunLoop里，无论这两种中的哪种情况，都要确保timer被添加到的RunLoop是处于Running的。</li>
+<li><p><strong>带afterDelay的方法簇</strong>: -performSelector:withObject:afterDelay:，此方法簇的内部创建了一个隐式的timer并添加到当前RunLoop中，但是也要注意上一条同样的问题，一定要确保当前RunLoop处于Running状态。比如说下面的代码里的doPerformSelectAfterDelay方法是不会被调用到的，因为第一个的RunLoop没有运行，第二个的RunLoop已经运行完了。</p>
+
+<pre><code>dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    [self performSelector:@selector(doPerformSelectAfterDelay) withObject:nil afterDelay:0];
+});
+
+dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    [[NSRunLoop currentRunLoop] run];
+    [self performSelector:@selector(doPerformSelectAfterDelay) withObject:nil afterDelay:0];
+}); 
+</code></pre>
+
+<p>所以，正确的写法是如下：</p>
+
+<pre><code>dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    [self performSelector:@selector(doPerformSelectAfterDelay) withObject:nil afterDelay:0];
+    [[NSRunLoop currentRunLoop] run];
+}); 
+</code></pre></li>
+<li><p><strong>CADisplayLink</strong>: +(CADisplayLink *)displayLinkWithTarget:selector:、- (void)addToRunLoop:forMode:。CADisplayLink完全是一个Timer，它的刷新频率与UI主线程的刷新频率是完全一致的。CADisplayLink默认每秒运行60次， 如果将它的frameInterval属性设置为2，意味CADisplayLink每隔一帧运行一次，使得回调频率由每秒60次降为30次。</p></li>
+</ul>
+</li>
+<li><p><strong>Observer(CFRunLoopObserver)</strong><br/>
+与Observer非常相关的就是CFRunLoopActivity，即从侧面反映出Observer回调时RunLoop当前的状态。具体每个状态的意义见我在每个状态后面加的注释。</p>
+
+<pre><code>/* Run Loop Observer Activities */
+typedef CF_OPTIONS(CFOptionFlags, CFRunLoopActivity) {
+    kCFRunLoopEntry = (1UL &lt;&lt; 0), //InputSource/Timer已经加入到RunLoop了
+    kCFRunLoopBeforeTimers = (1UL &lt;&lt; 1), //Timer即将要被执行了
+    kCFRunLoopBeforeSources = (1UL &lt;&lt; 2), //InputSource即将要被执行了
+    kCFRunLoopBeforeWaiting = (1UL &lt;&lt; 5), //RunLoop即将休眠了
+    kCFRunLoopAfterWaiting = (1UL &lt;&lt; 6), //RunLoop即将被唤醒
+    kCFRunLoopExit = (1UL &lt;&lt; 7), //RunLoop停止运转了
+    kCFRunLoopAllActivities = 0x0FFFFFFFU
+};
+</code></pre>
+
+<p>所以，我们可以用Observer监听RunLoop状态的变化，事实上Framework里很多机制都是由RunLoopObserver触发的。如CAAnimation，RunLoop应该是在收集完每一轮要做的事情后，在RunLoop一轮的后期(kCFRunLoopBeforeWaiting, kCFRunLoopAfterWaiting)来执行动画。</p></li>
+</ul>
+</li>
+<li><p><strong>RunLoop运行的伪代码 <br/></strong></p>
+
+<pre><code>  int32_t __CFRunLoopRun()
+  {
+      //通知即将进入runloop
+      __CFRunLoopDoObservers(KCFRunLoopEntry);
+
+      do
+      {
+          // 通知将要处理timer和source
+          __CFRunLoopDoObservers(kCFRunLoopBeforeTimers);
+          __CFRunLoopDoObservers(kCFRunLoopBeforeSources);
+
+          __CFRunLoopDoBlocks();  //处理非延迟的主线程调用
+          __CFRunLoopDoSource0(); //处理UIEvent事件
+
+          //GCD dispatch main queue
+          CheckIfExistMessagesInMainDispatchQueue();
+
+          // 即将进入休眠
+          __CFRunLoopDoObservers(kCFRunLoopBeforeWaiting);
+
+          // 等待内核mach_msg事件
+          mach_port_t wakeUpPort = SleepAndWaitForWakingUpPorts();
+
+          // Zzz...
+
+          // 从等待中醒来
+          __CFRunLoopDoObservers(kCFRunLoopAfterWaiting);
+
+          // 处理timer的唤醒
+          if (wakeUpPort == timerPort)
+              __CFRunLoopDoTimers();
+
+          // 处理异步方法唤醒,如dispatch_async
+          else if (wakeUpPort == mainDispatchQueuePort)
+              __CFRUNLOOP_IS_SERVICING_THE_MAIN_DISPATCH_QUEUE__()
+
+          // UI刷新,动画显示
+          else
+              __CFRunLoopDoSource1();
+
+          // 再次确保是否有同步的方法需要调用
+          __CFRunLoopDoBlocks();
+
+      } while (!stop &amp;&amp; !timeout);
+
+      //通知即将退出runloop
+      __CFRunLoopDoObservers(CFRunLoopExit);
+  }
+</code></pre></li>
+</ul>
+
+
+<h4>RunLoop与AutoRelease</h4>
+
+<p>我们知道AutoRelease对象是被AutoReleasePool管理的，那么AutoRelease对象在什么时候被回收呢？可能有人会说在AutoReleasePool回收的时候。这样说没错，但是对于Application主线程的AutoReleasePool里的AutoRelease对象来说呢，因为Main AutoReleasePool是不会被回收的。带着这个问题，我们来分析一下：</p>
+
+<p>第一种情况：在我们自己写的for循环或线程体里，我们都习惯用AutoReleasePool来管理一些临时变量的autorelease，使得在for循环或线程结束后回收AutoReleasePool的时候来回收AutoRelease临时变量。所以，刚才的回答没错，但是比较片面。</p>
+
+<p>另一种情况：我们在主线程里创建了一些AutoRelease对象，这些对象可不能指望在回收Main AutoReleasePool时才被回收，因为App一直运行的过程中Main AutoReleasePool是不会被回收的。其实，这种AutoRelease对象的回收机制就依赖Main RunLoop的状态，Main RunLoop的Observer会在Main RunLoop结束休眠被唤醒后且即将开始下一轮时(kCFRunLoopAfterWaiting状态时回调)通知UIKit，UIKit收到这一通知后就会调用_CFAutorleasePoolPop方法来回收主线程中的所有AutoRelease对象。</p>
+
+<h4>UITrackingRunLoopMode与Timer</h4>
+
+<p>在主线程中Schedule一个Timer并正常运行，然后滑动动界面上的TableView或UIScrollView时，之前的Timer不触发了。为什么呢？</p>
+
+<pre><code>[NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(doTimer1) userInfo:nil repeats:YES];
+</code></pre>
+
+<p>这个问题就与RunLoop的RunLoopMode有关。因为schedule一个Timer时，Timer是被加到了RunLoop的NSDefaultRunLoopMode下，而在滑动TableView或UIScrollView时，RunLoop的Mode被切换到了UITrackingRunLoopMode下，RunLoop就只会去跟踪UI上的滑动事件了而Timer被暂停不会被触发了。</p>
+
+<pre><code>通过对CFRunLoopWakeUp的符号断点得知，UIApplication是通过
+-[UIApplication pushRunLoopMode:requester:] ()
+和
+-[UIApplication popRunLoopMode:requester:] ()
+两个方法来切换RunLoop模式的。
+</code></pre>
+
+<p>所以，只需要把Timer加到RunLoop的NSRunLoopCommonModes下就可以解决此问题了，因为NSRunLoopCommonModes包含了UITrackingRunLoopMode。</p>
+
+<pre><code>NSTimer *timer1 = [NSTimer timerWithTimeInterval:1 target:self selector:@selector(doTimer1) userInfo:nil repeats:YES];
+
+[runloop addTimer:timer1 forMode:NSRunLoopCommonModes];
+</code></pre>
+
+<h4>RunLoop与GCD</h4>
+
+<p>RunLoop与GCD并没有直接关系，当且仅当GCD使用到main_queue时才有关系，如下：</p>
+
+<pre><code>//实验GCD Timer 与 Runloop的关系，只有当dispatch_get_main_queue时才与RunLoop有关系
+dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    NSLog(@"GCD Timer...");
+});
+</code></pre>
+
+<p>如果debug代码NSLog(@&ldquo;GCD Timer&hellip;&rdquo;);这一行的话，可以在调用栈里看到Main RunLoop是通过<strong>CFRUNLOOP_IS_SERVING_THE_MAIN_DISPATCH_QUEUE</strong>来回调的，而且把dispatch_get_main_queue换成dispatch_get_global_queue，那么在调用栈里将不会看到RunLoop相关的调用，而是和pthread相关。所以，GCD的dispatch_after timer只有在主线程中时才与RunLoop相关，即仅当GCD使用到main_queue时才有关系。</p>
+
+<h4>RunLoop的挂起和唤醒</h4>
+
+<ul>
+<li><strong>RunLoop的挂起</strong><br />
+  RunLoop的挂起是通过_CFRunLoopServiceMachPort &ndash;> mach_msg &ndash;> mach_msg_trap这个调用顺序来告诉内核监听哪个MachPort(前面提到的通道)，然后等待消息的发生(等待与InputSource、Timer描述内容相关的消息)，内核就把RunLoop挂起了，即RunLoop休眠了。</li>
+<li><strong>RunLoop的唤醒</strong><br />
+  当RunLoop被挂起后，如果之前监听的事情发生了，那么就需要被另一个进程或线程来唤醒主动监听的RunLoop，那么这个进程或线程就需要赂MachPort发一个消息即可。</li>
+<li><p><strong>RunLoop内部运行逻辑伪代码</strong> －根据RunLoop源代码整理的伪代码</p>
+
+<pre><code>  SetupThisRunLoopRunTimeoutTimer(); //By GCD timer.
+  do {
+      __CFRunLoopDoObservers(kCFRunLoopBeforeTimers);
+      __CFRunLoopDoObservers(kCFRunLoopBeforeSources);
+
+      __CFRunLoopDoBlocks(); // 执行6个__CFRUNLOOP_IS_*中的某些函数
+      __CFRunLoopDoSource0(); // 执行加入source0里的逻辑
+
+      CheckIfExistMessagesInMainDispatchQueue(); //问GCD有没有需要要主线程中执行的事情
+
+      __CFRunLoopDoObservers(kCFRunLoopBeforeWaiting);
+      var wakeUpPort = SleepToWaitForWakingupPorts(); //mach_msg_trap
+      //mach_msg_trap
+      //Zzz......
+      //Received mach_msg, wake up
+      __CFRunLoopDoObservers(kCFRunLoopAfterWaiting);
+      //Handle msgs
+      if (wakeUpPort == timerPort) { //Timer的port消息
+          __CFRunLoopDoTimers();
+      } else if (wakeUpPort == mainDispatchQueuePort) { //GCD的port消息
+          //GCD
+          __CFRunLoop_IS_SERVING_THE_MAIN_DISPATCH_QUEUE__();
+      } else {
+          __CFRunLoopDoSource1(); //基于port的消息通讯
+      }
+
+      __CFRunLoopDoBlocks(); // 执行6个__CFRUNLOOP_IS_*中的某些函数
+
+  } while (!stop &amp;&amp; !timeout)
+</code></pre></li>
+</ul>
+
+
+<h4>总结</h4>
+
+<p>在本文开头时，我提了三个问题，结合上面讲到的内容，分别作答如下：</p>
+
+<ul>
+<li><p>在一个线程里启动一个timer，但是这个timer一次也不会被调用？</p>
+
+<pre><code>  答：线程里并没有创建RunLoop，所以要想让线程里的Timer正常运行，那么需要创建RunLoop、把Timer放到RunLoop里、再运行RunLoop.
+
+  NSTimer *timer1 = [NSTimer timerWithTimeInterval:1 target:self selector:@selector(doTimer1) userInfo:nil repeats:YES];
+  [runloop addTimer:timer1 forMode:NSRunLoopCommonModes];
+  [runloop run];
+</code></pre></li>
+<li><p>在一个线程里发起一个NSURLConnection网络数据请求，但是NSURLConnection的delegate没有回调？</p>
+
+<pre><code>  答：需要在 保证NSURLConnection线程的RunLoop已run 的前提下，将NSURLConnection以NSRunLoopCommonModes加入到RunLoop中运行。为什么是以NSRunLoopCommonModes模式呢，结合本文讲解可知，为了在RunLoop处于TrackingMode时也能接收到数据回调的CALLBACK。
+
+  - (void)testURLConnection {
+      dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+          [[NSThread currentThread] setName:@"Handy-Thread"];
+
+          NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.baidu.com"]];
+          _conn = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
+          [_conn scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+          [_conn start];
+
+          //不但运行RunLoop也让当前线程一直维持住，尽管URLConnection执行完后这个线程也不会结束。这里维持住线程采用NSMachPort方式而不是采用while(YES)就是为了不让CPU空转。
+          NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
+          [runLoop addPort:[NSMachPort port] forMode:NSDefaultRunLoopMode];
+          [runLoop run];
+
+          //这种方式在connection执行完成后，RunLoop也结束了。
+          //[[NSRunLoop currentRunLoop] run];
+
+          NSLog(@"Finish runloop...");
+      });
+  }
+
+  - (void)connection:(NSURLConnection __unused *)connection didReceiveResponse:(NSURLResponse *)response {
+      NSLog(@"%@", NSStringFromSelector(_cmd));
+      _didReceiveResponse = YES;
+  }
+
+  - (void)connection:(NSURLConnection __unused *)connection didFailWithError:(NSError *)error {
+      NSLog(@"%@", NSStringFromSelector(_cmd));
+  }
+
+  - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+      NSLog(@"%@", NSStringFromSelector(_cmd));
+  }
+</code></pre></li>
+<li><p>在主线程环境下的一个方法体里的第一行调用performSelector:withObject:afterDelay:这种带afterDelay的方法簇时，这一行代码实际执行时机往往是在方法体执行过程的最后，为什么呢？如下：</p>
+
+<pre><code>  - (void)testPerformSelectorAfterDelay {
+      [self performSelector:@selector(printMyName) withObject:nil afterDelay:0];
+      for (int i=0; i &lt; 10; i++) {
+          NSLog(@"index is %d", i);
+      }
+  }
+
+  - (void)printMyName {
+      NSLog(@"My name is Handy.Wang ...");
+  }
+
+  输出结果是：
+  2016-02-21 16:40:25.880 RunLoopXX[3782:200607] index is 0
+  2016-02-21 16:40:25.880 RunLoopXX[3782:200607] index is 1
+  2016-02-21 16:40:25.880 RunLoopXX[3782:200607] index is 2
+  2016-02-21 16:40:25.880 RunLoopXX[3782:200607] index is 3
+  2016-02-21 16:40:25.881 RunLoopXX[3782:200607] index is 4
+  2016-02-21 16:40:25.881 RunLoopXX[3782:200607] index is 5
+  2016-02-21 16:40:25.881 RunLoopXX[3782:200607] index is 6
+  2016-02-21 16:40:25.881 RunLoopXX[3782:200607] index is 7
+  2016-02-21 16:40:25.881 RunLoopXX[3782:200607] index is 8
+  2016-02-21 16:40:25.881 RunLoopXX[3782:200607] index is 9
+  2016-02-21 16:43:03.736 RunLoopXX[3782:200607] My name is Handy.Wang ...
+
+  答：在testPerformSelectorAfterDelay方法体内的代码肯定是按顺序执行，先执行performSelector:withObject:afterDelay方法，再执行for循环。由于performSelector只是向RunLoop注册Timer Source并不是执行，尽管delay是0，所以注册完后就执行完了，接着就执行for循环，然后testPerformSelectorAfterDelay方法运行完了，整个App就没有什么可做的了进入了sleep。我们结合本文讲的知识和上面提到的伪代码可知，Timer真正地执行时机是取决于是在RunLoop否收收到了timer machport msg，由于RunLoop已进入了sleep，而且delay是0，所以瞬间之后RunLoop收到了timer mach_msg从而把RunLoop唤醒然后回调Timer要做的事情，再然后RunLoop接着进入sleep.
+</code></pre></li>
+</ul>
+
+
+<p>到此，RunLoop的相关知识就介绍完了。</p>
+
+<p>下篇我将结合开源项目AFNetworking来讲讲RunLoop的实际应用。</p>
+
+<h2>参考资料</h2>
+
+<ul>
+<li><a href="https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/Multithreading/RunLoopManagement/RunLoopManagement.html#//apple_ref/doc/uid/10000057i-CH16-SW1">Threading Programming Guide &ndash; iOS Developer Library</a></li>
+<li><a href="http://v.youku.com/v_show/id_XODgxODkzODI0.html">视频: iOS线下分享《RunLoop》by 孙源@sunnyxx</a></li>
+<li><a href="http://www.cocoachina.com/ios/20150601/11970.html">深入理解RunLoop</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[如何重置推送设置提醒(转)]]></title>
+    <link href="http://blog.handy.wang/blog/2014/03/27/ru-he-zhong-zhi-tui-song-she-zhi-ti-xing/"/>
+    <updated>2014-03-27T12:33:35+08:00</updated>
+    <id>http://blog.handy.wang/blog/2014/03/27/ru-he-zhong-zhi-tui-song-she-zhi-ti-xing</id>
+    <content type="html"><![CDATA[<h6>步骤很简单，就是有点麻烦。如下：</h6>
+
+
+<pre><code>1 删除app
+2 重启
+3 设置里修改系统时间为至少1天后
+4 重启，重新安装app，打开app，就能再次看到“是否允许推送”确认框
+5 把系统时间调回正常当前时间即可(这一点是为了保证时间的正常使用与推送无关)
+</code></pre>
+
+<h3>参考</h3>
+
+
+<p><a href="http://stackoverflow.com/questions/2438400/reset-push-notification-settings-for-app">http://stackoverflow.com/questions/2438400/reset-push-notification-settings-for-app</a><br />
+<a target="_blank" href="http://weibo.com/danc?topnav=1&wvr=5&topsug=1">@Dan</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[剖析带有afterDealy参数的performSelector方法实现]]></title>
+    <link href="http://blog.handy.wang/blog/2014/03/19/pou-xi-performselectordai-you-afterdealy-can-shu-de-fang-fa-shi-xian/"/>
+    <updated>2014-03-19T15:46:02+08:00</updated>
+    <id>http://blog.handy.wang/blog/2014/03/19/pou-xi-performselectordai-you-afterdealy-can-shu-de-fang-fa-shi-xian</id>
+    <content type="html"><![CDATA[<p>主要从performSelector:afterDealy:的实现原理来分析为什么在主线程中调用此方法后不会阻塞主线程里业务代码的顺序执行。</p>
+
+<!--more-->
+
+
+<p>示例代码如下：</p>
+
+<pre><code>- (void)doSomething {
+    NSLog(@"Begin doSomething...");
+    for (int i = 0; i &lt; 10; i++) {
+        if (i == 5) {
+            NSLog(@"++++++++++%f", CFAbsoluteTimeGetCurrent());
+            [self performSelector:@selector(printIData:) withObject:@(i) afterDelay:0.2];
+        }
+        else {
+            [NSThread sleepForTimeInterval:0.2];
+            [self printIData:@(i)];
+        }
+    }
+    NSLog(@"Finish doSomething...");
+}
+
+- (void)printIData:(NSNumber *)i {
+    int iv = [i intValue];
+
+    if (iv == 5) {
+        NSLog(@"===================i is %d, %f", iv, CFAbsoluteTimeGetCurrent());
+    }
+    else {
+        NSLog(@"i is %d, %f", iv, CFAbsoluteTimeGetCurrent());
+    }
+}
+</code></pre>
+
+<p>[[AboutRunloop sharedInstance] doSomething];</p>
+
+<p>输出的结果是：<br/>
+2014-03-19 14:44:26.054 RuntimePractice[9750:60b] i is 0, 416904266.054601<br/>
+2014-03-19 14:44:26.256 RuntimePractice[9750:60b] i is 1, 416904266.256110<br/>
+2014-03-19 14:44:26.457 RuntimePractice[9750:60b] i is 2, 416904266.457738<br/>
+2014-03-19 14:44:26.659 RuntimePractice[9750:60b] i is 3, 416904266.659130<br/>
+2014-03-19 14:44:26.860 RuntimePractice[9750:60b] i is 4, 416904266.860487<br/>
+2014-03-19 14:44:26.861 RuntimePractice[9750:60b] ++++++++++416904266.861006<br/>
+2014-03-19 14:44:27.061 RuntimePractice[9750:60b] i is 6, 416904267.061459<br/>
+2014-03-19 14:44:27.263 RuntimePractice[9750:60b] i is 7, 416904267.263020<br/>
+2014-03-19 14:44:27.464 RuntimePractice[9750:60b] i is 8, 416904267.464554<br/>
+2014-03-19 14:44:27.666 RuntimePractice[9750:60b] i is 9, 416904267.666095<br/>
+2014-03-19 14:44:27.666 RuntimePractice[9750:60b] Finish doSomething&hellip;<br/>
+2014-03-19 14:44:27.672 RuntimePractice[9750:60b] =====i is 5, 416904267.672478<br/></p>
+
+<p>通过示例代码充分说明了：
+在主线程中调用performSelector:afterDealy方法后不会阻塞主线程里业务代码的顺序执行。</p>
+
+<p>分析(主线程中调用)：带有afterDealy:参数的performSelector方法内部采用了timer实现，我们知道timer不放到runloop里的话timer是不会触发的，所以这个timer肯定会放到runloop里，又因为主线程的runloop默认是运行着的，所以这个timer一定会被触发即Selector会被runloop触发回调。</p>
+
+<p>回到示例程序上下文里面，当i==5时，执行了performSelector:afterDealy，所以此时一个timer源会被添加加到主线程的runloop里。又根据示例代码的日志输出可以看到doSomething 方法完全执行完后 runloop才触发i==5时的selector调用，这说明在线程中(包括主线程)是先执行线程的代码逻辑，最后才会检测Runloop里有没有注册的监听源，如果有则检测是不是应该触发源对应的外部处理方法，所以最后才会触发i==5的performSelector:afterDealy。</p>
+
+<p>另注：<br/>
+1) 示例代码中非i==5的情况下故意sleep了0.2秒(6/7/8/9 4个数x0.2 > delay的0.2)，这是为了充分证明[self performSelector:@selector(printIData:) withObject:@(i) afterDelay:0.2];一定是在doSomething 方法执行完返回后再运行的。<br/>
+2) [self performSelector:@selector(printIData:) withObject:@(i) afterDelay:0.2];中的0.2秒按timer的时间触发原理，它是Timer被加到runloop里后的0.2秒，但是在本示例代码环境下，线程里有长时任务正做着，所以这个触发的时间点是从timer被加到runloop里开始计时，等长时任务做完后的最近的0.2秒整数倍的时间点。</p>
+
+<p>综上，performSelector带有afterDealy:参数的方法，哪怕是delay为0，也在当前线程的runloop里注册一个timer源，等线程里的逻辑做完后，会去检测runloop并按runloop里源注册的条件触发对应的事件处理方法，所以这个方法簇不会阻塞原线程中的代码执行流程。</p>
+
+<p>参考：<br/>
+1）方法的说明:：NSObject Reference里performSelector:withObject:afterDelay:<br/>
+2）Runloop相关： <a href="http://www.hrchen.com/2013/06/multi-threading-programming-of-ios-part-1/">http://www.hrchen.com/2013/06/multi-threading-programming-of-ios-part-1/</a><br/>
+3）Timer和Runloop相关： <a href="http://www.hrchen.com/2013/07/tricky-runloop-on-ios/">http://www.hrchen.com/2013/07/tricky-runloop-on-ios/</a><br/>
+4）Timer的触发: <a href="http://www.cnblogs.com/smileEvday/archive/2012/12/21/NSTimer.html">http://www.cnblogs.com/smileEvday/archive/2012/12/21/NSTimer.html</a><br/></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[浅谈内存布局(Memory Layout)即虚拟地址空间]]></title>
+    <link href="http://blog.handy.wang/blog/2014/03/18/qian-tan-nei-cun-bu-ju-memory-layout/"/>
+    <updated>2014-03-18T15:14:37+08:00</updated>
+    <id>http://blog.handy.wang/blog/2014/03/18/qian-tan-nei-cun-bu-ju-memory-layout</id>
+    <content type="html"><![CDATA[<p>对于高级语言的程序员(Java、OC)来说，一定听过堆栈、数据段、代码段，但可能没有细细研究过。本文在此分享对它们的理解。</p>
+
+<!--more-->
+
+
+<h3>C语言的内存布局</h3>
+
+
+<p>   这里从C语方入手,说说内存布局。<br/>
+<img src="https://raw.github.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/Memory-Layout-300x255.gif" width="400" height="300"><br/>
+   内存从低地址到高地址划分，分为：Text Segment、Initialized Data Segment、Uninitialized Data Segment、Heap、Stack。<br/></p>
+
+<h6>Text Segment</h6>
+
+
+<pre><code>即代码段(Code Segment)，里面存放可执行的指令，可以理解为程序的实际逻辑代码(不考虑形参、局部变量)，不过在代码段里的指令应该已是汇编指令了。
+代码段在内存布局中处在堆栈下面(即低地址段)的位置，防止代码段被堆栈溢出覆盖。通常，代码段里的内容是被共享且只读的，防止程序意外的修改其在代码段里的指令。
+</code></pre>
+
+<h6>Initialized Data Segment</h6>
+
+
+<pre><code>即数据段(Data Segment)，这应该是一种狭义的叫法，也就是大家通常意义上认为的数据段。
+其实Initialized Data Segment和Uninitialized Data Segment合起来可以称为广义的数据段，因为它们都存数据。
+Initialized Data Segment存储被程序员显式初始化过的全局变量、静态变量、常量,由此可以看数据段(狭义)可以进一步的分为 只读区段 和 读写区段，
+数据段不是只读的，在程序运行的时候存储在此区段的变量值可以修改。
+</code></pre>
+
+<h6>Uninitialized Data Segment</h6>
+
+
+<pre><code>又名BSS，即Block Started by Symbol，最早是联合航空公司的联合航空符号汇编程序里的一个伪操作，后来BSS这个术语被合并到FORTRAN汇编程序里。
+这伪操作定义了一个标签而且预留了一定量的未初始化的区域，所以BSS就成了“单独保留许多独立的小数据的位置“的简称。
+由此看出，BSS这部分空间是预留出来的，存放的是程序员没有初始化或初始化为0(我的理解是初始化为nil)的全局变量、静态变量，未初始化的在被编译器在内存中初始化为0(0x0)，
+这就是为什么它也叫Uninitialized Data Segment。
+[Historically, BSS (from Block Started by Symbol) was a pseudo-operation in UA-SAP (United Aircraft Symbolic Assembly Program), 
+the assembler developed in the mid-1950s for the IBM 704 by Roy Nutt, Walter Ramshaw, and others at United Aircraft Corporation.
+The BSS keyword was later incorporated into FAP (FORTRAN Assembly Program), IBM's standard assembler for its 709 and 7090/94 computers. 
+It defined a label (i.e. symbol) and reserved a block of uninitialized space for a given number of words (Timar 1996). 
+In this situation BSS served as a shorthand in place of individually reserving a number of separate smaller data locations. 
+Some assemblers support a complementary or alternative directive BES, for Block Ended by Symbol, 
+where the specified symbol corresponds to the end of the reserved block.]
+</code></pre>
+
+<h6>Heap</h6>
+
+
+<pre><code>堆区紧接着BSS段，它的内存分配增长方向是从低地址向高地址。所有动态的内存分配操作都是由 程序员 通过相关函数从堆区进行分配和释放，如malloc, realloc, and free这些操作。
+在一个进程里，堆区被所有的共享函数库和动态加载的模块所共享。
+</code></pre>
+
+<h6>Stack</h6>
+
+
+<pre><code>栈区紧挨着堆区，一般都处在内存的高地址区域，但是它的内存分配增长方向是从高地址向低地址，也就是说堆和栈的内存分配增长方向上是相对的，即从两头向中间方向。
+此区段的内存分配是由编译器做的，当栈顶指针已经遇到堆指针的时候表明栈溢出了。
+栈区是LIFO的结构，SP(Stack Pointer)寄存器始终记录着栈顶位置，当push或pop数据的时候，SP都会有相应的变化。
+在栈区里主要是存放函数调用相关的内容，如：实参、函数调用的返回地址、局部变量等相关信息，我们称之为栈帧(Stack Frame)，
+也就是说在栈区里有很多个栈帧，每进行一次函数调用，一个新的栈帧就会入栈，且向低地址区方向增长。
+一个栈帧至少由一个函数调用的返回地址组成，所以普通的函数调用递归函数调用都是借助这个返回地址才得到让程序流程进行下去的。
+The stack frame at the top of the stack is for the currently executing routine. The stack frame usually includes at least the following items (in push order):
+the arguments (parameter values) passed to the routine (if any);
+the return address back to the routine's caller (e.g. in the DrawLine stack frame, an address into DrawSquare's code); and
+space for the local variables of the routine (if any).
+</code></pre>
+
+<h6>C语言函数调用的内存机制</h6>
+
+
+<pre><code>待续。。。
+</code></pre>
+
+<h3>C++语言的内存布局</h3>
+
+
+<p>C++的内存布局大致分为：代码段、全局/静态存储区、常量区、自由存储区、堆、栈。</p>
+
+<h6>差异</h6>
+
+
+<pre><code>1）全局/静态存储区
+    全局变量和静态变量被分配到同一块内存中，在以前的C语言中，全局变量又分为初始化的和未初始化的，
+    在C++里面没有这个区分了，他们共同占用同一块内存区（未初始化的变量都被初始化成0或空串，C中也一样）。
+2）常量存储区
+    这是一块比较特殊的存储区，他们里面存放的是常量，不允许修改。
+    注意常量的存放区域，通常情况下，常量存放在程序区(程序区是只读的，因此任何修改常量的行为都是非法的)，而不是数据区。
+    有的系统，也将部分常量分配到静态数据区，比如字符串常量(有的系统也将其分配在程序区)。但是要记住一点，常量所在的内存空间都是受系统保护的，不能修改。
+    对常量空间的修改将造成访问内存出错，一般系统都会提示。常量的生命周期一直到程序执行结束为止。
+3）自由存储区
+    就是那些由malloc等分配的内存块，他和堆是十分相似的，不过它是用free来结束自己的生命的
+5）重要示例：
+    char s[]="123";    s在栈区，“123”在栈区，其值可以被修改
+    char *s="123";     s在栈区，“123”在常量区，其值不能被修改
+</code></pre>
+
+<h3>OC语言的内存布局</h3>
+
+
+<pre><code>减少内存垃圾碎片的优化: 《Pro Multithreading and Memory Management for iOS and OS X》中The alloc Method小节1-7图
+</code></pre>
+
+<p>待续。。。</p>
+
+<p><a href="http://reverse.put.as/wp-content/uploads/2011/06/objective-c-internals.pdf">http://reverse.put.as/wp-content/uploads/2011/06/objective-c-internals.pdf</a>
+<a href="http://www.cnblogs.com/csutanyu/archive/2011/12/12/Objective-C_memory_layout.html">http://www.cnblogs.com/csutanyu/archive/2011/12/12/Objective-C_memory_layout.html</a>
+<a href="http://www.easyfunstudy.com/books/Transfer/Learning_Objective_C_2_0__A_Hands_On_Guide_to_Objective_C_for_Mac_and_iOS_Developers__Developer__039_s_Library_.pdf">http://www.easyfunstudy.com/books/Transfer/Learning_Objective_C_2_0__A_Hands_On_Guide_to_Objective_C_for_Mac_and_iOS_Developers__Developer__039_s_Library_.pdf</a></p>
+
+<h6>差异</h6>
+
+
+<p>结束语：
+究其细节，其实，没有什么过程是“自动的”，这只不过用来搪塞程序员自己的理由。</p>
+
+<h3>参考</h3>
+
+
+<p>MemoryLayoutOut：<a href="http://www.geeksforgeeks.org/memory-layout-of-c-program/">http://www.geeksforgeeks.org/memory-layout-of-c-program/</a><br/>
+DataSegment(wikipedia)：<a href="http://en.wikipedia.org/wiki/Data_segment">http://en.wikipedia.org/wiki/Data_segment</a><br/>
+CallStack(wikipedia)：<a href="http://en.wikipedia.org/wiki/Call_stack">http://en.wikipedia.org/wiki/Call_stack</a><br/>
+C/C++堆、栈及静态数据区详解：<a href="http://www.cnblogs.com/hanyonglu/archive/2011/04/12/2014212.html">http://www.cnblogs.com/hanyonglu/archive/2011/04/12/2014212.html</a>
+C++内存分配、函数调用： <a href="http://www.cnblogs.com/dolphin0520/archive/2011/04/04/2005061.html">http://www.cnblogs.com/dolphin0520/archive/2011/04/04/2005061.html</a><br/></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[UINavigationController分析]]></title>
+    <link href="http://blog.handy.wang/blog/2014/03/14/uinavigationcontrollerfen-xi/"/>
+    <updated>2014-03-14T18:55:47+08:00</updated>
+    <id>http://blog.handy.wang/blog/2014/03/14/uinavigationcontrollerfen-xi</id>
+    <content type="html"><![CDATA[<h3>UINavigationController结构</h3>
+
+
+<p>导航条层次结构<br/>
+UINavigationController &ndash;(1:1)&ndash;> UINavigationBar &ndash;(1:多)&ndash;> UINavigationItem &ndash;(1:多)&ndash;> UIBarButtonItem &ndash;(1:1)&ndash;> CustomView<br/>
+其中UINavigationBar是UIView的子类，UINavigationItem和UIBarButtonItem都是NSObject的子类，也就是说UINavigationItem和UIBarButtonItem都是
+UINavigationBar用于显示的model数据。</p>
+
+<!--more-->
+
+
+
+
+<h6>UINavigationBar与UINavigationItem</h6>
+
+
+<pre><code>UINavigationBar与UINavigationItem是一对多的关系，UINavigationItem存放UINavigationBar用于显示的数据(title, UIBarButtonItem等)。
+UINavigationBar提供 push和pop UINavigationItem的方法,push UINavigationItem后UINavigationBar显示样式对应于新push的UINavigationItem,
+上一个UINavigationItem显示成当前UINavigationBar样式的返回按钮以表示回到上一个UINavigationItem。pop 操作与push操作相反，不再赘述。
+下面是UINavigationBar中相关的push/pop UINavigationItem的方法：
+- (void)pushNavigationItem:(UINavigationItem *)item animated:(BOOL)animated;
+- (UINavigationItem *)popNavigationItemAnimated:(BOOL)animated; // Returns the item that was popped.
+
+如果你尝试在UINavigationController的UINavigationBar上push或pop UINavigationItem，那么程序会crash，如下：
+"Cannot call pushNavigationItem:animated: directly on a UINavigationBar managed by a controller."
+说明UINavigationController自己管理的UINavigationBar不让程序员手动去push和pop UINavigationItem。
+
+试想一下，如果程序员自己实例化一个UINavigationBar，再在其上push和pop UINavigationItem，这样就不会crash了吧？
+没错， 是这样的，如下：
+- (void)viewDidLoad {
+    __navigationBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];   //设置导航栏界面
+    UINavigationItem *navigationItem = [[UINavigationItem alloc] initWithTitle:@"登录"];  //初始化并设置title
+    UIBarButtonItem *rightBarbutton = [[UIBarButtonItem alloc] initWithTitle:@"注册" style:UIBarButtonItemStyleBordered target:self action:@selector(signin)];
+    navigationItem.rightBarButtonItem = rightBarbutton;
+    [navigationBar pushNavigationItem:navigationItem animated:YES];
+    [self.view __navigationBar];
+}
+
+- (void)signin {
+    UINavigationItem *navigationItem = [[UINavigationItem alloc] initWithTitle:@"注册"];  //初始化并设置title
+    [__navigationBar pushNavigationItem:navigationItem animated:YES];
+}
+运行的效果和我们采用UINavigationController push和pop的效果一样，只是没有了UIViewController参与。
+
+再试想一下，如果程序员自己来实现UINavigatioinController，那么上面这个利用UINavigationBar push UINavigationItem的环节肯定少不了，
+只是另外还要管理UINavigationItem与UIViewController的对应关系、UIViewController类似于UINavigationItem的push/pop、UIViewController stack中每一个的生命周期。
+</code></pre>
+
+<h6>UINavigationController与UIViewController与UINavigationItem</h6>
+
+
+<pre><code>从上一点的分析中已经能大致推测出UINavigationController里肯定有一个UINavigationBar，查看UINavigationController的.h文件也证实了这一点，
+所以UINavigationController push/pop UIViewController时，肯定会管理UINavigationItem在UINavigationBar上的pop/push。
+
+那么UINavigationController里管理的UINavigationItem从哪里来呢，以及UIViewController与UINavigationItem的对应关系是怎么样的呢？
+    通过查看UIViewControlelr以及UIViewController (UINavigationControllerItem),可以知道
+    UIViewControlelr它有一个叫_navigationItem的实例变量，UIViewController (UINavigationControllerItem)中扩展了一个navigationItem属性，
+    应该就是访问_navigationItem实例变量。所以，不难推测出UINavigationController push UIViewController时
+    UIViewController的View会被用于显示，UIViewController的UINavigationItem会被对应于UINavigationBar的显示，
+    并且UINavigationItem被放到UINavigationBar中管理。
+
+UINavigationController也提供了类似于UINavigationBar push/pop的方法，如下：
+// Uses a horizontal slide transition. Has no effect if the view controller is already in the stack.
+- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated;
+// Returns the popped controller.
+- (UIViewController *)popViewControllerAnimated:(BOOL)animated;
+</code></pre>
+
+<h6>导航条的定制</h6>
+
+
+<pre><code>- (instancetype)initWithNavigationBarClass:(Class)navigationBarClass toolbarClass:(Class)toolbarClass NS_AVAILABLE_IOS(5_0);
+</code></pre>
+
+<h6>UIBarButtonItem定制</h6>
+
+
+<pre><code>- (id)initWithCustomView:(UIView *)customView;
+</code></pre>
+
+<h6>子ViewController层次结构</h6>
+
+
+<pre><code>UINavigationController -(1:多)-&gt; UIViewController -(1:1)-&gt;UINavigationItem
+</code></pre>
+
+<h3>子view controller stack的管理</h3>
+
+
+<p>待续。。。</p>
+
+<h3>子view controller的生命周期和内存的管理</h3>
+
+
+<p>待续。。。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[UIWebView的cookie]]></title>
+    <link href="http://blog.handy.wang/blog/2014/03/14/uiwebviewde-cookie/"/>
+    <updated>2014-03-14T17:18:03+08:00</updated>
+    <id>http://blog.handy.wang/blog/2014/03/14/uiwebviewde-cookie</id>
+    <content type="html"><![CDATA[<h3>场景描述</h3>
+
+
+<p>我们以实际例子驱动的方式来开始这个话题。<br />
+实际例子描述：在App里内嵌一个UIWebView，通过UIWebView打开<a href="http://weibo.com">http://weibo.com</a> 微博首页，在UIWebView里登录我的账号，登录成功后kill App，再次启动App打开UIWebView时微博仍为登录状态。<br />
+实现这个Demo的整体业务代码很简单，主要是怎么实现“再次启动App打开UIWebView时微博仍为登录状态”。这就涉及到UIWebView的cookie问题。</p>
+
+<!--more-->
+
+
+
+
+<h3>Session、Cookie</h3>
+
+
+<p>客户端(包括浏览器)连接某网站(服务器)进行数据交换时，服务器给客户端分配一个数据交换的环境，保存着相关的状态(登录状态、记住用户名密码等)，称之为会话即Session，每个Session都会有唯一的session id。
+在客户端(包括浏览器)不断开连接的情况下这个session会一直在服务器保持着，直到连接断开或会话建立的过程长时间没有数据交换即超时。
+Session是客户端第一次请求时在服务器创建的，Session维持的过程中(未断开连接)，客户端肯定会发起多次数据请求，那么对同一服务器的多次请求时，服务器怎么知道各个请求是否是属于同一Sessioin的呢？
+这时需要客户端的辅助，这个辅助机制称之为Cookie机制，浏览器的cookie机制都是这么做的，我详细说一下：客户端收到服务器的第一次响应时，服务器会把session id通过response返回给客户端，
+客户端收到这个session id后把它存在客户端本地，以后客户端所有向服务器发起的请求都要带着这个session id，
+这样服务器就知道这些请求都是属于同一个session，那么这些请求都可以共享这个Session状态(登录状态、记住用户名密码等)。
+所谓Cookie就是存在本地的若干数据，如session id等其它一些需要临时存在本地以后请求需要的数据。
+所以，一个Session对应一个session id，一个Session对应多个request, 一个request对应多个cookie，session id可以做为其中的一个cookie。</p>
+
+<p>另外，我们还会遇到浏览器的Cookie被禁用的情况(即浏览器不支持存cookie)。这种情况下，对网站的所有请求都必须在url里带着session id，以前是浏览器自动把session id放到请求的header里的。
+对于这一点我就不深究了。</p>
+
+<h3>实际例子的解决方案</h3>
+
+
+<p>在UIWebView里登录成功后，把Session id作为cookie保存到客户端本地，以后对微博网站的所有请求都把存在本地的session id这个cookie传给服务器。代码如下</p>
+
+<pre><code>第一部分
+[self restoreCookieIfNeeded];
+[self.webView loadRequest:request];
+
+第二部分
+- (void)webViewDidFinishLoad:(UIWebView *)webView {
+    [self saveSessionIDCookie];
+}
+
+第三部分
+- (void)saveSessionIDCookie {
+    NSArray *nCookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies];
+    NSHTTPCookie *cookie = nil;
+    for (id cObj in nCookies) {
+        if ([cObj isKindOfClass:[NSHTTPCookie class]]){
+            cookie = (NSHTTPCookie *)cObj;
+            if (!!cookie &amp;&amp; [cookie.name isEqualToString:PHPSESSID]) {
+                NSString *savePath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES) objectAtIndex:0];
+                NSString *saveFile = [savePath stringByAppendingPathComponent:PHPSESSID];
+                [NSKeyedArchiver archiveRootObject:cookie toFile:saveFile];
+            }
+            NSLog(@"cookie properties: %@", cookie.properties);
+        }
+    }
+}
+
+- (void)restoreCookieIfNeeded {
+    NSString *savePath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *saveFile = [savePath stringByAppendingPathComponent:PHPSESSID];
+    NSHTTPCookie *sessionIDCookie = [NSKeyedUnarchiver unarchiveObjectWithFile:saveFile];
+    if (!!sessionIDCookie) {
+        [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:sessionIDCookie];
+    }
+}
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Runtime（一）之 Message转发浅析]]></title>
+    <link href="http://blog.handy.wang/blog/2014/03/10/runtime-1rd-message/"/>
+    <updated>2014-03-10T15:52:57+08:00</updated>
+    <id>http://blog.handy.wang/blog/2014/03/10/runtime-1rd-message</id>
+    <content type="html"><![CDATA[<h3>Objective-C对象模型</h3>
+
+
+<p>本文假定您对Objective-C对象模型已了解</p>
+
+<p><img src="https://raw.github.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/class-diagram.jpg" width="350" height="450"></p>
+
+<h3>消息转发两大流程</h3>
+
+
+<h6>一）方法的动态决议</h6>
+
+
+<h6>二）完整的消息转发机制</h6>
+
+
+<!--more-->
+
+
+
+
+<h3>一）方法的动态决议</h3>
+
+
+<p>即程序运行时动态提供方法的实现，运行时是没有方法实现的。这一机制与消息机制不冲突，即发送消息后，如果运行时发现接收者没有消息实现，
+则会触发方法<br/>
++(BOOL)resolveInstanceMethod:(SEL)sel; 和 +(BOOL)resolveClassMethod:(SEL)sel;<br/>
+以拦截需要&#8221;动态决议&#8221;的方法，显而易见的是这两个方法分别对应实例方法和类方法的调用拦截。</p>
+
+<p>针对“动态决议“的“运行时是没有方法实现”这一特性，我总结了两类动态决议的实际场景：<br/>
+1）@dynamic<br/>
+与@synthesis一样用于修饰属性，但@synthesis用于生成确实名称的getter、setter方法（如果@property中没有特殊指定getter、setter方法名）；@dynamic则是告诉编译器此属性的getter、setter方法的实现在运行时动态指定。<br/>
+2）调用没有实现的实例方法或静态方法<br/>
+因为运行时消息接收者是没有方法实现的，所以在运行时上面提到的两个方法<br />
+(+(BOOL)resolveInstanceMethod:(SEL)sel; 和 +(BOOL)resolveClassMethod:(SEL)sel;)一定能被触发。</p>
+
+<p>重点总结：<br/>
+1）一定是被调用方法（静态方法和实例方法）的实现在运行时不存在，则“方法的动态决议机制”才有效，否则无效<br />
+2）属性方法的动态决议体现在：@dynamic修饰属性以及配合方法 +(BOOL)resolveInstanceMethod:(SEL)sel; 来指定方法的实现<br />
+3）通过runtime相关函数提供方法的动态实现时，如果方法实现有返回值，那么返回值必须是对象类型不能为基本数据类型(通过代码实验证明)<br /></p>
+
+<p>知识扩展<br />
+使用runtime相关函数在运行时添加静态和实例方法实现时，发现一些小知识点。<br />
+1）实例对象、类、类对象、元类对象、相关方法</p>
+
+<pre><code>实例对象 instance object, 通过Frameworks里的类(或自己定义的类)实例化得到的对象叫实例对象，
+    如:AboutMethods *am = [[[AboutMethods alloc] init]]; am就是实例对象。实例对象的isa指向其类对象。
+
+类 class，定义用于抽象一类事物的数据结构
+
+类对象 class object, 在Objective-C中任何的类定义都是对象。
+    即在程序启动的时候任何类定义都对应于一块内存。
+    在编译的时候，编译器会给每一个类生成一个且只生成一个”描述其定义的对象”,
+    也就是Apple说的类对象(class object), 它是一个单例(singleton)。
+    官方文档中是这样说的： The class object is the compiled version of the class
+    类对象(class object)中存储了关于实例对象(instace object)所属的类的定义的
+    一切：包括变量，方法，遵守的协议等等
+
+元类对象 metaclass object, 实际上，类对象是元类对象的一个实例。
+    元类对象描述了一个类对象，就像类对象描述了普通对象一样。
+    不同的是元类对象的方法列表是类方法的集合，由类对象的选择器来响应。
+    当向一个类发送消息时，objc_msgSend会通过类对象的isa指针定位到元类对象，
+    并检查元类的方法列表（包括父类）来决定调用哪个方法。元类对象代替了类对象描述了类方法，
+    就像类对象代替了实例对象描述了实例方法
+
+类对象和元类对象的相关方法
+    1. object_getClass 跟随对象的isa指针，返回此对象所属的类，对于实例对象(instance object)返回
+        的是类对象(class object),
+        对于类对象(class object)则返回的是元类对象(metaclass object),
+    2. -class方法对于实例对象(instance)会返回类对象(class object), 对于类对象(class object)有方法+class
+        则不会返回元类(metaclass object), 而只会返回类对象本身,即[@"instance" class]返回的是
+        __NSCFConstantString, 而[NSString class]返回的是NSString。
+        注：类名出现在消息表达式([])中作为消息接收者时表示类对象class object.
+    3. class_isMetaClass 可判断某类是否为元类.                                     
+    4. 使用objc_allocateClassPair可在运行时创建新的类与元类对，使用class_addMethod和
+        class_addIvar可向类中增加方法和实例变量,
+        最后使用objc_registerClassPair注册后，就可以使用此类了。
+</code></pre>
+
+<p>2）self、[self class]、[[self class] class]、[类名 class]、[[类名 class] class]、objc_getMetaClass[&lsquo;类名&rsquo;]、self->isa、[类名 class]&ndash;>isa、self->isa->isa的区别：</p>
+
+<pre><code>要区分它们之前，首先要考虑调用它们的上下文：实例方法里和静态方法里， 以下分析假设有一个类名为AboutMethods
+    如果是静态方法里调用：
+        1.self 即类对象class object
+        2.[self class] self表示类对象,从上面相关知识中了解到[类对象 class]还是返回类对象
+        3.[[self class] class]、[类名 class]、[[类名 class] class] 如2.分析，
+            都是获取类对象class object
+        4.objc_getMetaClass["类名"] 从这个runtime函数名上即可知道这是获取类的metaclass，
+            即元类对象metaclass object
+            如：objc_getMetaClass("AboutMethods") 返回的是AboutMethods类的元类对象metaclass object
+        5. self-&gt;isa、[类名 class]-&gt;isa 如前面所述，self、[xxx class]都是返回类对象class object，
+            那么类对象的isa就是元类对象metaclass object
+        6. self-&gt;isa-&gt;isa 因为self-&gt;isa是metaclass object，根据OC对象模式图知self-&gt;isa-&gt;isa是
+            root metaclass object, 即NSOjbect的metaclass
+    如果是实例方法里调用：
+        1.self 指实例对象
+        2.[self class] 指类对象
+        3.[[self class] class]、[类名 class]、[[类名 class] class] 同静态方法里，都是获取类对象
+        4.objc_getMetaClass["类名"] 同静态方法里，即获取元类对象metaclass object
+        5. self-&gt;isa 由于self是实例对象instance object，所以self-&gt;isa获取的是类对象class object
+        6. [类名 class]-&gt;isa 由于[类名 class]获取的是类对象class object,
+                所以[类名 class]-&gt;isa获取到的是元类对象metaclass object.
+        7. self-&gt;isa-&gt;isa 由于self是实例对象，所以self-&gt;isa表示类对象
+                那么self-&gt;isa-&gt;isa表示是元类对象
+        8. 注：在实例对象上直接调用isa已经被抛弃了，建议用object_getClass()函数
+</code></pre>
+
+<p>疑问：<br />
+1）实例对象的创建过程？<br /></p>
+
+<pre><code>类的编译过程、对象的创建过程，编译时与运行时的关系
+</code></pre>
+
+<p>2）类对象、元类对象的创建过程？</p>
+
+<h3>二）完整的消息转发机制</h3>
+
+
+<p>在运行时向消息接受者发送消息，消息接受者在收到消息请求后会从自己的类对象、父类对象中的method_list链表中查询消息实现的地址入口IMP。
+如果在这些地方都没有找到发送的消息实现的地址入口，则rumtime运行时环境会向消息接收者发送一个forwardInvocation:消息，
+并且把原始的消息以及消息的参数打成一个NSInvocation的一个对象里面，作为forwardInvocation:的唯一的参数。
+forwardInvocation:本身是在NSObject里面定义的，如果你需要重载这个方法的话，那么任何试图向你的类发送一个没有定义的消息的话，
+你都可以在forwardInvocation:里面捕捉到，并且把消息送到某一个安全的地方，从而避免了系统报错。</p>
+
+<p>注意：<br />
+1）重载 &ndash; (void)forwardInvocation:(NSInvocation <em>)anInvocation;的同时需要重载方法 &ndash; (NSMethodSignature </em>)methodSignatureForSelector:(SEL)sel;</p>
+
+<pre><code>- (NSMethodSignature *)methodSignatureForSelector:(SEL)sel {
+    NSLog(@"///////%@", NSStringFromSelector(_cmd));
+    NSMethodSignature *sig = [_sub methodSignatureForSelector:sel];
+    return sig;
+}
+
+- (void)forwardInvocation:(NSInvocation *)anInvocation {
+    NSLog(@"///////%@", NSStringFromSelector(_cmd));
+    [anInvocation invokeWithTarget:_sub];
+}
+</code></pre>
+
+<h3>参考</h3>
+
+
+<p><a href="http://www.cnblogs.com/yaski/archive/2009/04/13/1434308.html">http://www.cnblogs.com/yaski/archive/2009/04/13/1434308.html</a>
+<a href="http://www.cnblogs.com/liufeng24/p/3561852.html">http://www.cnblogs.com/liufeng24/p/3561852.html</a>
+<a href="http://blog.csdn.net/wzzvictory/article/details/8592492">http://blog.csdn.net/wzzvictory/article/details/8592492</a>
+<a href="http://blog.devtang.com/blog/2013/10/15/objective-c-object-model/">http://blog.devtang.com/blog/2013/10/15/objective-c-object-model/</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[iOS App UI调试工具（三）· Reveal App]]></title>
+    <link href="http://blog.handy.wang/blog/2014/01/03/ios-app-uidiao-shi-gong-ju-san-reveal/"/>
+    <updated>2014-01-03T20:53:01+08:00</updated>
+    <id>http://blog.handy.wang/blog/2014/01/03/ios-app-uidiao-shi-gong-ju-san-reveal</id>
+    <content type="html"><![CDATA[<p>昨天，经<a target="_blank" href="http://weibo.com/danc">@Dan</a>推荐又了解到一款UI调试神器<code>Reveal App</code>
+<video width='640' height='320' preload='none' controls poster='http://revealapp.com/img/testimonial-flipboard.jpg'><source src='http://revealapp.com/video/Reveal.mp4' type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'></video></p>
+
+<!--more-->
+
+
+<p>官方地址在<a target="_blank" href="http://revealapp.com/">这里</a>
+<code>注意：我今天下的试用版试用总是提示已过期，一气之下就把系统日期改成2013年01月03日了，再启动，可以试用了。</code></p>
+
+<p>集成向导：
+Reveal App安装完成后，点开菜单Help->Getting Started，会出现一个界面，界面里有三个步骤，点界面左下角的“View Integration Guide”会打开一个本地的网页，这个网页里详细的描述了
+集成静态库和动态库的步骤。</p>
+
+<p>OK，大家可以试用一下。截止目前介绍的三款中，感觉这款的UE最NB，绝对产品级的。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[由kIOS6MEMORYWARNING引发的思考]]></title>
+    <link href="http://blog.handy.wang/blog/2013/12/26/you-kios6memorywarningyin-fa-de-si-kao/"/>
+    <updated>2013-12-26T21:09:31+08:00</updated>
+    <id>http://blog.handy.wang/blog/2013/12/26/you-kios6memorywarningyin-fa-de-si-kao</id>
+    <content type="html"><![CDATA[<p>昨晚，在Review搜狐新闻客户端代码时发现iOS6+时ViewController类里的didReceiveMemoryWarning方法实现被宏kIOS6MEMORYWARNING(它的值是0)屏蔽了。(<a target="_blank" href="http://weibo.com/chh1980?topnav=1&wvr=5&topsug=1">@陈宏-Wesley</a>)</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">didReceiveMemoryWarning</span> <span class="p">{</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">super</span> <span class="n">didReceiveMemoryWarning</span><span class="p">];</span>
+</span><span class='line'>    <span class="err">#</span><span class="k">if</span> <span class="n">kIOS6MEMORYWARNING</span>
+</span><span class='line'>    <span class="c1">// only want to do this on iOS 6</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">([[[</span><span class="n">UIDevice</span> <span class="n">currentDevice</span><span class="p">]</span> <span class="n">systemVersion</span><span class="p">]</span> <span class="n">floatValue</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mf">6.0</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="c1">//  Don&#39;t want to rehydrate the view if it&#39;s already unloaded</span>
+</span><span class='line'>        <span class="kt">BOOL</span> <span class="n">isLoaded</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span> <span class="n">isViewLoaded</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">//  We check the window property to make sure that the view is not visible</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">isLoaded</span> <span class="o">&amp;&amp;</span> <span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">.</span><span class="n">window</span> <span class="o">==</span> <span class="nb">nil</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="c1">//  Give a chance to implementors to get model data from their views</span>
+</span><span class='line'>            <span class="p">[</span><span class="n">self</span> <span class="nl">performSelectorOnMainThread:</span><span class="k">@selector</span><span class="p">(</span><span class="n">viewWillUnload</span><span class="p">)</span>
+</span><span class='line'>                                   <span class="nl">withObject:</span><span class="nb">nil</span>
+</span><span class='line'>                                <span class="nl">waitUntilDone:</span><span class="n">YES</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="c1">//  Detach it from its parent (in cases of view controller containment)</span>
+</span><span class='line'>            <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">view</span> <span class="n">removeFromSuperview</span><span class="p">];</span>
+</span><span class='line'>            <span class="n">self</span><span class="p">.</span><span class="n">view</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>    <span class="c1">//  Clear out the view.  Goodbye!</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="c1">//  The view is now unloaded...now call viewDidUnload</span>
+</span><span class='line'>            <span class="p">[</span><span class="n">self</span> <span class="nl">performSelectorOnMainThread:</span><span class="k">@selector</span><span class="p">(</span><span class="n">viewDidUnload</span><span class="p">)</span>
+</span><span class='line'>                                   <span class="nl">withObject:</span><span class="nb">nil</span>
+</span><span class='line'>                                <span class="nl">waitUntilDone:</span><span class="n">YES</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="err">#</span><span class="n">endif</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>刹那间觉得很奇怪，一定有一些不为人知的原因，所以我打算一探究竟。</p>
+
+<!--more-->
+
+
+<p>经过和 <a target="_blank" href="http://weibo.com/iqipei?topnav=1&wvr=5&topsug=1">@单eye皮</a> <a target="_blank" href="http://weibo.com/u/1620329427?topnav=1&wvr=5&topsug=1">@Aaron_亚伦007</a> 一天的激烈讨论得出了一些我们认为正确的答案，特总结如下。</p>
+
+<p>iOS6以前(不包括iOS6)，内存警告后，我们都会在viewDidUnload方法里手动的回收ViewController里的子View以及ViewController的View([self.view removeFromSuperview];self.view = nil;)，当ViewController通过loadView重建时ViewController的View和子View全部会被重建(一般在loadView和viewDidLoad里)。所以，iOS6以前(不包括iOS6)两个关键点：1）MemoryWarning时viewDidUnload一定会被调到；2）为了重建loadView被调用多次；</p>
+
+<p>iOS6及以后内存警告时，didReceiveMemoryWarning会被调到但viewDidUnload方法已经不会被调到。按iOS6以下的思维或没看官方文档前，我们会觉得这样有不妥，所以我们会在didReceiveMemoryWarning方法里手动调用viewDidUnload方法来回收ViewController的View和子View，以使我们内心觉得真NB，完美解决了iOS6以前和
+iOS6及以后内存警告的处理了。所以，文章开头的代码片断里在iOS6及以后会手动调用viewDidUnload方法，即，回收ViewController子View和ViewController的View。</p>
+
+<p>如果觉得上面处理iOS6及以后内存警告的方式很NB的话，那么我们还可以更NB。其实，Apple已经为了考虑到iOS6以后内存警告应该怎么处理。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">On</span> <span class="n">iOS</span> <span class="mi">6</span> <span class="n">and</span> <span class="n">Later</span><span class="p">,</span> <span class="n">a</span> <span class="n">View</span> <span class="n">Controller</span> <span class="n">Unloads</span> <span class="n">Its</span> <span class="n">Own</span> <span class="n">Views</span> <span class="n">When</span> <span class="n">Desired</span>
+</span><span class='line'><span class="n">The</span> <span class="k">default</span> <span class="n">behavior</span> <span class="k">for</span> <span class="n">a</span> <span class="n">view</span> <span class="n">controller</span> <span class="n">is</span> <span class="n">to</span> <span class="n">load</span> <span class="n">its</span> <span class="n">view</span> <span class="n">hierarchy</span>
+</span><span class='line'><span class="n">when</span> <span class="n">the</span> <span class="n">view</span> <span class="n">property</span> <span class="n">is</span> <span class="n">first</span> <span class="n">accessed</span> <span class="n">and</span> <span class="n">thereafter</span> <span class="n">keep</span> <span class="n">it</span> <span class="k">in</span> <span class="n">memory</span> <span class="n">until</span>
+</span><span class='line'><span class="n">the</span> <span class="n">view</span> <span class="n">controller</span> <span class="n">is</span> <span class="n">disposed</span> <span class="n">of</span><span class="p">.</span>
+</span><span class='line'><span class="n">The</span> <span class="n">memory</span> <span class="n">used</span> <span class="n">by</span> <span class="n">a</span> <span class="n">view</span> <span class="n">to</span> <span class="n">draw</span> <span class="n">itself</span> <span class="n">onscreen</span> <span class="n">is</span> <span class="n">potentially</span> <span class="n">quite</span> <span class="n">large</span><span class="p">.</span> <span class="n">However</span><span class="p">,</span>
+</span><span class='line'><span class="n">the</span> <span class="n">system</span> <span class="n">automatically</span> <span class="n">releases</span> <span class="n">these</span> <span class="n">expensive</span> <span class="n">resources</span> <span class="n">when</span> <span class="n">the</span> <span class="n">view</span> <span class="n">is</span> <span class="n">not</span> <span class="n">attached</span>
+</span><span class='line'><span class="n">to</span> <span class="n">a</span> <span class="n">window</span><span class="p">.</span> <span class="n">The</span> <span class="n">remaining</span> <span class="n">memory</span> <span class="n">used</span> <span class="n">by</span> <span class="n">most</span> <span class="n">views</span> <span class="n">is</span> <span class="n">small</span> <span class="n">enough</span> <span class="n">that</span> <span class="n">it</span> <span class="n">is</span> <span class="n">not</span> <span class="n">worth</span>
+</span><span class='line'><span class="n">it</span> <span class="k">for</span> <span class="n">the</span> <span class="n">system</span> <span class="n">to</span> <span class="n">automatically</span> <span class="n">purge</span> <span class="n">and</span> <span class="n">recreate</span> <span class="n">the</span> <span class="n">view</span> <span class="n">hierarchy</span><span class="p">.</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">You</span> <span class="n">can</span> <span class="n">explicitly</span> <span class="n">release</span> <span class="n">the</span> <span class="n">view</span> <span class="n">hierarchy</span> <span class="k">if</span> <span class="n">that</span> <span class="n">additional</span> <span class="n">memory</span> <span class="n">is</span>
+</span><span class='line'><span class="n">necessary</span> <span class="k">for</span> <span class="n">your</span> <span class="n">app</span><span class="p">.</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>下面，就这一段话展开分析和解释：
+iOS6及以后，内存警告时系统会回收ViewController的View的CALayer里的BitMap（CABackingStore类型，它的内容是直接用于渲染到屏幕，它是View消耗内存的大户）。view和calayer占的内存极少，
+数量级也就在byte和kbyte之间，所以系统只回收了BitMap，但是这里所谓的回收只是给BitMap占用的内存打了一个volatile标记表明这部分内存是可能随时被其它数据占用,平时没内存警告时正在使用的内存标记为In use，完全被释放回收的标记为Not in use。概括起来也就是说：iOS6及以后的内存警告时，系统会给用于渲染视图的数据(BitMap)内存打一个volatile，
+ViewController的View的架子结构并不会回收，当View再次被访问时，虽然View的架子结构会用重建，但触发drawRect来渲染界面时，如果view对应的BitMap数据内存没有被占用则会被View的drawRect方法直接渲染出来且内存被标记为in use，从而这块内存又可以独享了；如果已被其它数据占用，那么BitMap必须要重建。所以可以看到整个重建过程不再是由loadView来做的，它是通过对view的访问来触发的。但是，请注意，
+如果说在iOS6及以后ViewController的loadView方法只会被调用一次，这种说法是不完全准确的。因为：如果在didReceiveMemoryWarning里把ViewController的View也回收了([self.view removeFromSuperview];self.view = nil;)，那么当再次有对View访问时，loadView会被调用以进行完全最彻底的重建(想想也是，ViewController的View都没了，不调loadView来重建那怎么办呢)。</p>
+
+<p>总结一下：
+iOS6的这种设计高明在两个地方：1）视图结构和视图数据的分离；2）内存警告后系统只回收的是内存大户视图数据，但是回收不是完全的清掉，而只是做个标记，这样既做到减小了每次重建BitMap
+的成本，同时也把这部分内存开放出去可以随时被别的数据占用；3）重建时，充其量是重建BitMap(没被占用时是直接用不用重建)</p>
+
+<p>回顾kIOS6MEMORYWARNING这个宏，如果kIOS6MEMORYWARNING==0，那么不回收View的架子结构，loadView也就不会被再次调用(没有必要嘛)；如果kIOS6MEMORYWARNING==1，那么回收View的架子结构，
+再次访问View时loadView会被调用，loadView里的逻辑又运行了一次，这样不但降低了渲染速度还提高了重建成本。</p>
+
+<p>所以，我只能这么说，iOS6及以后didReceiveMemoryWarning方法里面没有必要做任何事情，要做最多也是回收视图的架子结构或回收一些业务上处理的大数据。（你觉得真的有必要回收视图架子结构吗，这就是为什么文章一开始提到kIOS6MEMORYWARNING屏蔽了didReceiveMemoryWarning方法的实现，因为没有必要回收架子结构）</p>
+
+<p>特别感谢：<a target="_blank" href="http://weibo.com/iqipei?topnav=1&wvr=5&topsug=1">@单eye皮</a> <a target="_blank" href="http://weibo.com/u/1620329427?topnav=1&wvr=5&topsug=1">@Aaron_亚伦007</a></p>
+
+<h3>参考</h3>
+
+
+<ol style="margin-top:-18px; padding-left:28px;">
+    <li style="padding-bottom:10px;">
+        <a target="_blank" href="http://blog.devtang.com/blog/2013/05/18/goodbye-viewdidunload/">《再见，viewDidUnload方法</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" href="http://weibo.com/tangqiaoboy?topnav=1&wvr=5&topsug=1">by @唐巧_boy</a><br/>
+    </li>
+    <li>
+        <a target="_blank" href=" https://developer.apple.com/library/ios/featuredarticles/ViewControllerPGforiPhoneOS/ViewLoadingandUnloading/ViewLoadingandUnloading.html">《Resource Management in View Controllers》</a><br/>
+    </li>
+    <li>
+        <a target="_blank" href="http://blog.spacemanlabs.com/2011/08/calayer-internals-contents/">《CALayer Internals: Contents》</a><br/>
+    </li>
+    <li>
+        <a target="_blank" href="http://blog.csdn.net/mad2man/article/details/11177293">《viewDidUnload 和 viewWillUnload 被废弃之后的内存警告处理》</a><br/>
+    </li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Mac OS下搭建APNS推送服务器(Apache+PHP)]]></title>
+    <link href="http://blog.handy.wang/blog/2013/12/19/mac-osxia-da-jian-apnstui-song-fu-wu-qi/"/>
+    <updated>2013-12-19T21:16:04+08:00</updated>
+    <id>http://blog.handy.wang/blog/2013/12/19/mac-osxia-da-jian-apnstui-song-fu-wu-qi</id>
+    <content type="html"><![CDATA[<h3>配置Apache+PHP</h3>
+
+
+<p>Mac OS自带Apache服务器和PHP，所以只需少许配置便可将它派上用场</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>1）启动Apache服务器
+</span><span class='line'>打开“终端（terminal）”，然后（注意，sudo需要的密码就是系统的root帐号密码）运行“sudo apachectl start”
+</span><span class='line'>再输入帐号密码这样Apache就运行了。如此在浏览器中输入“http://localhost”就可以看到一个内容为“It works!”
+</span><span class='line'>的页面。其位于“/Library/WebServer/Documents/”下，这就是Apache的默认根目录
+</span><span class='line'>
+</span><span class='line'>2）配置Apache支持PHP
+</span><span class='line'>在终端中运行“sudo vi /etc/apache2/httpd.conf”，打开Apache的配置文件。
+</span><span class='line'>找到“#LoadModule php5_module libexec/apache2/libphp5.so”，把前面的#号去掉，
+</span><span class='line'>保存（在命令行输入:w）并退出vi（在命令行输入:q）。运行“sudo apachectl restart”，
+</span><span class='line'>重启Apache，这样PHP就可以用了。
+</span><span class='line'>
+</span><span class='line'>3）测试PHP在Apache中运行是否正常
+</span><span class='line'>运行“sudo cp /Library/WebServer/Documents/index.html.en /Library/WebServer/Documents/info.php”
+</span><span class='line'>即在Apache的根目录下复制index.html.en文件并重命名为info.php。
+</span><span class='line'>在终端中运行“sudo vi /Library/WebServer/Document/info.php”，这样就可以在vi中编辑info.php文件了。
+</span><span class='line'>在“It’s works!”后面加上“&lt;?php phpinfo(); ?&gt;”，然后保存之。如此就可以在http://localhost/info.php中看到
+</span><span class='line'>有关PHP的信息，比如10.8中内置PHP版本号是5.3.13。</span></code></pre></td></tr></table></div></figure>
+
+
+<!--more-->
+
+
+<h3>制作Pem文件</h3>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>1）打开keychain，选择左上Keychains区域中的login，再选择左下Category区域中的My Certificates，
+</span><span class='line'>然后在右边找到项目使用的Push证书(注意：当有developement和production时一定要记住你导出的是哪个)
+</span><span class='line'>后面做测试时无论是打包还是直接build在device的App都要使用对应的codesign.
+</span><span class='line'>
+</span><span class='line'>2）分别把Certificate和key的p12导出，命名为cert.p12和key.p12
+</span><span class='line'>
+</span><span class='line'>3）打开terminal运行以下代码：
+</span><span class='line'>    openssl pkcs12 -clcerts -nokeys -out cert.pem -in cert.p12
+</span><span class='line'>    openssl pkcs12 -nocerts -out key.pem -in key.p12
+</span><span class='line'>    openssl rsa -in key.pem -out key-noenc.pem
+</span><span class='line'>    cat cert.pem key-noenc.pem &gt; apns.pem
+</span><span class='line'>把最后生成的apns.pem保管好</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<h3>编写PHP页面</h3>
+
+
+<p>在Apache根录下新建一个index.php文件，代码如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;html&gt;
+</span><span class='line'>&lt;head&gt;
+</span><span class='line'>  &lt;title&gt;Push Simulator&lt;/title&gt;
+</span><span class='line'>  &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
+</span><span class='line'>  &lt;meta id="viewport" name="viewport"content="width=320; initial-scale=1.0;maximum-scale=1.0;user-scalable=no;"/&gt;
+</span><span class='line'>  &lt;script language="javascript"&gt;
+</span><span class='line'>      function onTokenChange(value) {
+</span><span class='line'>          if (value == "other") {
+</span><span class='line'>              var token_other = document.getElementById("token_other");
+</span><span class='line'>              token_other.style.display = "inline"
+</span><span class='line'>          }
+</span><span class='line'>          else {
+</span><span class='line'>              var token_other = document.getElementById("token_other");
+</span><span class='line'>              token_other.style.display = "none"
+</span><span class='line'>          }
+</span><span class='line'>      };
+</span><span class='line'>  &lt;/script&gt;
+</span><span class='line'>&lt;/head&gt;
+</span><span class='line'>&lt;body&gt;
+</span><span class='line'>  &lt;h2 style="border-bottom:red solid 1px;"&gt;Push Simulator&lt;/h2&gt;
+</span><span class='line'>  &lt;form action="a.php" method="post"&gt;
+</span><span class='line'>      &lt;div&gt;Badge number&lt;/div&gt;
+</span><span class='line'>      &lt;div&gt;
+</span><span class='line'>          &lt;input style="width:40px;" value="1" name="badgeNumber"&gt;&lt;/input&gt;
+</span><span class='line'>      &lt;/div&gt;
+</span><span class='line'>      &lt;br /&gt;
+</span><span class='line'>
+</span><span class='line'>      &lt;div&gt;Alert message&lt;/div&gt;
+</span><span class='line'>      &lt;div&gt;
+</span><span class='line'>          &lt;input style="width:150px;" value="新消息内容" name="msg"&gt;&lt;/input&gt;
+</span><span class='line'>      &lt;/div&gt;
+</span><span class='line'>      &lt;br /&gt;
+</span><span class='line'>
+</span><span class='line'>      &lt;div&gt;Link2&lt;/div&gt;
+</span><span class='line'>      &lt;div&gt;
+</span><span class='line'>          &lt;input style="width:450px;" value="video://vid=1605673&mid=10348504&columnId=117&channelId=1" name="link2"&gt;&lt;/input&gt;
+</span><span class='line'>      &lt;/div&gt;
+</span><span class='line'>      &lt;br /&gt;
+</span><span class='line'>
+</span><span class='line'>      &lt;div&gt;
+</span><span class='line'>          Token:
+</span><span class='line'>          &lt;select name="token" id="tokenSelect" onchange="onTokenChange(this.options[this.options.selectedIndex].value);"&gt;
+</span><span class='line'>              &lt;option value="4e52bb2a215643c0da52477177ba19793720ebc17ec5a38aa853a68a22ab7f93"&gt;token1&lt;/option&gt;
+</span><span class='line'>              &lt;option value="other"&gt;Other&lt;/option&gt;
+</span><span class='line'>          &lt;/select&gt;
+</span><span class='line'>          &lt;input style="width:450px;display:none;" value="" id="token_other" name="token_other"&gt;
+</span><span class='line'>      &lt;/div&gt;
+</span><span class='line'>      &lt;div&gt;
+</span><span class='line'>          Schema:
+</span><span class='line'>          &lt;select name="schema"&gt;
+</span><span class='line'>              &lt;option value="apns.pem"&gt;apns.pem&lt;/option&gt;
+</span><span class='line'>          &lt;/select&gt;
+</span><span class='line'>      &lt;/div&gt;
+</span><span class='line'>      &lt;br /&gt;
+</span><span class='line'>
+</span><span class='line'>      &lt;div&gt;
+</span><span class='line'>          &lt;input type="submit" value="发送"&gt;&lt;/input&gt;
+</span><span class='line'>      &lt;/div&gt;
+</span><span class='line'>  &lt;/form&gt;
+</span><span class='line'>&lt;/body&gt;
+</span><span class='line'>&lt;/html&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>再在Apache根录下新建一个a.php文件(这个文件才是真正用来发推送的)，代码如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+<span class='line-number'>92</span>
+<span class='line-number'>93</span>
+<span class='line-number'>94</span>
+<span class='line-number'>95</span>
+<span class='line-number'>96</span>
+<span class='line-number'>97</span>
+<span class='line-number'>98</span>
+<span class='line-number'>99</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;?php
+</span><span class='line'>/*
+</span><span class='line'>* 文件名称：Lib_Push_IPhone_Server.php
+</span><span class='line'>* 摘    要：苹果PUSH发送类
+</span><span class='line'>* 版    本：1.0
+</span><span class='line'>*/
+</span><span class='line'>class Lib_Push_IPhone_Server  {
+</span><span class='line'>  //发布版的server：gateway.push.apple.com 开发版：gateway.sandbox.push.apple.com
+</span><span class='line'>  private $apnsHost = 'gateway.sandbox.push.apple.com';
+</span><span class='line'>  private $apnsPort = '2195';
+</span><span class='line'>  private $sslPem = ''; //开发版本和发布版的pem不一样，用不同的证书生成
+</span><span class='line'>  private $passPhrase = 'sohu';
+</span><span class='line'>  private $apnsConnection = null ;
+</span><span class='line'> 
+</span><span class='line'>  public function __destruct(){
+</span><span class='line'>  //退出时，关闭到苹果服务器的连接
+</span><span class='line'>      $this-&gt;closeConnections();
+</span><span class='line'>      }
+</span><span class='line'> 
+</span><span class='line'>  //建立到苹果服务器的连接
+</span><span class='line'>  function connectToAPNS($pem) {
+</span><span class='line'>      $streamContext = stream_context_create();
+</span><span class='line'>      stream_context_set_option($streamContext, 'ssl', 'local_cert', $pem);
+</span><span class='line'>      $this-&gt;apnsConnection = stream_socket_client('ssl://'.$this-&gt;apnsHost.':'.$this-&gt;apnsPort, $error, $errorString, 60, STREAM_CLIENT_CONNECT, $streamContext);
+</span><span class='line'>      if($this-&gt;apnsConnection == false) {
+</span><span class='line'>          $this-&gt;Nslog("Failed to connect {".$error."} {".$errorString."}");
+</span><span class='line'>          $this-&gt;closeConnections();
+</span><span class='line'>      }
+</span><span class='line'>  }
+</span><span class='line'> 
+</span><span class='line'>  //发送消息到苹果
+</span><span class='line'>  function sendNotification($deviceToken, $message) {
+</span><span class='line'>      if(!$this-&gt;apnsConnection){
+</span><span class='line'>          $this-&gt;connectToAPNS();
+</span><span class='line'>      }
+</span><span class='line'>      $apnsMessage = chr(0) . chr(0) . chr(32) . pack('H*', str_replace(' ', '', $deviceToken)) . chr(0) . chr(strlen($message)) . $message;
+</span><span class='line'>      return fwrite($this-&gt;apnsConnection, $apnsMessage);
+</span><span class='line'>  }
+</span><span class='line'> 
+</span><span class='line'>  //关闭到苹果服务器的连接
+</span><span class='line'>  function closeConnections() {
+</span><span class='line'>      fclose($this-&gt;apnsConnection);
+</span><span class='line'>  }
+</span><span class='line'> 
+</span><span class='line'>  function NsLog($logmsg) {
+</span><span class='line'>      print date("Y-m-d H:i:s")."\t".$logmsg."\n";
+</span><span class='line'>  }
+</span><span class='line'>}
+</span><span class='line'>?&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;?php
+</span><span class='line'>    //=========================
+</span><span class='line'>    $schema           = $_POST['schema'];
+</span><span class='line'>    $badgeNumber  = $_POST['badgeNumber'];
+</span><span class='line'>    $msg          = $_POST['msg'];
+</span><span class='line'>    $link2            = $_POST['link2'];
+</span><span class='line'>    $token            = $_POST['token'];
+</span><span class='line'>    $token_other  = $_POST['token_other'];
+</span><span class='line'>    if ($token == 'other') {
+</span><span class='line'>        $token = $token_other;
+</span><span class='line'>    }
+</span><span class='line'>
+</span><span class='line'>    $body = array();
+</span><span class='line'>    $body['aps'] = array('alert' =&gt; $msg);
+</span><span class='line'>    $body['aps']['badge'] = $badgeNumber;
+</span><span class='line'>    $body['url'] = $link2;
+</span><span class='line'>    $payload = json_encode($body);
+</span><span class='line'>    $push = new Lib_Push_IPhone_Server();
+</span><span class='line'>
+</span><span class='line'>    $push-&gt;connectToAPNS($schema);
+</span><span class='line'>    $push-&gt;sendNotification($token, $payload);
+</span><span class='line'>    $push-&gt;closeConnections();
+</span><span class='line'>?&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;title&gt;iOS PushNotification Simulator&lt;/title&gt;
+</span><span class='line'>&lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
+</span><span class='line'>&lt;meta id="viewport" name="viewport"content="width=320; initial-scale=1.0;maximum-scale=1.0;user-scalable=no;"/&gt;
+</span><span class='line'>&lt;body&gt;
+</span><span class='line'>    &lt;div&gt;&lt;a href="javascript:history.back();"&gt;&lt;&lt;&lt;&lt;返回&lt;/a&gt;&lt;/div&gt;
+</span><span class='line'>    &lt;div&gt;Schema&lt;/div&gt;
+</span><span class='line'>    &lt;div&gt;&lt;?=$schema?&gt;&lt;/div&gt;
+</span><span class='line'>    &lt;br /&gt;
+</span><span class='line'>    
+</span><span class='line'>    &lt;div&gt;Badge Number&lt;/div&gt;
+</span><span class='line'>    &lt;div&gt;&lt;?=$badgeNumber?&gt;&lt;/div&gt;
+</span><span class='line'>    &lt;br /&gt;
+</span><span class='line'>    
+</span><span class='line'>    &lt;div&gt;Alert Message&lt;/div&gt;
+</span><span class='line'>    &lt;div&gt;&lt;?=$msg?&gt;&lt;/div&gt;
+</span><span class='line'>    &lt;br /&gt;
+</span><span class='line'>
+</span><span class='line'>    &lt;div&gt;Link2&lt;/div&gt;
+</span><span class='line'>    &lt;div&gt;&lt;?=$link2?&gt;&lt;/div&gt;
+</span><span class='line'>    &lt;br /&gt;
+</span><span class='line'>    
+</span><span class='line'>    &lt;div&gt;Token&lt;/div&gt;
+</span><span class='line'>    &lt;div&gt;&lt;?=$token?&gt;&lt;/div&gt;
+</span><span class='line'>    &lt;br /&gt;
+</span><span class='line'>&lt;/body&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>再把apns.pem拷到Apache根目录下，然后重启Apche: sudo apachectl restart</p>
+
+<h3>配置index.php为默认首页</h3>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>找到
+</span><span class='line'>&lt;IfModule dir_module&gt;
+</span><span class='line'>    DirectoryIndex index.html
+</span><span class='line'>&lt;/IfModule&gt;
+</span><span class='line'>修改为
+</span><span class='line'>&lt;IfModule dir_module&gt;
+</span><span class='line'>    DirectoryIndex index.php index.html
+</span><span class='line'>&lt;/IfModule&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>重启Apche: sudo apachectl restart</p>
+
+<h3>测试</h3>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>在浏览器地址栏里输入http://apache服务器地址，如:http://localhost，便能看到index.php页面。
+</span><span class='line'>在这个页面填写相关参数便可以发送。</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<h3>注意要点</h3>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>1）导出cert.p12和key.p12时的p12一定要是最后测试的App对应用的codesign
+</span><span class='line'>即：developent的p12对应Debug模式的App，production的p12对应AppStore模式的App
+</span><span class='line'>
+</span><span class='line'>2）生成pem时一定要小心
+</span><span class='line'>
+</span><span class='line'>3）在index.php页面测试时，一定要选择对的schema（即pem，目前只有一种，
+</span><span class='line'>我的项目中有多种：debug和debug-inhouse）填对token，
+</span><span class='line'>这个token要以xcode输出的为准，因为它会变化</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<h3>GOOD LUCK!!!</h3>
+
+
+
+
+<h3>参考</h3>
+
+
+<ol style="margin-top:-18px; padding-left:28px;">
+    <li style="padding-bottom:10px;">
+        <a target="_blank" href="http://dancewithnet.com/2010/05/09/run-apache-php-mysql-in-mac-os-x/">在Mac OS X中配置Apache＋PHP＋MySQL</a><br/>
+    </li>
+    <li>
+        <a target="_blank" href="http://stackoverflow.com/questions/11536587/creating-pem-file-for-push-notification">Creating.pem file for push notification</a><br/>
+    </li>
+</ol>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[iOS App UI调试工具（二）· Realtime Debug Portal]]></title>
+    <link href="http://blog.handy.wang/blog/2013/12/17/ios-app-uidiao-shi-gong-ju2/"/>
+    <updated>2013-12-17T05:30:58+08:00</updated>
+    <id>http://blog.handy.wang/blog/2013/12/17/ios-app-uidiao-shi-gong-ju2</id>
+    <content type="html"><![CDATA[<p><img src="https://github-camo.global.ssl.fastly.net/03548ab74978beee15b711ab26b5ed1bd71714f2/687474703a2f2f7777772e76696e716f6e2e636f6d2f636f6465626c6f672f66636b656469746f722f75706c6f61642f696d6167652f323031332d30362f325f322e706e67"></p>
+
+<h3>Realtime Debug Portal简介</h3>
+
+
+<blockquote><p>RDP是一个类似Web Inspector的工具，把这个工具引入我们的项目工程，并做一些简单的配置，然后启动应用，<br/>在浏览器输入手机的IP地址，就可以看到UIView的树状结构和Log信息，还可以在浏览器中对View进行移动，<br/>隐藏，选中高亮等操作。</p><footer><strong>Realtime Debug Portal</strong> <cite><a href='https://github.com/vinqon/Realtime-Debug-Portal'>Read On</a></cite></footer></blockquote>
+
+
+<!--more-->
+
+
+
+
+<h3>配置步骤</h3>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>把库文件、头文件以及资源文件(bundle)引入项目即可，有两点需要注意一下：
+</span><span class='line'>
+</span><span class='line'>把工程中的Build Settings中的Other Linker Flags设置为-ObjC;
+</span><span class='line'>使用iOS5或以上SDK;
+</span><span class='line'>然后在合适位置调用以下代码：
+</span><span class='line'>#import "libRDP.h"
+</span><span class='line'>[RDP startServer];
+</span><span class='line'>启动应用之后，状态栏会显示出你需要访问的地址，模拟器一般会显示http://127.0.0.1:8080 ，
+</span><span class='line'>请使用Chrome或者Safari打开。
+</span><span class='line'>
+</span><span class='line'>当选中某个view之后，RDP会在这个view上面盖一层蓝色透明遮罩以便开发者区别。
+</span><span class='line'>用户可以通过按下方向键来移动view，每次会移动1个逻辑像素；按住shift加方向键可以移动10个逻辑像素；
+</span><span class='line'>按住w字母键，加方向键可以调整大小；
+</span><span class='line'>点击h可以切换hidden状态；</span></code></pre></td></tr></table></div></figure>
+
+
+<p>也可参考github上<a target="_blank" href="https://github.com/vinqon/Realtime-Debug-Portal">这里</a></p>
+
+<h3>试用体会</h3>
+
+
+<div>
+    1）目前，支持视图的Inspect、position和size调整、隐藏或显示
+</div>
+
+
+<div>
+    2）方便集成到项目，UE简单明了很容易上手，基本能满足界面布局调试需求
+</div>
+
+
+
+
+<h3>参考</h3>
+
+
+<ol style="margin-top:-18px; padding-left:28px;">
+    <li style="padding-bottom:10px;">
+        <a target="_blank" href="http://www.vinqon.com/codeblog/?detail/11109">Redesign Your App for iOS 7 之 页面布局</a><br/>
+    </li>
+    <li>
+        <a target="_blank" href="https://github.com/vinqon/Realtime-Debug-Portal">Realtime Debug Portal的github</a><br/>
+    </li>
+</ol>
+
+
+
+]]></content>
+  </entry>
+  
+</feed>

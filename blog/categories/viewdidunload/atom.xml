@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: viewDidUnload | Handy's]]></title>
+  <link href="http://blog.handy.wang/blog/categories/viewdidunload/atom.xml" rel="self"/>
+  <link href="http://blog.handy.wang/"/>
+  <updated>2016-05-13T16:11:00+08:00</updated>
+  <id>http://blog.handy.wang/</id>
+  <author>
+    <name><![CDATA[Handy.Wang]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[由kIOS6MEMORYWARNING引发的思考]]></title>
+    <link href="http://blog.handy.wang/blog/2013/12/26/you-kios6memorywarningyin-fa-de-si-kao/"/>
+    <updated>2013-12-26T21:09:31+08:00</updated>
+    <id>http://blog.handy.wang/blog/2013/12/26/you-kios6memorywarningyin-fa-de-si-kao</id>
+    <content type="html"><![CDATA[<p>昨晚，在Review搜狐新闻客户端代码时发现iOS6+时ViewController类里的didReceiveMemoryWarning方法实现被宏kIOS6MEMORYWARNING(它的值是0)屏蔽了。(<a target="_blank" href="http://weibo.com/chh1980?topnav=1&wvr=5&topsug=1">@陈宏-Wesley</a>)
+``` objc
+&ndash; (void)didReceiveMemoryWarning {</p>
+
+<pre><code>[super didReceiveMemoryWarning];
+#if kIOS6MEMORYWARNING
+// only want to do this on iOS 6
+if ([[[UIDevice currentDevice] systemVersion] floatValue] &gt;= 6.0) {
+    //  Don't want to rehydrate the view if it's already unloaded
+    BOOL isLoaded = [self isViewLoaded];
+
+    //  We check the window property to make sure that the view is not visible
+    if (isLoaded &amp;&amp; self.view.window == nil) {
+
+        //  Give a chance to implementors to get model data from their views
+        [self performSelectorOnMainThread:@selector(viewWillUnload)
+                               withObject:nil
+                            waitUntilDone:YES];
+
+        //  Detach it from its parent (in cases of view controller containment)
+        [self.view removeFromSuperview];
+        self.view = nil;    //  Clear out the view.  Goodbye!
+
+        //  The view is now unloaded...now call viewDidUnload
+        [self performSelectorOnMainThread:@selector(viewDidUnload)
+                               withObject:nil
+                            waitUntilDone:YES];
+    }
+}
+#endif
+</code></pre>
+
+<p>}
+```
+刹那间觉得很奇怪，一定有一些不为人知的原因，所以我打算一探究竟。</p>
+
+<!--more-->
+
+
+<p>经过和 <a target="_blank" href="http://weibo.com/iqipei?topnav=1&wvr=5&topsug=1">@单eye皮</a> <a target="_blank" href="http://weibo.com/u/1620329427?topnav=1&wvr=5&topsug=1">@Aaron_亚伦007</a> 一天的激烈讨论得出了一些我们认为正确的答案，特总结如下。</p>
+
+<p>iOS6以前(不包括iOS6)，内存警告后，我们都会在viewDidUnload方法里手动的回收ViewController里的子View以及ViewController的View([self.view removeFromSuperview];self.view = nil;)，当ViewController通过loadView重建时ViewController的View和子View全部会被重建(一般在loadView和viewDidLoad里)。所以，iOS6以前(不包括iOS6)两个关键点：1）MemoryWarning时viewDidUnload一定会被调到；2）为了重建loadView被调用多次；</p>
+
+<p>iOS6及以后内存警告时，didReceiveMemoryWarning会被调到但viewDidUnload方法已经不会被调到。按iOS6以下的思维或没看官方文档前，我们会觉得这样有不妥，所以我们会在didReceiveMemoryWarning方法里手动调用viewDidUnload方法来回收ViewController的View和子View，以使我们内心觉得真NB，完美解决了iOS6以前和
+iOS6及以后内存警告的处理了。所以，文章开头的代码片断里在iOS6及以后会手动调用viewDidUnload方法，即，回收ViewController子View和ViewController的View。</p>
+
+<p>如果觉得上面处理iOS6及以后内存警告的方式很NB的话，那么我们还可以更NB。其实，Apple已经为了考虑到iOS6以后内存警告应该怎么处理。
+```
+On iOS 6 and Later, a View Controller Unloads Its Own Views When Desired
+The default behavior for a view controller is to load its view hierarchy
+when the view property is first accessed and thereafter keep it in memory until
+the view controller is disposed of.
+The memory used by a view to draw itself onscreen is potentially quite large. However,
+the system automatically releases these expensive resources when the view is not attached
+to a window. The remaining memory used by most views is small enough that it is not worth
+it for the system to automatically purge and recreate the view hierarchy.</p>
+
+<p>You can explicitly release the view hierarchy if that additional memory is
+necessary for your app.
+```
+下面，就这一段话展开分析和解释：
+iOS6及以后，内存警告时系统会回收ViewController的View的CALayer里的BitMap（CABackingStore类型，它的内容是直接用于渲染到屏幕，它是View消耗内存的大户）。view和calayer占的内存极少，
+数量级也就在byte和kbyte之间，所以系统只回收了BitMap，但是这里所谓的回收只是给BitMap占用的内存打了一个volatile标记表明这部分内存是可能随时被其它数据占用,平时没内存警告时正在使用的内存标记为In use，完全被释放回收的标记为Not in use。概括起来也就是说：iOS6及以后的内存警告时，系统会给用于渲染视图的数据(BitMap)内存打一个volatile，
+ViewController的View的架子结构并不会回收，当View再次被访问时，虽然View的架子结构会用重建，但触发drawRect来渲染界面时，如果view对应的BitMap数据内存没有被占用则会被View的drawRect方法直接渲染出来且内存被标记为in use，从而这块内存又可以独享了；如果已被其它数据占用，那么BitMap必须要重建。所以可以看到整个重建过程不再是由loadView来做的，它是通过对view的访问来触发的。但是，请注意，
+如果说在iOS6及以后ViewController的loadView方法只会被调用一次，这种说法是不完全准确的。因为：如果在didReceiveMemoryWarning里把ViewController的View也回收了([self.view removeFromSuperview];self.view = nil;)，那么当再次有对View访问时，loadView会被调用以进行完全最彻底的重建(想想也是，ViewController的View都没了，不调loadView来重建那怎么办呢)。</p>
+
+<p>总结一下：
+iOS6的这种设计高明在两个地方：1）视图结构和视图数据的分离；2）内存警告后系统只回收的是内存大户视图数据，但是回收不是完全的清掉，而只是做个标记，这样既做到减小了每次重建BitMap
+的成本，同时也把这部分内存开放出去可以随时被别的数据占用；3）重建时，充其量是重建BitMap(没被占用时是直接用不用重建)</p>
+
+<p>回顾kIOS6MEMORYWARNING这个宏，如果kIOS6MEMORYWARNING==0，那么不回收View的架子结构，loadView也就不会被再次调用(没有必要嘛)；如果kIOS6MEMORYWARNING==1，那么回收View的架子结构，
+再次访问View时loadView会被调用，loadView里的逻辑又运行了一次，这样不但降低了渲染速度还提高了重建成本。</p>
+
+<p>所以，我只能这么说，iOS6及以后didReceiveMemoryWarning方法里面没有必要做任何事情，要做最多也是回收视图的架子结构或回收一些业务上处理的大数据。（你觉得真的有必要回收视图架子结构吗，这就是为什么文章一开始提到kIOS6MEMORYWARNING屏蔽了didReceiveMemoryWarning方法的实现，因为没有必要回收架子结构）</p>
+
+<p>特别感谢：<a target="_blank" href="http://weibo.com/iqipei?topnav=1&wvr=5&topsug=1">@单eye皮</a> <a target="_blank" href="http://weibo.com/u/1620329427?topnav=1&wvr=5&topsug=1">@Aaron_亚伦007</a></p>
+
+<h3>参考</h3>
+
+
+<ol style="margin-top:-18px; padding-left:28px;">
+    <li style="padding-bottom:10px;">
+        <a target="_blank" href="http://blog.devtang.com/blog/2013/05/18/goodbye-viewdidunload/">《再见，viewDidUnload方法</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" href="http://weibo.com/tangqiaoboy?topnav=1&wvr=5&topsug=1">by @唐巧_boy</a><br/>
+    </li>
+    <li>
+        <a target="_blank" href=" https://developer.apple.com/library/ios/featuredarticles/ViewControllerPGforiPhoneOS/ViewLoadingandUnloading/ViewLoadingandUnloading.html">《Resource Management in View Controllers》</a><br/>
+    </li>
+    <li>
+        <a target="_blank" href="http://blog.spacemanlabs.com/2011/08/calayer-internals-contents/">《CALayer Internals: Contents》</a><br/>
+    </li>
+    <li>
+        <a target="_blank" href="http://blog.csdn.net/mad2man/article/details/11177293">《viewDidUnload 和 viewWillUnload 被废弃之后的内存警告处理》</a><br/>
+    </li>
+</ol>
+
+]]></content>
+  </entry>
+  
+</feed>

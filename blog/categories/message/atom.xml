@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Message | Handy's]]></title>
+  <link href="http://blog.handy.wang/blog/categories/message/atom.xml" rel="self"/>
+  <link href="http://blog.handy.wang/"/>
+  <updated>2016-05-13T16:11:00+08:00</updated>
+  <id>http://blog.handy.wang/</id>
+  <author>
+    <name><![CDATA[Handy.Wang]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Runtime（一）之 Message转发浅析]]></title>
+    <link href="http://blog.handy.wang/blog/2014/03/10/runtime-1rd-message/"/>
+    <updated>2014-03-10T15:52:57+08:00</updated>
+    <id>http://blog.handy.wang/blog/2014/03/10/runtime-1rd-message</id>
+    <content type="html"><![CDATA[<h3>Objective-C对象模型</h3>
+
+
+<p>本文假定您对Objective-C对象模型已了解</p>
+
+<p><img class="<a" src="href="https://raw.github.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/class-diagram.jpg">https://raw.github.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/class-diagram.jpg</a>" width="350" height="450"></p>
+
+<h3>消息转发两大流程</h3>
+
+
+<h6>一）方法的动态决议</h6>
+
+
+<h6>二）完整的消息转发机制</h6>
+
+
+<!--more-->
+
+
+
+
+<h3>一）方法的动态决议</h3>
+
+
+<p>即程序运行时动态提供方法的实现，运行时是没有方法实现的。这一机制与消息机制不冲突，即发送消息后，如果运行时发现接收者没有消息实现，
+则会触发方法<br/>
++(BOOL)resolveInstanceMethod:(SEL)sel; 和 +(BOOL)resolveClassMethod:(SEL)sel;<br/>
+以拦截需要"动态决议"的方法，显而易见的是这两个方法分别对应实例方法和类方法的调用拦截。</p>
+
+<p>针对“动态决议“的“运行时是没有方法实现”这一特性，我总结了两类动态决议的实际场景：<br/>
+1）@dynamic<br/>
+与@synthesis一样用于修饰属性，但@synthesis用于生成确实名称的getter、setter方法（如果@property中没有特殊指定getter、setter方法名）；@dynamic则是告诉编译器此属性的getter、setter方法的实现在运行时动态指定。<br/>
+2）调用没有实现的实例方法或静态方法<br/>
+因为运行时消息接收者是没有方法实现的，所以在运行时上面提到的两个方法<br />
+(+(BOOL)resolveInstanceMethod:(SEL)sel; 和 +(BOOL)resolveClassMethod:(SEL)sel;)一定能被触发。</p>
+
+<p>重点总结：<br/>
+1）一定是被调用方法（静态方法和实例方法）的实现在运行时不存在，则“方法的动态决议机制”才有效，否则无效<br />
+2）属性方法的动态决议体现在：@dynamic修饰属性以及配合方法 +(BOOL)resolveInstanceMethod:(SEL)sel; 来指定方法的实现<br />
+3）通过runtime相关函数提供方法的动态实现时，如果方法实现有返回值，那么返回值必须是对象类型不能为基本数据类型(通过代码实验证明)<br /></p>
+
+<p>知识扩展<br />
+使用runtime相关函数在运行时添加静态和实例方法实现时，发现一些小知识点。<br />
+1）实例对象、类、类对象、元类对象、相关方法</p>
+
+<pre><code>实例对象 instance object, 通过Frameworks里的类(或自己定义的类)实例化得到的对象叫实例对象，
+    如:AboutMethods *am = [[[AboutMethods alloc] init]]; am就是实例对象。实例对象的isa指向其类对象。
+
+类 class，定义用于抽象一类事物的数据结构
+
+类对象 class object, 在Objective-C中任何的类定义都是对象。
+    即在程序启动的时候任何类定义都对应于一块内存。
+    在编译的时候，编译器会给每一个类生成一个且只生成一个”描述其定义的对象”,
+    也就是Apple说的类对象(class object), 它是一个单例(singleton)。
+    官方文档中是这样说的： The class object is the compiled version of the class
+    类对象(class object)中存储了关于实例对象(instace object)所属的类的定义的
+    一切：包括变量，方法，遵守的协议等等
+
+元类对象 metaclass object, 实际上，类对象是元类对象的一个实例。
+    元类对象描述了一个类对象，就像类对象描述了普通对象一样。
+    不同的是元类对象的方法列表是类方法的集合，由类对象的选择器来响应。
+    当向一个类发送消息时，objc_msgSend会通过类对象的isa指针定位到元类对象，
+    并检查元类的方法列表（包括父类）来决定调用哪个方法。元类对象代替了类对象描述了类方法，
+    就像类对象代替了实例对象描述了实例方法
+
+类对象和元类对象的相关方法
+    1. object_getClass 跟随对象的isa指针，返回此对象所属的类，对于实例对象(instance object)返回
+        的是类对象(class object),
+        对于类对象(class object)则返回的是元类对象(metaclass object),
+    2. -class方法对于实例对象(instance)会返回类对象(class object), 对于类对象(class object)有方法+class
+        则不会返回元类(metaclass object), 而只会返回类对象本身,即[@"instance" class]返回的是
+        __NSCFConstantString, 而[NSString class]返回的是NSString。
+        注：类名出现在消息表达式([])中作为消息接收者时表示类对象class object.
+    3. class_isMetaClass 可判断某类是否为元类.                                     
+    4. 使用objc_allocateClassPair可在运行时创建新的类与元类对，使用class_addMethod和
+        class_addIvar可向类中增加方法和实例变量,
+        最后使用objc_registerClassPair注册后，就可以使用此类了。
+</code></pre>
+
+<p>2）self、[self class]、[[self class] class]、[类名 class]、[[类名 class] class]、objc_getMetaClass[&lsquo;类名&rsquo;]、self->isa、[类名 class]&ndash;>isa、self->isa->isa的区别：</p>
+
+<pre><code>要区分它们之前，首先要考虑调用它们的上下文：实例方法里和静态方法里， 以下分析假设有一个类名为AboutMethods
+    如果是静态方法里调用：
+        1.self 即类对象class object
+        2.[self class] self表示类对象,从上面相关知识中了解到[类对象 class]还是返回类对象
+        3.[[self class] class]、[类名 class]、[[类名 class] class] 如2.分析，
+            都是获取类对象class object
+        4.objc_getMetaClass["类名"] 从这个runtime函数名上即可知道这是获取类的metaclass，
+            即元类对象metaclass object
+            如：objc_getMetaClass("AboutMethods") 返回的是AboutMethods类的元类对象metaclass object
+        5. self-&gt;isa、[类名 class]-&gt;isa 如前面所述，self、[xxx class]都是返回类对象class object，
+            那么类对象的isa就是元类对象metaclass object
+        6. self-&gt;isa-&gt;isa 因为self-&gt;isa是metaclass object，根据OC对象模式图知self-&gt;isa-&gt;isa是
+            root metaclass object, 即NSOjbect的metaclass
+    如果是实例方法里调用：
+        1.self 指实例对象
+        2.[self class] 指类对象
+        3.[[self class] class]、[类名 class]、[[类名 class] class] 同静态方法里，都是获取类对象
+        4.objc_getMetaClass["类名"] 同静态方法里，即获取元类对象metaclass object
+        5. self-&gt;isa 由于self是实例对象instance object，所以self-&gt;isa获取的是类对象class object
+        6. [类名 class]-&gt;isa 由于[类名 class]获取的是类对象class object,
+                所以[类名 class]-&gt;isa获取到的是元类对象metaclass object.
+        7. self-&gt;isa-&gt;isa 由于self是实例对象，所以self-&gt;isa表示类对象
+                那么self-&gt;isa-&gt;isa表示是元类对象
+        8. 注：在实例对象上直接调用isa已经被抛弃了，建议用object_getClass()函数
+</code></pre>
+
+<p>疑问：<br />
+1）实例对象的创建过程？<br /></p>
+
+<pre><code>类的编译过程、对象的创建过程，编译时与运行时的关系
+</code></pre>
+
+<p>2）类对象、元类对象的创建过程？</p>
+
+<h3>二）完整的消息转发机制</h3>
+
+
+<p>在运行时向消息接受者发送消息，消息接受者在收到消息请求后会从自己的类对象、父类对象中的method_list链表中查询消息实现的地址入口IMP。
+如果在这些地方都没有找到发送的消息实现的地址入口，则rumtime运行时环境会向消息接收者发送一个forwardInvocation:消息，
+并且把原始的消息以及消息的参数打成一个NSInvocation的一个对象里面，作为forwardInvocation:的唯一的参数。
+forwardInvocation:本身是在NSObject里面定义的，如果你需要重载这个方法的话，那么任何试图向你的类发送一个没有定义的消息的话，
+你都可以在forwardInvocation:里面捕捉到，并且把消息送到某一个安全的地方，从而避免了系统报错。</p>
+
+<p>注意：<br />
+1）重载 &ndash; (void)forwardInvocation:(NSInvocation <em>)anInvocation;的同时需要重载方法 &ndash; (NSMethodSignature </em>)methodSignatureForSelector:(SEL)sel;</p>
+
+<pre><code>- (NSMethodSignature *)methodSignatureForSelector:(SEL)sel {
+    NSLog(@"///////%@", NSStringFromSelector(_cmd));
+    NSMethodSignature *sig = [_sub methodSignatureForSelector:sel];
+    return sig;
+}
+
+- (void)forwardInvocation:(NSInvocation *)anInvocation {
+    NSLog(@"///////%@", NSStringFromSelector(_cmd));
+    [anInvocation invokeWithTarget:_sub];
+}
+</code></pre>
+
+<h3>参考</h3>
+
+
+<p><a href="http://www.cnblogs.com/yaski/archive/2009/04/13/1434308.html">http://www.cnblogs.com/yaski/archive/2009/04/13/1434308.html</a>
+<a href="http://www.cnblogs.com/liufeng24/p/3561852.html">http://www.cnblogs.com/liufeng24/p/3561852.html</a>
+<a href="http://blog.csdn.net/wzzvictory/article/details/8592492">http://blog.csdn.net/wzzvictory/article/details/8592492</a>
+<a href="http://blog.devtang.com/blog/2013/10/15/objective-c-object-model/">http://blog.devtang.com/blog/2013/10/15/objective-c-object-model/</a></p>
+]]></content>
+  </entry>
+  
+</feed>

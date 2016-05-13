@@ -1,0 +1,225 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>初识Cocos2d - Handy's</title>
+  <meta name="author" content="Handy.Wang">
+
+  
+  <meta name="description" content="俗话说『山不转水转，水不转人转，人不转需求转，需求不转代码转』，好扯，总之，各种机缘巧合已经让我无法逃离地要去了解一下这个该死的让人望而生畏的Cocos家族。 记忆中从去年开始Cocos2d这个字眼时不时的出现在互联网上、同事谈论中，打那时起我也就只知道他是跟游戏开发相关， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.handy.wang/blog/2013/12/09/chu-shi-cocos2d">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Handy's" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//libs.baidu.com/jquery/1.7.2/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Fjalla+One" rel="stylesheet" type="text/css">
+<!--- MathJax Configuration -->
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+</head>
+
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Handy's</a></h1>
+  
+    <h2>Stay hungry, stay foolish.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscribe" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS" target="_blank"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25" viewbox="0 0 100 100"><path class="social" d="M 13.310204,73.332654 C 5.967347,73.332654 0,79.322448 0,86.621428 c 0,7.338776 5.967347,13.262246 13.310204,13.262246 7.370408,0 13.328572,-5.92245 13.328572,-13.262246 0,-7.29898 -5.958164,-13.288774 -13.328572,-13.288774 z M 0.01530612,33.978572 V 53.143878 C 12.493878,53.143878 24.229592,58.02347 33.068368,66.865306 41.894898,75.685714 46.767346,87.47449 46.767346,100 h 19.25 C 66.017346,63.592858 36.4,33.979592 0.01530612,33.978572 l 0,0 z M 0.03877552,0 V 19.17449 C 44.54796,19.17551 80.77551,55.437756 80.77551,100 H 100 C 100,44.87653 55.15102,0 0.03877552,0 z"></path></svg></a></li>
+  
+</ul>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    
+      <form action="https://www.google.com/search" method="get">
+        <fieldset role="search">
+          <input type="hidden" name="sitesearch" value="blog.handy.wang" />
+    
+          <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+        </fieldset>
+      </form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>	
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      
+        <h1 class="entry-title">初识Cocos2d</h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+        
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>俗话说『山不转水转，水不转人转，人不转需求转，需求不转代码转』，好扯，总之，各种机缘巧合已经让我无法逃离地要去了解一下这个该死的让人望而生畏的Cocos家族。</p>
+
+<!--more-->
+
+
+<p>记忆中从去年开始Cocos2d这个字眼时不时的出现在互联网上、同事谈论中，打那时起我也就只知道他是跟游戏开发相关，毕竟开发<code>搜狐新闻客户端</code>用不到它，而且在我这种长期做应用型开发的
+苦逼攻城师的认识里开发游戏是一件既高级又复杂的事情，渐渐对它产生了距离感和畏惧心理。</p>
+
+<p>往往越是担心发生的事情，其实它早已在某个阴暗的角落里萌芽、长大。终于，我要直面它了。</p>
+
+<p>Cocos2d是Ricardo Quesada团队在2008年2月基于Python开发的开源2D游戏框架。</p>
+
+<blockquote><p>Cocos2d is a framework for building 2D games, demos, <br/>and other graphical/interactive applications. <br/>It is built over pyglet. It provides some conventions <br/>and classes to help you structure a &#8220;scene based application&#8221;</p><footer><strong>Cocos2D</strong> <cite><a href='http://cocos2d.org/index.html'>Read On</a></cite></footer></blockquote>
+
+
+<p>同年6月该团队OC版的<code>Cocos2d-iPhone</code>也面世。好敏捷呀，NB吧？有两点我没有想到，第一）Python语言，第二）开发速度</p>
+
+<p>就在大家还在感叹<code>Cocos2d-iPhone</code>多么NB多么方便时，一个中国人，请注意他叫<code>王哲</code>干了一件让所有用Cocos2D开发游戏的小伙伴们都惊呆的事儿。2010年，这哥们儿找到了兴趣、
+擅长，和商业的结合点－基于Cocos2d-iPhone架构C++语言的跨平台的Cocos2d-x<code>http://www.cocos2d-x.org/</code>版问世</p>
+
+<blockquote><p>你是怎么开始开发Cocos2d-x的？</p><p>后来我和一个夏新同事，也就是现在带cocos2d-html5项目的林顺，一起去厦大读商学院，边读边思考管理、技术上的问题。在2010年，我们去了国内一家做操作系统的公司，我负责的那个部门是多媒体游戏。为什么去做游戏？因为整个公司里就我自己最喜欢玩游戏，而别人又不喜欢，所以我就开始入手了。当时我就想有没有一种简单的方式让别人把游戏移植过来，于是我想做一个引擎，能够方便地把iOS游戏移植到我们操作系统上面，顺便再出一个安卓版本。</p><footer><strong>王哲：爱偷懒+爱游戏=开源Cocos2d-x的生命基因</strong> <cite><a href='http://www.ituring.com.cn/article/42393'>Read On</a></cite></footer></blockquote>
+
+
+<p>不得不承认这哥们儿是个实干家！之后，依托于陈昊芝以及他的<code>CocoaChina</code>下的Cocos2d-x的社区和<code>触控科技</code>，Cocos2d-x得到了青春期最好的发育，到目前Cocos2d-x已广泛应用到
+游戏开发中，已经到了那种如果你不用Cocos2d-x甲方就感觉乙方不专业的程度。当前，围绕Cocos2d-x的技术产品也逐渐诞生：Cocos2d-js、Cocos2d-html5、CocosStudio、Plugin-x等。</p>
+
+<p>最后上一张图吧，辅助对Cocos2d家族的理解。
+<img src="https://raw.github.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/cocos2d-x_hierarchi.png"></p>
+
+<p>有一天，也许我也会搞搞Cocos2d-x游戏开发。。。呵呵</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+
+
+  <span class="byline author vcard">Authored by <span class="fn">
+  
+    Handy.Wang
+  
+  </span></span>
+
+
+      
+
+
+
+
+
+      
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/cocos2d/'>Cocos2d</a>, <a class='category' href='/blog/categories/cocos2d-x/'>Cocos2d-X</a>, <a class='category' href='/blog/categories/cocos2d-iphone/'>Cocos2d-iPhone</a>, <a class='category' href='/blog/categories/wang-zhe/'>王哲</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.handy.wang/blog/2013/12/09/chu-shi-cocos2d/" data-via="" data-counturl="http://blog.handy.wang/blog/2013/12/09/chu-shi-cocos2d/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/12/08/zhong-sheng/" title="Previous Post: 重生">&laquo; 重生</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/12/14/ios-app-uidiao-shi-gong-ju/" title="Next Post: iOS App UI调试工具（一）· Symbiote In Frank">iOS App UI调试工具（一）· Symbiote In Frank &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+
+</div>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - Handy.Wang -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> | Themed with <a href="https://github.com/lucaslew/whitespace">Whitespace</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

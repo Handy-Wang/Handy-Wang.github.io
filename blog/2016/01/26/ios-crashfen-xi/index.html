@@ -1,0 +1,296 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>iOS Crash快速分析实战 - Handy's</title>
+  <meta name="author" content="Handy.Wang">
+
+  
+  <meta name="description" content="快速定位导致App crash的代码">
+  <meta name="keywords" content="iOS App Crash, Debug">
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.handy.wang/blog/2016/01/26/ios-crashfen-xi">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Handy's" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//libs.baidu.com/jquery/1.7.2/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Fjalla+One" rel="stylesheet" type="text/css">
+<!--- MathJax Configuration -->
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+</head>
+
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Handy's</a></h1>
+  
+    <h2>Stay hungry, stay foolish.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscribe" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS" target="_blank"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25" viewbox="0 0 100 100"><path class="social" d="M 13.310204,73.332654 C 5.967347,73.332654 0,79.322448 0,86.621428 c 0,7.338776 5.967347,13.262246 13.310204,13.262246 7.370408,0 13.328572,-5.92245 13.328572,-13.262246 0,-7.29898 -5.958164,-13.288774 -13.328572,-13.288774 z M 0.01530612,33.978572 V 53.143878 C 12.493878,53.143878 24.229592,58.02347 33.068368,66.865306 41.894898,75.685714 46.767346,87.47449 46.767346,100 h 19.25 C 66.017346,63.592858 36.4,33.979592 0.01530612,33.978572 l 0,0 z M 0.03877552,0 V 19.17449 C 44.54796,19.17551 80.77551,55.437756 80.77551,100 H 100 C 100,44.87653 55.15102,0 0.03877552,0 z"></path></svg></a></li>
+  
+</ul>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    
+      <form action="https://www.google.com/search" method="get">
+        <fieldset role="search">
+          <input type="hidden" name="sitesearch" value="blog.handy.wang" />
+    
+          <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+        </fieldset>
+      </form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>	
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      
+        <h1 class="entry-title">iOS Crash快速分析实战</h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+        
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><pre><code>实际开发中或使用App过程中遇到App crash是一件很常见的事儿，但是要能快速定位是哪一行代码导致的可能就不一定是件易事儿了。
+在这里我结合自己与别人遇到过的坑，总结了一下。
+</code></pre>
+
+<!--more-->
+
+
+<ul>
+<li>ObjC Crash
+
+<ul>
+<li><p>制造一个Crash，代码如下
+<img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/ios_app_crash_debug_1.png" title="图1" alt="图1" /></p></li>
+<li><p>Crash了，假装不知道是由于什么导致的：
+<img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/ios_app_crash_debug_2.png" title="图2" alt="图2" /></p></li>
+<li><p>左侧的Crash trace 也是很让人无语
+<img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/ios_app_crash_debug_3.png" title="图3" alt="图3" /></p></li>
+<li><p>展开看一下更详细的crash trace
+<img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/ios_app_crash_debug_4.png" title="图4" alt="图4" /></p></li>
+<li><p>想办法排查：</p>
+
+<ul>
+<li>全局断点法（All Exceptions）
+
+<ul>
+<li>适用于：停留到main里的crash，可能是EXC_CRASH（SIGABRT）或EXC_BAD_ACCESS（SIGBUG/SIGSEGV）导致的</li>
+<li>加上全局断点再run，就可以看见哪一行导致crash了。
+<img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/ios_app_crash_debug_5.png" title="图5" alt="图5" />
+<img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/ios_app_crash_debug_6.png" title="图6" alt="图6" /></li>
+</ul>
+</li>
+<li>Xcode Zoombie法
+
+<ul>
+<li>适用于：EXC_BAD_ACCESS（SIGBUG/SIGSEGV）</li>
+<li>修改scheme的配置项
+<img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/ios_app_crash_debug_7.png" title="图7" alt="图7" /></li>
+</ul>
+</li>
+<li>UncaughtExceptionHandler收集日志
+
+<ul>
+<li>适用于：收集crash日志并上报给服务器</li>
+<li><a href="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/UncaughtExceptionHandler.zip">源码</a></li>
+</ul>
+</li>
+<li>符号表解析法
+
+<ul>
+<li>适用于：crash日志文件里全是二进制内容，看不出哪里crash的情况下</li>
+<li>把.app、.dSYM、.crash三个文件放到一个目录里
+<img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/ios_app_crash_debug_8.png" title="图8" alt="图8" /></li>
+<li>连上手机，把.crash文件导入到Xcode 的device log里
+<img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/ios_app_crash_debug_9.png" title="图9" alt="图9" /></li>
+<li>Xcode就会desymbol符号表，即可查看导致crash的位置。</li>
+</ul>
+</li>
+<li>NSAssert断言跟踪法
+
+<ul>
+<li>适用于：采用NSAssert跟踪代码，即时跟踪到由于服务器脏数据导致的crash</li>
+<li>如下：
+<img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/ios_app_crash_debug_10.png" title="图10" alt="图10" /></li>
+</ul>
+</li>
+<li>辅助工具：
+
+<ul>
+<li>Instruments</li>
+<li>Crashlytics</li>
+<li>Bugly</li>
+</ul>
+</li>
+<li>终极大招：注释代码、回滚代码方式的排除法</li>
+<li>总结：
+
+<ul>
+<li>分析console输出的crash日志</li>
+<li>分析crash trace</li>
+<li>分析crash log</li>
+<li>Crash到main里，建议首先采用全局断点法</li>
+<li>EXC_BAD_ACCESS时，建议首先采用enable Zombie Objects方法</li>
+<li>不要忽视Xcode里的编译警告，可能它们正是问题所在。如果你不明白编译警告的内容，那么就把它弄清楚，因为这会节约你很多不必要的调试程序的时间开销。</li>
+<li>注意用真机和模拟器调试时得到的结果可能不一样，建议以真机为准。</li>
+<li>正所谓，授之以鱼不如授之以渔，以上都是一些分析的方式，开发中需要按实际情况分析和采用不同的方法。也许以上方法并不能解你遇到的问题，这就需要我们自己趟坑了。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>JS Crash
+
+<ul>
+<li>待续</li>
+</ul>
+</li>
+<li>参考文献
+
+<ul>
+<li><a href="http://www.raywenderlich.com/10209/my-app-crashed-now-what-part-1">my-app-crashed-now-what-part-1</a></li>
+<li><a href="http://www.raywenderlich.com/10209/my-app-crashed-now-what-part-2">my-app-crashed-now-what-part-2</a></li>
+<li><a href="http://game.academy.163.com/library/2015/2/9/17717_497701.html">App Crash探析</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+
+
+  <span class="byline author vcard">Authored by <span class="fn">
+  
+    Handy.Wang
+  
+  </span></span>
+
+
+      
+
+
+
+
+
+      
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.handy.wang/blog/2016/01/26/ios-crashfen-xi/" data-via="" data-counturl="http://blog.handy.wang/blog/2016/01/26/ios-crashfen-xi/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/12/10/software-architecture-patterns/" title="Previous Post: 软件架构模式（译）">&laquo; 软件架构模式（译）</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2016/01/29/sdwebimagehuan-cun-zhi-tu-pian-urlbu-bian/" title="Next Post: SDWebImage缓存之图片URL不变">SDWebImage缓存之图片URL不变 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+
+</div>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - Handy.Wang -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> | Themed with <a href="https://github.com/lucaslew/whitespace">Whitespace</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

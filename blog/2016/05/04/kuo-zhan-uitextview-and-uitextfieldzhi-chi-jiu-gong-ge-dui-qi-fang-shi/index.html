@@ -1,0 +1,242 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>扩展UITextView &amp; UITextField支持九宫格对齐方式 - Handy's</title>
+  <meta name="author" content="Handy.Wang">
+
+  
+  <meta name="description" content="目标 iOS原生的 UITextField 和 UITextView 只支持文本内容的左、中、右对齐，但是目前我的需求是需要让UITextField 和 UITextView 支持9宫格对齐方式，并能按此对齐方式进行正常输入，如下图： 知识铺垫 iOS7之后，UILabel / &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.handy.wang/blog/2016/05/04/kuo-zhan-uitextview-and-uitextfieldzhi-chi-jiu-gong-ge-dui-qi-fang-shi">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Handy's" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//libs.baidu.com/jquery/1.7.2/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Fjalla+One" rel="stylesheet" type="text/css">
+<!--- MathJax Configuration -->
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+</head>
+
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Handy's</a></h1>
+  
+    <h2>Stay hungry, stay foolish.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscribe" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS" target="_blank"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25" viewbox="0 0 100 100"><path class="social" d="M 13.310204,73.332654 C 5.967347,73.332654 0,79.322448 0,86.621428 c 0,7.338776 5.967347,13.262246 13.310204,13.262246 7.370408,0 13.328572,-5.92245 13.328572,-13.262246 0,-7.29898 -5.958164,-13.288774 -13.328572,-13.288774 z M 0.01530612,33.978572 V 53.143878 C 12.493878,53.143878 24.229592,58.02347 33.068368,66.865306 41.894898,75.685714 46.767346,87.47449 46.767346,100 h 19.25 C 66.017346,63.592858 36.4,33.979592 0.01530612,33.978572 l 0,0 z M 0.03877552,0 V 19.17449 C 44.54796,19.17551 80.77551,55.437756 80.77551,100 H 100 C 100,44.87653 55.15102,0 0.03877552,0 z"></path></svg></a></li>
+  
+</ul>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    
+      <form action="https://www.google.com/search" method="get">
+        <fieldset role="search">
+          <input type="hidden" name="sitesearch" value="blog.handy.wang" />
+    
+          <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+        </fieldset>
+      </form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>	
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      
+        <h1 class="entry-title">扩展UITextView &amp; UITextField支持九宫格对齐方式</h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+        
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h3>目标</h3>
+
+<p>iOS原生的 UITextField 和 UITextView 只支持文本内容的左、中、右对齐，但是目前我的需求是需要让UITextField 和 UITextView 支持9宫格对齐方式，并能按此对齐方式进行正常输入，如下图：</p>
+
+<!-- more -->
+
+
+<p><img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/9point_alignment_textfield_textview1.png" title="目标" alt="目标" /></p>
+
+<h3>知识铺垫</h3>
+
+<p>iOS7之后，UILabel / UITextField / UITextView的实现采用TextKit进行了替换，所以对于这个命题我主要需要关注TextKit.
+下面以一张图来说明TextKit内部的关键类与UITextView的逻辑关系.</p>
+
+<p><img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/9point_alignment_textfield_textview2.png" title="TextKit类的协作" alt="TextKit类的协作" /></p>
+
+<ul>
+<li><p>说明</p>
+
+<ul>
+<li>NSTextStorage 存储着文本的样式信息且是NSAttribute的子类，可以把它近似看成NSAttributeString. NSTextStorage关联一个NSLayoutManager.</li>
+<li>NSLayoutManager  负责布局动作的类，把文本按其样式信息放到NSTextContainer里进行布局排版. NSLayoutManager关联一个NSTextContainer.</li>
+<li>NSTextContainer 提供给NSLayoutManager用于排版的布局空，当然这肯定是根据文本信息计算出来的. 图中的黑块部分就是最终文本被填充上去的区域.</li>
+<li>UITextView 以上三步都是计算的过程，从NS打头可以看出去显示无关。UITextView则提供了显示的空间，继承自UIScrollView，它包含了一个NSTextContainer用于显示以上三步计算出来的结果. 图中的黑块部分同上，蓝色部分是UITextView与NSTextContainer之间的inset，即textContainerInset .</li>
+</ul>
+</li>
+<li><p>综上</p>
+
+<ul>
+<li>有了以上对TextKit与UITextView关系的初步了解后，要做到目标图中UITextView的样式，纵向上需设置textContainerInset的top和bottom，横向上需要设置UITextView的textAlignment即可。</li>
+<li>UITextField要做目标图中的样式，</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>源码</h3>
+
+<p>加微博 @我是小山我是坏人</p>
+
+<h3>参考</h3>
+
+<ul>
+<li><a href="http://esoftmobile.com/2013/10/17/text-kit%E5%85%A5%E9%97%A8/">Text Kit入门</a></li>
+<li><a href="http://esoftmobile.com/2013/10/17/text-kit%E8%BF%9B%E9%98%B6/">Text Kit进阶</a></li>
+<li><a href="http://www.ituring.com.cn/tupubarticle/2542">第 9 章　iOS 7中文字排版和渲染引擎——Text Kit</a></li>
+<li><a href="https://www.raywenderlich.com/50151/text-kit-tutorial">Text Kit Tutorial</a></li>
+<li><a href="http://orangejuiceliberationfront.com/cocoa-text-system-everywhere/">Cocoa Text System everywhere…</a></li>
+<li><a href="http://www.howwaydo.com/how-to-lose-marginpadding-in-uitextview/">How to lose margin/padding in UITextView</a></li>
+<li><a href="http://www.pixeldock.com/blog/how-to-get-rid-of-the-padding-insets-in-an-uitextview/">How to get rid of the padding / insets in an UITextView</a></li>
+<li><a href="https://developer.apple.com/library/ios/documentation/StringsTextFonts/Conceptual/TextAndWebiPhoneOS/Introduction/Introduction.html#">Text Programming Guide for iOS</a></li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+
+
+  <span class="byline author vcard">Authored by <span class="fn">
+  
+    Handy.Wang
+  
+  </span></span>
+
+
+      
+
+
+
+
+
+      
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.handy.wang/blog/2016/05/04/kuo-zhan-uitextview-and-uitextfieldzhi-chi-jiu-gong-ge-dui-qi-fang-shi/" data-via="" data-counturl="http://blog.handy.wang/blog/2016/05/04/kuo-zhan-uitextview-and-uitextfieldzhi-chi-jiu-gong-ge-dui-qi-fang-shi/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2016/01/29/sdwebimagehuan-cun-zhi-tu-pian-urlbu-bian/" title="Previous Post: SDWebImage缓存之图片URL不变">&laquo; SDWebImage缓存之图片URL不变</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2016/05/13/uiimage-stretch/" title="Next Post: UIImage stretch">UIImage stretch &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+
+</div>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - Handy.Wang -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> | Themed with <a href="https://github.com/lucaslew/whitespace">Whitespace</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
