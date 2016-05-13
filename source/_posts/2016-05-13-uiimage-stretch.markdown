@@ -10,7 +10,7 @@ categories:
 <br />
 一张可拉伸的图片其实给自己定义了一个区域，在这个区域内的图片内容以一种更美观优雅的方式被重复显示。可拉伸图片通常用于视图的背景，因为这种图片可以按拉伸区域的定义被撑大或缩小，从而以一种更美观的方式来填充视图区域。
 
-<!-- more -->
+<!--more-->
 
 <br />
 iOS提供了 `resizableImageWithCapInsets:`、`resizableImageWithCapInsets:resizingMode:` 两个方法来指定图片的拉伸区域。方法中的`insets`参数(insets = (top,left,bottom,right))把图片细分为了两个或多个区域，其中的top/left/bottom/right称为inset。给insets中的每个inset指定一个非零值，就可以把图片细分为9个区域，如下图。
