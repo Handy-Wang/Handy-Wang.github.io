@@ -93,6 +93,10 @@ delicious_count: 3
 disqus_short_name: bloghandywang
 disqus_show_comment_count: true
 
+# duoshuo comments
+duoshuo_comments: false
+duoshuo_short_name: handyblog
+
 # Google Analytics
 google_analytics_tracking_id:
 
