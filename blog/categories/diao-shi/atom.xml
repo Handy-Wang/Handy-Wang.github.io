@@ -4,7 +4,7 @@
   <title><![CDATA[Category: 调试 | Handy's]]></title>
   <link href="http://blog.handy.wang/blog/categories/diao-shi/atom.xml" rel="self"/>
   <link href="http://blog.handy.wang/"/>
-  <updated>2016-05-13T16:40:20+08:00</updated>
+  <updated>2016-05-21T21:46:34+08:00</updated>
   <id>http://blog.handy.wang/</id>
   <author>
     <name><![CDATA[Handy.Wang]]></name>
@@ -108,7 +108,7 @@ Reveal App安装完成后，点开菜单Help->Getting Started，会出现一个�
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[iOS App UI调试工具（一）· Symbiote in Frank]]></title>
+    <title type="html"><![CDATA[iOS App UI调试工具（一）· Symbiote In Frank]]></title>
     <link href="http://blog.handy.wang/blog/2013/12/14/ios-app-uidiao-shi-gong-ju/"/>
     <updated>2013-12-14T21:48:49+08:00</updated>
     <id>http://blog.handy.wang/blog/2013/12/14/ios-app-uidiao-shi-gong-ju</id>
@@ -132,7 +132,7 @@ Reveal App安装完成后，点开菜单Help->Getting Started，会出现一个�
 
 <p>完全按照<a href="http://blog.thepete.net/blog/2012/06/24/writing-your-first-frank-test/">Writing Your First Frank Test</a>操作即可。
 请注意：这个HowTo中会有Ruby环境和插件的安装，做好心理准备。
-Touble shoot：<a href="&#109;&#x61;&#105;&#108;&#116;&#x6f;&#x3a;&#110;&#x6e;&#110;&#x77;&#106;&#x73;&#64;&#x31;&#50;&#x36;&#x2e;&#99;&#111;&#109;">&#110;&#x6e;&#110;&#x77;&#x6a;&#x73;&#x40;&#x31;&#x32;&#54;&#x2e;&#99;&#111;&#109;</a></p>
+Touble shoot：<a href="&#109;&#x61;&#x69;&#x6c;&#x74;&#x6f;&#58;&#x6e;&#110;&#x6e;&#x77;&#106;&#x73;&#x40;&#49;&#x32;&#x36;&#x2e;&#99;&#111;&#109;">&#110;&#x6e;&#x6e;&#x77;&#106;&#115;&#x40;&#x31;&#x32;&#x36;&#x2e;&#99;&#111;&#109;</a></p>
 
 <h3>试用体会</h3>
 

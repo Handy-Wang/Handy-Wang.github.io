@@ -2,110 +2,93 @@
 <!DOCTYPE html>
 <!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
 <!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!-->
+<html class="no-js" lang="zh-CN"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
   <title>Handy's</title>
   <meta name="author" content="Handy.Wang">
-
+  <!--[if lt IE 9]>
+    <script src="http://x.papaapp.com/farm1/a571d2/8dda131d/html5shiv.js"></script>
+    <![endif]-->
   
-  <meta name="description" content="步骤很简单，就是有点麻烦。如下： 1 删除app
+  <meta name="description" content="如何重置推送设置提醒(转) Mar 27th, 2014 步骤很简单，就是有点麻烦。如下： 1 删除app
 2 重启
 3 设置里修改系统时间为至少1天后
 4 重启，重新安装app，打开app，就能再次看到“是否允许推送”确认框
-5 把系统时间调回正常当前时间即可(这一点是为了保证时间的正常使用与推送无关) 参考 http://stackoverflow. &hellip;">
+5 把系统时间调回正常当前时间即可( &hellip;">
   
 
-  <!-- http://t.co/dKP3o1e -->
   <meta name="HandheldFriendly" content="True">
   <meta name="MobileOptimized" content="320">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.handy.wang/blog/page/2">
+  <link rel="canonical" href="http://blog.handy.wang/blog/page/2/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script type="text/javascript" src="http://t.papaapp.com/js/libs/jquery/1.7.2/jquery.js"></script>
   <link href="/atom.xml" rel="alternate" title="Handy's" type="application/atom+xml">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="//libs.baidu.com/jquery/1.7.2/jquery.min.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-<link href="//fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
-<link href="//fonts.googleapis.com/css?family=Fjalla+One" rel="stylesheet" type="text/css">
-<!--- MathJax Configuration -->
-<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
   
 
 </head>
-
-<body   class="collapse-sidebar sidebar-footer" >
-  <header role="banner"><hgroup>
-  <h1><a href="/">Handy's</a></h1>
-  
-    <h2>Stay hungry, stay foolish.</h2>
-  
-</hgroup>
-
+<body   >
+  <header id="header" class="clearfix">    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                <a id="logo" href="/">
+                   Handy's
+                </a>
+                <p class="description">Stay hungry, stay foolish.</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="index-nav current" href="/">Blog</a>
+<a class="archives-nav" href="/blog/archives">Archives</a>
+                </nav>
+            </div>
+        </div>
+    </div>
 </header>
-  <nav role="navigation"><ul class="subscribe" data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS" target="_blank"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25" viewbox="0 0 100 100"><path class="social" d="M 13.310204,73.332654 C 5.967347,73.332654 0,79.322448 0,86.621428 c 0,7.338776 5.967347,13.262246 13.310204,13.262246 7.370408,0 13.328572,-5.92245 13.328572,-13.262246 0,-7.29898 -5.958164,-13.288774 -13.328572,-13.288774 z M 0.01530612,33.978572 V 53.143878 C 12.493878,53.143878 24.229592,58.02347 33.068368,66.865306 41.894898,75.685714 46.767346,87.47449 46.767346,100 h 19.25 C 66.017346,63.592858 36.4,33.979592 0.01530612,33.978572 l 0,0 z M 0.03877552,0 V 19.17449 C 44.54796,19.17551 80.77551,55.437756 80.77551,100 H 100 C 100,44.87653 55.15102,0 0.03877552,0 z"></path></svg></a></li>
-  
-</ul>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+  <div id="body">
+    <div class="container">
+    	<div class="col-group">
+			  <div class="col-8" id="main">
+    <div class="res-cons">
     
-      <form action="https://www.google.com/search" method="get">
-        <fieldset role="search">
-          <input type="hidden" name="sitesearch" value="blog.handy.wang" />
     
-          <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-        </fieldset>
-      </form>
-  
-<ul class="main-navigation">
-  <li><a href="/">Blog</a></li>	
-  <li><a href="/blog/archives">Archives</a></li>
-</ul>
-
-</nav>
-  <div id="main">
-    <div id="content">
-      <div class="blog-index">
-  
-  
-  
-    <article>
-      
+    
+      <article class="post">
+        
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2014/03/27/ru-he-zhong-zhi-tui-song-she-zhi-ti-xing/">如何重置推送设置提醒(转)</a></h1>
+      <h2 class="post-title"><a href="/blog/2014/03/27/ru-he-zhong-zhi-tui-song-she-zhi-ti-xing/">如何重置推送设置提醒(转)</a></h2>
     
     
-      <p class="meta">
+      <p class="post-meta">
         
 
 
 
 
 
-        
+
+
+
+  
+
+
+<time datetime="2014-03-27T12:33:35+08:00" pubdate data-updated="true">Mar 27<span>th</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><h6>步骤很简单，就是有点麻烦。如下：</h6>
+  <div class="post-content"><h6>步骤很简单，就是有点麻烦。如下：</h6>
 
 
 <pre><code>1 删除app
@@ -125,31 +108,37 @@
   
 
 
-    </article>
-  
-  
-    <article>
-      
+      </article>
+    
+    
+      <article class="post">
+        
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2014/03/19/pou-xi-performselectordai-you-afterdealy-can-shu-de-fang-fa-shi-xian/">剖析带有afterDealy参数的performSelector方法实现</a></h1>
+      <h2 class="post-title"><a href="/blog/2014/03/19/pou-xi-performselectordai-you-afterdealy-can-shu-de-fang-fa-shi-xian/">剖析带有afterDealy参数的performSelector方法实现</a></h2>
     
     
-      <p class="meta">
+      <p class="post-meta">
         
 
 
 
 
 
-        
+
+
+
+  
+
+
+<time datetime="2014-03-19T15:46:02+08:00" pubdate data-updated="true">Mar 19<span>th</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>主要从performSelector:afterDealy:的实现原理来分析为什么在主线程中调用此方法后不会阻塞主线程里业务代码的顺序执行。</p>
+  <div class="post-content"><p>主要从performSelector:afterDealy:的实现原理来分析为什么在主线程中调用此方法后不会阻塞主线程里业务代码的顺序执行。</p>
 
 </div>
   
@@ -160,31 +149,37 @@
   
 
 
-    </article>
-  
-  
-    <article>
-      
+      </article>
+    
+    
+      <article class="post">
+        
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2014/03/18/qian-tan-nei-cun-bu-ju-memory-layout/">浅谈内存布局(Memory Layout)即虚拟地址空间</a></h1>
+      <h2 class="post-title"><a href="/blog/2014/03/18/qian-tan-nei-cun-bu-ju-memory-layout/">浅谈内存布局(Memory Layout)即虚拟地址空间</a></h2>
     
     
-      <p class="meta">
+      <p class="post-meta">
         
 
 
 
 
 
-        
+
+
+
+  
+
+
+<time datetime="2014-03-18T15:14:37+08:00" pubdate data-updated="true">Mar 18<span>th</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>对于高级语言的程序员(Java、OC)来说，一定听过堆栈、数据段、代码段，但可能没有细细研究过。本文在此分享对它们的理解。</p>
+  <div class="post-content"><p>对于高级语言的程序员(Java、OC)来说，一定听过堆栈、数据段、代码段，但可能没有细细研究过。本文在此分享对它们的理解。</p>
 
 </div>
   
@@ -195,31 +190,37 @@
   
 
 
-    </article>
-  
-  
-    <article>
-      
+      </article>
+    
+    
+      <article class="post">
+        
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2014/03/14/uinavigationcontrollerfen-xi/">UINavigationController分析</a></h1>
+      <h2 class="post-title"><a href="/blog/2014/03/14/uinavigationcontrollerfen-xi/">UINavigationController分析</a></h2>
     
     
-      <p class="meta">
+      <p class="post-meta">
         
 
 
 
 
 
-        
+
+
+
+  
+
+
+<time datetime="2014-03-14T18:55:47+08:00" pubdate data-updated="true">Mar 14<span>th</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><h3>UINavigationController结构</h3>
+  <div class="post-content"><h3>UINavigationController结构</h3>
 
 
 <p>导航条层次结构<br/>
@@ -236,31 +237,37 @@ UINavigationBar用于显示的model数据。</p>
   
 
 
-    </article>
-  
-  
-    <article>
-      
+      </article>
+    
+    
+      <article class="post">
+        
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2014/03/14/uiwebviewde-cookie/">UIWebView的cookie</a></h1>
+      <h2 class="post-title"><a href="/blog/2014/03/14/uiwebviewde-cookie/">UIWebView的cookie</a></h2>
     
     
-      <p class="meta">
+      <p class="post-meta">
         
 
 
 
 
 
-        
+
+
+
+  
+
+
+<time datetime="2014-03-14T17:18:03+08:00" pubdate data-updated="true">Mar 14<span>th</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><h3>场景描述</h3>
+  <div class="post-content"><h3>场景描述</h3>
 
 
 <p>我们以实际例子驱动的方式来开始这个话题。<br />
@@ -276,31 +283,37 @@ UINavigationBar用于显示的model数据。</p>
   
 
 
-    </article>
-  
-  
-    <article>
-      
+      </article>
+    
+    
+      <article class="post">
+        
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2014/03/10/runtime-1rd-message/">Runtime（一）之 Message转发浅析</a></h1>
+      <h2 class="post-title"><a href="/blog/2014/03/10/runtime-1rd-message/">Runtime（一）之 Message转发浅析</a></h2>
     
     
-      <p class="meta">
+      <p class="post-meta">
         
 
 
 
 
 
-        
+
+
+
+  
+
+
+<time datetime="2014-03-10T15:52:57+08:00" pubdate data-updated="true">Mar 10<span>th</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><h3>Objective-C对象模型</h3>
+  <div class="post-content"><h3>Objective-C对象模型</h3>
 
 
 <p>本文假定您对Objective-C对象模型已了解</p>
@@ -325,31 +338,37 @@ UINavigationBar用于显示的model数据。</p>
   
 
 
-    </article>
-  
-  
-    <article>
-      
+      </article>
+    
+    
+      <article class="post">
+        
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2014/01/03/ios-app-uidiao-shi-gong-ju-san-reveal/">iOS App UI调试工具（三）· Reveal App</a></h1>
+      <h2 class="post-title"><a href="/blog/2014/01/03/ios-app-uidiao-shi-gong-ju-san-reveal/">iOS App UI调试工具（三）· Reveal App</a></h2>
     
     
-      <p class="meta">
+      <p class="post-meta">
         
 
 
 
 
 
-        
+
+
+
+  
+
+
+<time datetime="2014-01-03T20:53:01+08:00" pubdate data-updated="true">Jan 3<span>rd</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>昨天，经<a target="_blank" href="http://weibo.com/danc">@Dan</a>推荐又了解到一款UI调试神器<code>Reveal App</code>
+  <div class="post-content"><p>昨天，经<a target="_blank" href="http://weibo.com/danc">@Dan</a>推荐又了解到一款UI调试神器<code>Reveal App</code>
 <video width='640' height='320' preload='none' controls poster='http://revealapp.com/img/testimonial-flipboard.jpg'><source src='http://revealapp.com/video/Reveal.mp4' type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'></video></p>
 
 </div>
@@ -361,31 +380,37 @@ UINavigationBar用于显示的model数据。</p>
   
 
 
-    </article>
-  
-  
-    <article>
-      
+      </article>
+    
+    
+      <article class="post">
+        
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2013/12/26/you-kios6memorywarningyin-fa-de-si-kao/">由kIOS6MEMORYWARNING引发的思考</a></h1>
+      <h2 class="post-title"><a href="/blog/2013/12/26/you-kios6memorywarningyin-fa-de-si-kao/">由kIOS6MEMORYWARNING引发的思考</a></h2>
     
     
-      <p class="meta">
+      <p class="post-meta">
         
 
 
 
 
 
-        
+
+
+
+  
+
+
+<time datetime="2013-12-26T21:09:31+08:00" pubdate data-updated="true">Dec 26<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>昨晚，在Review搜狐新闻客户端代码时发现iOS6+时ViewController类里的didReceiveMemoryWarning方法实现被宏kIOS6MEMORYWARNING(它的值是0)屏蔽了。(<a target="_blank" href="http://weibo.com/chh1980?topnav=1&wvr=5&topsug=1">@陈宏-Wesley</a>)</p>
+  <div class="post-content"><p>昨晚，在Review搜狐新闻客户端代码时发现iOS6+时ViewController类里的didReceiveMemoryWarning方法实现被宏kIOS6MEMORYWARNING(它的值是0)屏蔽了。(<a target="_blank" href="http://weibo.com/chh1980?topnav=1&wvr=5&topsug=1">@陈宏-Wesley</a>)</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -457,31 +482,37 @@ UINavigationBar用于显示的model数据。</p>
   
 
 
-    </article>
-  
-  
-    <article>
-      
+      </article>
+    
+    
+      <article class="post">
+        
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2013/12/19/mac-osxia-da-jian-apnstui-song-fu-wu-qi/">Mac OS下搭建APNS推送服务器(Apache+PHP)</a></h1>
+      <h2 class="post-title"><a href="/blog/2013/12/19/mac-osxia-da-jian-apnstui-song-fu-wu-qi/">Mac OS下搭建APNS推送服务器(Apache+PHP)</a></h2>
     
     
-      <p class="meta">
+      <p class="post-meta">
         
 
 
 
 
 
-        
+
+
+
+  
+
+
+<time datetime="2013-12-19T21:16:04+08:00" pubdate data-updated="true">Dec 19<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><h3>配置Apache+PHP</h3>
+  <div class="post-content"><h3>配置Apache+PHP</h3>
 
 
 <p>Mac OS自带Apache服务器和PHP，所以只需少许配置便可将它派上用场</p>
@@ -531,31 +562,37 @@ UINavigationBar用于显示的model数据。</p>
   
 
 
-    </article>
-  
-  
-    <article>
-      
+      </article>
+    
+    
+      <article class="post">
+        
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2013/12/17/ios-app-uidiao-shi-gong-ju2/">iOS App UI调试工具（二）· Realtime Debug Portal</a></h1>
+      <h2 class="post-title"><a href="/blog/2013/12/17/ios-app-uidiao-shi-gong-ju2/">iOS App UI调试工具（二）· Realtime Debug Portal</a></h2>
     
     
-      <p class="meta">
+      <p class="post-meta">
         
 
 
 
 
 
-        
+
+
+
+  
+
+
+<time datetime="2013-12-17T05:30:58+08:00" pubdate data-updated="true">Dec 17<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p><img src="https://github-camo.global.ssl.fastly.net/03548ab74978beee15b711ab26b5ed1bd71714f2/687474703a2f2f7777772e76696e716f6e2e636f6d2f636f6465626c6f672f66636b656469746f722f75706c6f61642f696d6167652f323031332d30362f325f322e706e67"></p>
+  <div class="post-content"><p><img src="https://github-camo.global.ssl.fastly.net/03548ab74978beee15b711ab26b5ed1bd71714f2/687474703a2f2f7777772e76696e716f6e2e636f6d2f636f6465626c6f672f66636b656469746f722f75706c6f61642f696d6167652f323031332d30362f325f322e706e67"></p>
 
 <h3>Realtime Debug Portal简介</h3>
 
@@ -572,36 +609,80 @@ UINavigationBar用于显示的model数据。</p>
   
 
 
-    </article>
-  
-  <div class="pagination">
+      </article>
     
-      <a class="prev" href="">&larr; Older</a>
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-    <a class="next" href="">Newer &rarr;</a>
-    
+      <div class="page-navigator">
+        
+        <a class="prev" href="/blog/page/3/">&larr; Older</a>
+        
+        <div class="nav-center">
+        <a href="/blog/archives">Archives</a>
+        </div>
+        
+       <a class="next" href="/">Newer &rarr;</a>
+        
+      </div>
+     </div>
   </div>
-</div>
-<aside class="sidebar">
-  
     
+  <aside id="secondary">
   
-</aside>
+    <section class="widget">
+    <form id="search" action="https://www.google.com/search" method="get">
+    	<input type="hidden" name="q" value="site:blog.handy.wang"/>
+    	<input type="text" name="q" results="0" class="text" placeholder="Google搜索"/>
+    </form>
+</section>
 
+<section class="widget">
+	<h3 class="widget-title">最新文章</h3>
+	<ul class="widget-list">
+		
+     	<li>
+      	  <a href="/blog/2016/05/13/uiimage-stretch/">UIImage stretch</a>
+      	</li>
+    	
+     	<li>
+      	  <a href="/blog/2016/05/04/kuo-zhan-uitextview-and-uitextfieldzhi-chi-jiu-gong-ge-dui-qi-fang-shi/">扩展UITextView &amp; UITextField支持九宫格对齐方式</a>
+      	</li>
+    	
+     	<li>
+      	  <a href="/blog/2016/01/29/sdwebimagehuan-cun-zhi-tu-pian-urlbu-bian/">SDWebImage缓存之图片URL不变</a>
+      	</li>
+    	
+     	<li>
+      	  <a href="/blog/2016/01/26/ios-crashfen-xi/">iOS Crash快速分析实战</a>
+      	</li>
+    	
+     	<li>
+      	  <a href="/blog/2015/12/10/software-architecture-patterns/">软件架构模式（译）</a>
+      	</li>
+    	
+	</ul>
+</section>
+
+
+
+
+  
+  </aside>
+
+
+      	</div>
     </div>
   </div>
-  <footer role="contentinfo"><p>
-  Copyright &copy; 2016 - Handy.Wang -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> | Themed with <a href="https://github.com/lucaslew/whitespace">Whitespace</a></span>
-</p>
+  <footer id="footer">
+  	<div class="container">
+	Copyright &copy; 2016 - Handy.Wang -
+  <span class="credit">Powered by <a rel="nofollow" href="http://octopress.org">Octopress</a> on <a rel="nofollow" href="http://pages.github.com/">GitHubPages</a>
+  </span>
+  - <span class="credit">Theme by <a rel="nofollow" href="http://pagecho.com">Cho</a></span>
 
-</footer>
+
+</div>
+
+  </footer>
   
-
-
-
 
 
 
@@ -614,7 +695,7 @@ UINavigationBar用于显示的model数据。</p>
       var twitterWidgets = document.createElement('script');
       twitterWidgets.type = 'text/javascript';
       twitterWidgets.async = true;
-      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
       document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
     })();
   </script>

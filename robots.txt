@@ -1,4 +1,4 @@
 User-agent: *
-Disallow:
+Disallow: 
 
-Sitemap: http://blog.handy.wang/sitemap.xml
+Sitemap: http://blog.handy.wang/sitemap.xml 

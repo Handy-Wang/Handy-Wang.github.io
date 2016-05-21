@@ -2,107 +2,87 @@
 <!DOCTYPE html>
 <!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
 <!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!-->
+<html class="no-js" lang="zh-CN"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
   <title>iOS App UI调试工具（三）· Reveal App - Handy's</title>
   <meta name="author" content="Handy.Wang">
-
+  <!--[if lt IE 9]>
+    <script src="http://x.papaapp.com/farm1/a571d2/8dda131d/html5shiv.js"></script>
+    <![endif]-->
   
-  <meta name="description" content="昨天，经@Dan推荐又了解到一款UI调试神器Reveal App 官方地址在这里
-注意：我今天下的试用版试用总是提示已过期，一气之下就把系统日期改成2013年01月03日了，再启动，可以试用了。 集成向导：
-Reveal App安装完成后，点开菜单Help->Getting Started， &hellip;">
+  <meta name="description" content="iOS App UI调试工具（三）· Reveal App Jan 3rd, 2014 昨天，经@Dan推荐又了解到一款UI调试神器Reveal App 官方地址在这里
+注意：我今天下的试用版试用总是提示已过期，一气之下就把系统日期改成2013年01月03日了，再启动，可以试用了。 集成向导： &hellip;">
   
 
-  <!-- http://t.co/dKP3o1e -->
   <meta name="HandheldFriendly" content="True">
   <meta name="MobileOptimized" content="320">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.handy.wang/blog/2014/01/03/ios-app-uidiao-shi-gong-ju-san-reveal">
+  <link rel="canonical" href="http://blog.handy.wang/blog/2014/01/03/ios-app-uidiao-shi-gong-ju-san-reveal/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script type="text/javascript" src="http://t.papaapp.com/js/libs/jquery/1.7.2/jquery.js"></script>
   <link href="/atom.xml" rel="alternate" title="Handy's" type="application/atom+xml">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="//libs.baidu.com/jquery/1.7.2/jquery.min.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-<link href="//fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
-<link href="//fonts.googleapis.com/css?family=Fjalla+One" rel="stylesheet" type="text/css">
-<!--- MathJax Configuration -->
-<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
   
 
 </head>
-
-<body   class="collapse-sidebar sidebar-footer" >
-  <header role="banner"><hgroup>
-  <h1><a href="/">Handy's</a></h1>
-  
-    <h2>Stay hungry, stay foolish.</h2>
-  
-</hgroup>
-
+<body   >
+  <header id="header" class="clearfix">    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                <a id="logo" href="/">
+                   Handy's
+                </a>
+                <p class="description">Stay hungry, stay foolish.</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="index-nav current" href="/">Blog</a>
+<a class="archives-nav" href="/blog/archives">Archives</a>
+                </nav>
+            </div>
+        </div>
+    </div>
 </header>
-  <nav role="navigation"><ul class="subscribe" data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS" target="_blank"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25" viewbox="0 0 100 100"><path class="social" d="M 13.310204,73.332654 C 5.967347,73.332654 0,79.322448 0,86.621428 c 0,7.338776 5.967347,13.262246 13.310204,13.262246 7.370408,0 13.328572,-5.92245 13.328572,-13.262246 0,-7.29898 -5.958164,-13.288774 -13.328572,-13.288774 z M 0.01530612,33.978572 V 53.143878 C 12.493878,53.143878 24.229592,58.02347 33.068368,66.865306 41.894898,75.685714 46.767346,87.47449 46.767346,100 h 19.25 C 66.017346,63.592858 36.4,33.979592 0.01530612,33.978572 l 0,0 z M 0.03877552,0 V 19.17449 C 44.54796,19.17551 80.77551,55.437756 80.77551,100 H 100 C 100,44.87653 55.15102,0 0.03877552,0 z"></path></svg></a></li>
-  
-</ul>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-    
-      <form action="https://www.google.com/search" method="get">
-        <fieldset role="search">
-          <input type="hidden" name="sitesearch" value="blog.handy.wang" />
-    
-          <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-        </fieldset>
-      </form>
-  
-<ul class="main-navigation">
-  <li><a href="/">Blog</a></li>	
-  <li><a href="/blog/archives">Archives</a></li>
-</ul>
-
-</nav>
-  <div id="main">
-    <div id="content">
-      <div>
-<article class="hentry" role="article">
+  <div id="body">
+    <div class="container">
+    	<div class="col-group">
+			<div class="col-8" id="main">
+  <div class="res-cons">
+  <article class="post clearfix">
   
   <header>
     
-      
-        <h1 class="entry-title">iOS App UI调试工具（三）· Reveal App</h1>
-      
+      <h1 class="post-title">iOS App UI调试工具（三）· Reveal App</h1>
     
     
-      <p class="meta">
+      <p class="post-meta">
         
 
 
 
 
 
-        
+
+
+
+  
+
+
+<time datetime="2014-01-03T20:53:01+08:00" pubdate data-updated="true">Jan 3<span>rd</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>昨天，经<a target="_blank" href="http://weibo.com/danc">@Dan</a>推荐又了解到一款UI调试神器<code>Reveal App</code>
+<div class="post-content"><p>昨天，经<a target="_blank" href="http://weibo.com/danc">@Dan</a>推荐又了解到一款UI调试神器<code>Reveal App</code>
 <video width='640' height='320' preload='none' controls poster='http://revealapp.com/img/testimonial-flipboard.jpg'><source src='http://revealapp.com/video/Reveal.mp4' type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'></video></p>
 
 <!--more-->
@@ -119,28 +99,14 @@ Reveal App安装完成后，点开菜单Help->Getting Started，会出现一个�
 </div>
 
 
-  <footer>
-    <p class="meta">
+  <footer class="post-footer">
+    <div class="meta">
       
   
 
-
-
-  <span class="byline author vcard">Authored by <span class="fn">
-  
-    Handy.Wang
-  
-  </span></span>
-
-
-      
-
-
-
-
-
-      
-      
+<span class="byline author vcard">Posted by <span class="fn">Handy.Wang</span></span>
+ and 
+      File under 
 
 <span class="categories">
   
@@ -149,43 +115,89 @@ Reveal App安装完成后，点开菜单Help->Getting Started，会出现一个�
 </span>
 
 
-    </p>
+    </div>
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.handy.wang/blog/2014/01/03/ios-app-uidiao-shi-gong-ju-san-reveal/" data-via="" data-counturl="http://blog.handy.wang/blog/2014/01/03/ios-app-uidiao-shi-gong-ju-san-reveal/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.handy.wang/blog/2014/01/03/ios-app-uidiao-shi-gong-ju-san-reveal/" data-via="" data-counturl="http://blog.handy.wang/blog/2014/01/03/ios-app-uidiao-shi-gong-ju-san-reveal/" >Tweet</a>
   
   
   
 </div>
 
     
-    <p class="meta">
+    <div class="meta">
       
         <a class="basic-alignment left" href="/blog/2013/12/26/you-kios6memorywarningyin-fa-de-si-kao/" title="Previous Post: 由kIOS6MEMORYWARNING引发的思考">&laquo; 由kIOS6MEMORYWARNING引发的思考</a>
       
       
         <a class="basic-alignment right" href="/blog/2014/03/10/runtime-1rd-message/" title="Next Post: Runtime（一）之 Message转发浅析">Runtime（一）之 Message转发浅析 &raquo;</a>
       
-    </p>
+    </div>
   </footer>
 </article>
+
+  </div>
+</div>
+
+  <aside id="secondary">
+  
+    <section class="widget">
+    <form id="search" action="https://www.google.com/search" method="get">
+    	<input type="hidden" name="q" value="site:blog.handy.wang"/>
+    	<input type="text" name="q" results="0" class="text" placeholder="Google搜索"/>
+    </form>
+</section>
+
+<section class="widget">
+	<h3 class="widget-title">最新文章</h3>
+	<ul class="widget-list">
+		
+     	<li>
+      	  <a href="/blog/2016/05/13/uiimage-stretch/">UIImage stretch</a>
+      	</li>
+    	
+     	<li>
+      	  <a href="/blog/2016/05/04/kuo-zhan-uitextview-and-uitextfieldzhi-chi-jiu-gong-ge-dui-qi-fang-shi/">扩展UITextView &amp; UITextField支持九宫格对齐方式</a>
+      	</li>
+    	
+     	<li>
+      	  <a href="/blog/2016/01/29/sdwebimagehuan-cun-zhi-tu-pian-urlbu-bian/">SDWebImage缓存之图片URL不变</a>
+      	</li>
+    	
+     	<li>
+      	  <a href="/blog/2016/01/26/ios-crashfen-xi/">iOS Crash快速分析实战</a>
+      	</li>
+    	
+     	<li>
+      	  <a href="/blog/2015/12/10/software-architecture-patterns/">软件架构模式（译）</a>
+      	</li>
+    	
+	</ul>
+</section>
+
+
+
+
+  
+</aside>
+
+
+      	</div>
+    </div>
+  </div>
+  <footer id="footer">
+  	<div class="container">
+	Copyright &copy; 2016 - Handy.Wang -
+  <span class="credit">Powered by <a rel="nofollow" href="http://octopress.org">Octopress</a> on <a rel="nofollow" href="http://pages.github.com/">GitHubPages</a>
+  </span>
+  - <span class="credit">Theme by <a rel="nofollow" href="http://pagecho.com">Cho</a></span>
 
 
 </div>
 
-    </div>
-  </div>
-  <footer role="contentinfo"><p>
-  Copyright &copy; 2016 - Handy.Wang -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> | Themed with <a href="https://github.com/lucaslew/whitespace">Whitespace</a></span>
-</p>
-
-</footer>
+  </footer>
   
-
-
-
 
 
 
@@ -198,7 +210,7 @@ Reveal App安装完成后，点开菜单Help->Getting Started，会出现一个�
       var twitterWidgets = document.createElement('script');
       twitterWidgets.type = 'text/javascript';
       twitterWidgets.async = true;
-      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
       document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
     })();
   </script>
