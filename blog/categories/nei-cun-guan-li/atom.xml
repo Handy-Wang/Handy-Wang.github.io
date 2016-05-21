@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: 内存管理 | Handy's]]></title>
+  <link href="http://blog.handy.wang/blog/categories/nei-cun-guan-li/atom.xml" rel="self"/>
+  <link href="http://blog.handy.wang/"/>
+  <updated>2016-05-21T22:52:34+08:00</updated>
+  <id>http://blog.handy.wang/</id>
+  <author>
+    <name><![CDATA[Handy.Wang]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[浅谈内存布局(Memory Layout)]]></title>
+    <link href="http://blog.handy.wang/blog/2014/03/18/qian-tan-nei-cun-bu-ju-memory-layout/"/>
+    <updated>2014-03-18T15:14:37+08:00</updated>
+    <id>http://blog.handy.wang/blog/2014/03/18/qian-tan-nei-cun-bu-ju-memory-layout</id>
+    <content type="html"><![CDATA[<!--more-->
+
+
+<p>对于高级语言的程序员(Java、OC)来说，一定听过堆栈、数据段、代码段，但可能没有细细研究过。本文在此分享对它们的理解。</p>
+
+<h3>C语言的内存布局</h3>
+
+
+<p>   这里从C语方入手,说说内存布局。<br/>
+<img class="<a" src="href="https://raw.github.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/Memory-Layout-300x255.gif">https://raw.github.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/Memory-Layout-300x255.gif</a>" width="400" height="300"><br/>
+   内存从低地址到高地址划分，分为：Text Segment、Initialized Data Segment、Uninitialized Data Segment、Heap、Stack。<br/></p>
+
+<h6>Text Segment</h6>
+
+
+<pre><code>即代码段(Code Segment)，里面存放可执行的指令，可以理解为程序的实际逻辑代码(不考虑形参、局部变量)，不过在代码段里的指令应该已是汇编指令了。
+代码段在内存布局中处在堆栈下面(即低地址段)的位置，防止代码段被堆栈溢出覆盖。通常，代码段里的内容是被共享且只读的，防止程序意外的修改其在代码段里的指令。
+</code></pre>
+
+<h6>Initialized Data Segment</h6>
+
+
+<pre><code>即数据段(Data Segment)，这应该是一种狭义的叫法，也就是大家通常意义上认为的数据段。
+其实Initialized Data Segment和Uninitialized Data Segment合起来可以称为广义的数据段，因为它们都存数据。
+Initialized Data Segment存储被程序员显式初始化过的全局变量、静态变量、常量,由此可以看数据段(狭义)可以进一步的分为 只读区段 和 读写区段，
+数据段不是只读的，在程序运行的时候存储在此区段的变量值可以修改。
+</code></pre>
+
+<h6>Uninitialized Data Segment</h6>
+
+
+<pre><code>又名BSS，即Block Started by Symbol，最早是联合航空公司的联合航空符号汇编程序里的一个伪操作，后来BSS这个术语被合并到FORTRAN汇编程序里。
+这伪操作定义了一个标签而且预留了一定量的未初始化的区域，所以BSS就成了“单独保留许多独立的小数据的位置“的简称。
+由此看出，BSS这部分空间是预留出来的，存放的是程序员没有初始化或初始化为0(我的理解是初始化为nil)的全局变量、静态变量，未初始化的在被编译器在内存中初始化为0(0x0)，
+这就是为什么它也叫Uninitialized Data Segment。
+[Historically, BSS (from Block Started by Symbol) was a pseudo-operation in UA-SAP (United Aircraft Symbolic Assembly Program), 
+the assembler developed in the mid-1950s for the IBM 704 by Roy Nutt, Walter Ramshaw, and others at United Aircraft Corporation.
+The BSS keyword was later incorporated into FAP (FORTRAN Assembly Program), IBM's standard assembler for its 709 and 7090/94 computers. 
+It defined a label (i.e. symbol) and reserved a block of uninitialized space for a given number of words (Timar 1996). 
+In this situation BSS served as a shorthand in place of individually reserving a number of separate smaller data locations. 
+Some assemblers support a complementary or alternative directive BES, for Block Ended by Symbol, 
+where the specified symbol corresponds to the end of the reserved block.]
+</code></pre>
+
+<h6>Heap</h6>
+
+
+<pre><code>堆区紧接着BSS段，它的内存分配增长方向是从低地址向高地址。所有动态的内存分配操作都是由 程序员 通过相关函数从堆区进行分配和释放，如malloc, realloc, and free这些操作。
+在一个进程里，堆区被所有的共享函数库和动态加载的模块所共享。
+</code></pre>
+
+<h6>Stack</h6>
+
+
+<pre><code>栈区紧挨着堆区，一般都处在内存的高地址区域，但是它的内存分配增长方向是从高地址向低地址，也就是说堆和栈的内存分配增长方向上是相对的，即从两头向中间方向。
+此区段的内存分配是由编译器做的，当栈顶指针已经遇到堆指针的时候表明栈溢出了。
+栈区是LIFO的结构，SP(Stack Pointer)寄存器始终记录着栈顶位置，当push或pop数据的时候，SP都会有相应的变化。
+在栈区里主要是存放函数调用相关的内容，如：实参、函数调用的返回地址、局部变量等相关信息，我们称之为栈帧(Stack Frame)，
+也就是说在栈区里有很多个栈帧，每进行一次函数调用，一个新的栈帧就会入栈，且向低地址区方向增长。
+一个栈帧至少由一个函数调用的返回地址组成，所以普通的函数调用递归函数调用都是借助这个返回地址才得到让程序流程进行下去的。
+The stack frame at the top of the stack is for the currently executing routine. The stack frame usually includes at least the following items (in push order):
+the arguments (parameter values) passed to the routine (if any);
+the return address back to the routine's caller (e.g. in the DrawLine stack frame, an address into DrawSquare's code); and
+space for the local variables of the routine (if any).
+</code></pre>
+
+<h6>C语言函数调用的内存机制</h6>
+
+
+<pre><code>待续。。。
+</code></pre>
+
+<h3>C++语言的内存布局</h3>
+
+
+<p>C++的内存布局大致分为：代码段、全局/静态存储区、常量区、自由存储区、堆、栈。</p>
+
+<h6>差异</h6>
+
+
+<pre><code>1）全局/静态存储区
+    全局变量和静态变量被分配到同一块内存中，在以前的C语言中，全局变量又分为初始化的和未初始化的，
+    在C++里面没有这个区分了，他们共同占用同一块内存区（未初始化的变量都被初始化成0或空串，C中也一样）。
+2）常量存储区
+    这是一块比较特殊的存储区，他们里面存放的是常量，不允许修改。
+    注意常量的存放区域，通常情况下，常量存放在程序区(程序区是只读的，因此任何修改常量的行为都是非法的)，而不是数据区。
+    有的系统，也将部分常量分配到静态数据区，比如字符串常量(有的系统也将其分配在程序区)。但是要记住一点，常量所在的内存空间都是受系统保护的，不能修改。
+    对常量空间的修改将造成访问内存出错，一般系统都会提示。常量的生命周期一直到程序执行结束为止。
+3）自由存储区
+    就是那些由malloc等分配的内存块，他和堆是十分相似的，不过它是用free来结束自己的生命的
+5）重要示例：
+    char s[]="123";    s在栈区，“123”在栈区，其值可以被修改
+    char *s="123";     s在栈区，“123”在常量区，其值不能被修改
+</code></pre>
+
+<h3>OC语言的内存布局</h3>
+
+
+<pre><code>减少内存垃圾碎片的优化: 《Pro Multithreading and Memory Management for iOS and OS X》中The alloc Method小节1-7图
+</code></pre>
+
+<p>待续。。。</p>
+
+<p><a href="http://reverse.put.as/wp-content/uploads/2011/06/objective-c-internals.pdf">http://reverse.put.as/wp-content/uploads/2011/06/objective-c-internals.pdf</a>
+<a href="http://www.cnblogs.com/csutanyu/archive/2011/12/12/Objective-C_memory_layout.html">http://www.cnblogs.com/csutanyu/archive/2011/12/12/Objective-C_memory_layout.html</a>
+<a href="http://www.easyfunstudy.com/books/Transfer/Learning_Objective_C_2_0__A_Hands_On_Guide_to_Objective_C_for_Mac_and_iOS_Developers__Developer__039_s_Library_.pdf">http://www.easyfunstudy.com/books/Transfer/Learning_Objective_C_2_0__A_Hands_On_Guide_to_Objective_C_for_Mac_and_iOS_Developers__Developer__039_s_Library_.pdf</a></p>
+
+<h6>差异</h6>
+
+
+<p>结束语：
+究其细节，其实，没有什么过程是“自动的”，这只不过用来搪塞程序员自己的理由。</p>
+
+<h3>参考</h3>
+
+
+<p>MemoryLayoutOut：<a href="http://www.geeksforgeeks.org/memory-layout-of-c-program/">http://www.geeksforgeeks.org/memory-layout-of-c-program/</a><br/>
+DataSegment(wikipedia)：<a href="http://en.wikipedia.org/wiki/Data_segment">http://en.wikipedia.org/wiki/Data_segment</a><br/>
+CallStack(wikipedia)：<a href="http://en.wikipedia.org/wiki/Call_stack">http://en.wikipedia.org/wiki/Call_stack</a><br/>
+C/C++堆、栈及静态数据区详解：<a href="http://www.cnblogs.com/hanyonglu/archive/2011/04/12/2014212.html">http://www.cnblogs.com/hanyonglu/archive/2011/04/12/2014212.html</a>
+C++内存分配、函数调用： <a href="http://www.cnblogs.com/dolphin0520/archive/2011/04/04/2005061.html">http://www.cnblogs.com/dolphin0520/archive/2011/04/04/2005061.html</a><br/></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[iOS6+应该怎样覆盖didReceiveMemoryWarning]]></title>
+    <link href="http://blog.handy.wang/blog/2013/12/26/you-kios6memorywarningyin-fa-de-si-kao/"/>
+    <updated>2013-12-26T21:09:31+08:00</updated>
+    <id>http://blog.handy.wang/blog/2013/12/26/you-kios6memorywarningyin-fa-de-si-kao</id>
+    <content type="html"><![CDATA[<!--more-->
+
+
+<p>昨晚，在Review搜狐新闻客户端代码时发现iOS6+时ViewController类里的didReceiveMemoryWarning方法实现被宏kIOS6MEMORYWARNING(它的值是0)屏蔽了。(<a target="_blank" href="http://weibo.com/chh1980?topnav=1&wvr=5&topsug=1">@陈宏-Wesley</a>)
+``` objc
+&ndash; (void)didReceiveMemoryWarning {</p>
+
+<pre><code>[super didReceiveMemoryWarning];
+#if kIOS6MEMORYWARNING
+// only want to do this on iOS 6
+if ([[[UIDevice currentDevice] systemVersion] floatValue] &gt;= 6.0) {
+    //  Don't want to rehydrate the view if it's already unloaded
+    BOOL isLoaded = [self isViewLoaded];
+
+    //  We check the window property to make sure that the view is not visible
+    if (isLoaded &amp;&amp; self.view.window == nil) {
+
+        //  Give a chance to implementors to get model data from their views
+        [self performSelectorOnMainThread:@selector(viewWillUnload)
+                               withObject:nil
+                            waitUntilDone:YES];
+
+        //  Detach it from its parent (in cases of view controller containment)
+        [self.view removeFromSuperview];
+        self.view = nil;    //  Clear out the view.  Goodbye!
+
+        //  The view is now unloaded...now call viewDidUnload
+        [self performSelectorOnMainThread:@selector(viewDidUnload)
+                               withObject:nil
+                            waitUntilDone:YES];
+    }
+}
+#endif
+</code></pre>
+
+<p>}
+```
+刹那间觉得很奇怪，一定有一些不为人知的原因，所以我打算一探究竟。</p>
+
+<p>经过和 <a target="_blank" href="http://weibo.com/iqipei?topnav=1&wvr=5&topsug=1">@单eye皮</a> <a target="_blank" href="http://weibo.com/u/1620329427?topnav=1&wvr=5&topsug=1">@Aaron_亚伦007</a> 一天的激烈讨论得出了一些我们认为正确的答案，特总结如下。</p>
+
+<p>iOS6以前(不包括iOS6)，内存警告后，我们都会在viewDidUnload方法里手动的回收ViewController里的子View以及ViewController的View([self.view removeFromSuperview];self.view = nil;)，当ViewController通过loadView重建时ViewController的View和子View全部会被重建(一般在loadView和viewDidLoad里)。所以，iOS6以前(不包括iOS6)两个关键点：1）MemoryWarning时viewDidUnload一定会被调到；2）为了重建loadView被调用多次；</p>
+
+<p>iOS6及以后内存警告时，didReceiveMemoryWarning会被调到但viewDidUnload方法已经不会被调到。按iOS6以下的思维或没看官方文档前，我们会觉得这样有不妥，所以我们会在didReceiveMemoryWarning方法里手动调用viewDidUnload方法来回收ViewController的View和子View，以使我们内心觉得真NB，完美解决了iOS6以前和
+iOS6及以后内存警告的处理了。所以，文章开头的代码片断里在iOS6及以后会手动调用viewDidUnload方法，即，回收ViewController子View和ViewController的View。</p>
+
+<p>如果觉得上面处理iOS6及以后内存警告的方式很NB的话，那么我们还可以更NB。其实，Apple已经为了考虑到iOS6以后内存警告应该怎么处理。
+```
+On iOS 6 and Later, a View Controller Unloads Its Own Views When Desired
+The default behavior for a view controller is to load its view hierarchy
+when the view property is first accessed and thereafter keep it in memory until
+the view controller is disposed of.
+The memory used by a view to draw itself onscreen is potentially quite large. However,
+the system automatically releases these expensive resources when the view is not attached
+to a window. The remaining memory used by most views is small enough that it is not worth
+it for the system to automatically purge and recreate the view hierarchy.</p>
+
+<p>You can explicitly release the view hierarchy if that additional memory is
+necessary for your app.
+```
+下面，就这一段话展开分析和解释：
+iOS6及以后，内存警告时系统会回收ViewController的View的CALayer里的BitMap（CABackingStore类型，它的内容是直接用于渲染到屏幕，它是View消耗内存的大户）。view和calayer占的内存极少，
+数量级也就在byte和kbyte之间，所以系统只回收了BitMap，但是这里所谓的回收只是给BitMap占用的内存打了一个volatile标记表明这部分内存是可能随时被其它数据占用,平时没内存警告时正在使用的内存标记为In use，完全被释放回收的标记为Not in use。概括起来也就是说：iOS6及以后的内存警告时，系统会给用于渲染视图的数据(BitMap)内存打一个volatile，
+ViewController的View的架子结构并不会回收，当View再次被访问时，虽然View的架子结构会用重建，但触发drawRect来渲染界面时，如果view对应的BitMap数据内存没有被占用则会被View的drawRect方法直接渲染出来且内存被标记为in use，从而这块内存又可以独享了；如果已被其它数据占用，那么BitMap必须要重建。所以可以看到整个重建过程不再是由loadView来做的，它是通过对view的访问来触发的。但是，请注意，
+如果说在iOS6及以后ViewController的loadView方法只会被调用一次，这种说法是不完全准确的。因为：如果在didReceiveMemoryWarning里把ViewController的View也回收了([self.view removeFromSuperview];self.view = nil;)，那么当再次有对View访问时，loadView会被调用以进行完全最彻底的重建(想想也是，ViewController的View都没了，不调loadView来重建那怎么办呢)。</p>
+
+<p>总结一下：
+iOS6的这种设计高明在两个地方：1）视图结构和视图数据的分离；2）内存警告后系统只回收的是内存大户视图数据，但是回收不是完全的清掉，而只是做个标记，这样既做到减小了每次重建BitMap
+的成本，同时也把这部分内存开放出去可以随时被别的数据占用；3）重建时，充其量是重建BitMap(没被占用时是直接用不用重建)</p>
+
+<p>回顾kIOS6MEMORYWARNING这个宏，如果kIOS6MEMORYWARNING==0，那么不回收View的架子结构，loadView也就不会被再次调用(没有必要嘛)；如果kIOS6MEMORYWARNING==1，那么回收View的架子结构，
+再次访问View时loadView会被调用，loadView里的逻辑又运行了一次，这样不但降低了渲染速度还提高了重建成本。</p>
+
+<p>所以，我只能这么说，iOS6及以后didReceiveMemoryWarning方法里面没有必要做任何事情，要做最多也是回收视图的架子结构或回收一些业务上处理的大数据。（你觉得真的有必要回收视图架子结构吗，这就是为什么文章一开始提到kIOS6MEMORYWARNING屏蔽了didReceiveMemoryWarning方法的实现，因为没有必要回收架子结构）</p>
+
+<p>特别感谢：<a target="_blank" href="http://weibo.com/iqipei?topnav=1&wvr=5&topsug=1">@单eye皮</a> <a target="_blank" href="http://weibo.com/u/1620329427?topnav=1&wvr=5&topsug=1">@Aaron_亚伦007</a></p>
+
+<h3>参考</h3>
+
+
+<ol style="margin-top:-18px; padding-left:28px;">
+    <li style="padding-bottom:10px;">
+        <a target="_blank" href="http://blog.devtang.com/blog/2013/05/18/goodbye-viewdidunload/">《再见，viewDidUnload方法</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" href="http://weibo.com/tangqiaoboy?topnav=1&wvr=5&topsug=1">by @唐巧_boy</a><br/>
+    </li>
+    <li>
+        <a target="_blank" href=" https://developer.apple.com/library/ios/featuredarticles/ViewControllerPGforiPhoneOS/ViewLoadingandUnloading/ViewLoadingandUnloading.html">《Resource Management in View Controllers》</a><br/>
+    </li>
+    <li>
+        <a target="_blank" href="http://blog.spacemanlabs.com/2011/08/calayer-internals-contents/">《CALayer Internals: Contents》</a><br/>
+    </li>
+    <li>
+        <a target="_blank" href="http://blog.csdn.net/mad2man/article/details/11177293">《viewDidUnload 和 viewWillUnload 被废弃之后的内存警告处理》</a><br/>
+    </li>
+</ol>
+
+]]></content>
+  </entry>
+  
+</feed>

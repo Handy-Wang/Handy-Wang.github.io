@@ -6,13 +6,13 @@
 <html class="no-js" lang="zh-CN"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>由kIOS6MEMORYWARNING引发的思考 - Handy's</title>
+  <title>iOS6+应该怎样覆盖didReceiveMemoryWarning - Handy's</title>
   <meta name="author" content="Handy.Wang">
   <!--[if lt IE 9]>
     <script src="http://x.papaapp.com/farm1/a571d2/8dda131d/html5shiv.js"></script>
     <![endif]-->
   
-  <meta name="description" content="由kIOS6MEMORYWARNING引发的思考 Dec 26th, 2013 昨晚，在Review搜狐新闻客户端代码时发现iOS6+时ViewController类里的didReceiveMemoryWarning方法实现被宏kIOS6MEMORYWARNING(它的值是0)屏蔽了。(@陈宏- &hellip;">
+  <meta name="description" content="iOS6+应该怎样覆盖didReceiveMemoryWarning Dec 26th, 2013 昨晚，在Review搜狐新闻客户端代码时发现iOS6+时ViewController类里的didReceiveMemoryWarning方法实现被宏kIOS6MEMORYWARNING(它的值是0 &hellip;">
   
 
   <meta name="HandheldFriendly" content="True">
@@ -58,7 +58,7 @@
   
   <header>
     
-      <h1 class="post-title">由kIOS6MEMORYWARNING引发的思考</h1>
+      <h1 class="post-title">iOS6+应该怎样覆盖didReceiveMemoryWarning</h1>
     
     
       <p class="post-meta">
@@ -81,7 +81,10 @@
   </header>
 
 
-<div class="post-content"><p>昨晚，在Review搜狐新闻客户端代码时发现iOS6+时ViewController类里的didReceiveMemoryWarning方法实现被宏kIOS6MEMORYWARNING(它的值是0)屏蔽了。(<a target="_blank" href="http://weibo.com/chh1980?topnav=1&wvr=5&topsug=1">@陈宏-Wesley</a>)</p>
+<div class="post-content"><!--more-->
+
+
+<p>昨晚，在Review搜狐新闻客户端代码时发现iOS6+时ViewController类里的didReceiveMemoryWarning方法实现被宏kIOS6MEMORYWARNING(它的值是0)屏蔽了。(<a target="_blank" href="http://weibo.com/chh1980?topnav=1&wvr=5&topsug=1">@陈宏-Wesley</a>)</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -143,9 +146,6 @@
 
 
 <p>刹那间觉得很奇怪，一定有一些不为人知的原因，所以我打算一探究竟。</p>
-
-<!--more-->
-
 
 <p>经过和 <a target="_blank" href="http://weibo.com/iqipei?topnav=1&wvr=5&topsug=1">@单eye皮</a> <a target="_blank" href="http://weibo.com/u/1620329427?topnav=1&wvr=5&topsug=1">@Aaron_亚伦007</a> 一天的激烈讨论得出了一些我们认为正确的答案，特总结如下。</p>
 
@@ -230,7 +230,7 @@ iOS6的这种设计高明在两个地方：1）视图结构和视图数据的分
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/cabackingstore/'>CABackingStore</a>, <a class='category' href='/blog/categories/uiviewcontroller/'>UIViewController</a>, <a class='category' href='/blog/categories/didreceivememorywarning/'>didReceiveMemoryWarning</a>, <a class='category' href='/blog/categories/viewdidunload/'>viewDidUnload</a>
+    <a class='category' href='/blog/categories/nei-cun-guan-li/'>内存管理</a>
   
 </span>
 
@@ -248,10 +248,10 @@ iOS6的这种设计高明在两个地方：1）视图结构和视图数据的分
     
     <div class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/12/19/mac-osxia-da-jian-apnstui-song-fu-wu-qi/" title="Previous Post: Mac OS下搭建APNS推送服务器(Apache+PHP)">&laquo; Mac OS下搭建APNS推送服务器(Apache+PHP)</a>
+        <a class="basic-alignment left" href="/blog/2013/12/19/mac-osxia-da-jian-apnstui-song-fu-wu-qi/" title="Previous Post: 搭建iOS推送(Apache+PHP)">&laquo; 搭建iOS推送(Apache+PHP)</a>
       
       
-        <a class="basic-alignment right" href="/blog/2014/01/03/ios-app-uidiao-shi-gong-ju-san-reveal/" title="Next Post: iOS App UI调试工具（三）· Reveal App">iOS App UI调试工具（三）· Reveal App &raquo;</a>
+        <a class="basic-alignment right" href="/blog/2014/03/10/runtime-1rd-message/" title="Next Post: Runtime之Message转发浅析">Runtime之Message转发浅析 &raquo;</a>
       
     </div>
   </footer>
@@ -278,11 +278,11 @@ iOS6的这种设计高明在两个地方：1）视图结构和视图数据的分
       	</li>
     	
      	<li>
-      	  <a href="/blog/2016/05/04/kuo-zhan-uitextview-and-uitextfieldzhi-chi-jiu-gong-ge-dui-qi-fang-shi/">扩展UITextView &amp; UITextField支持九宫格对齐方式</a>
+      	  <a href="/blog/2016/05/04/kuo-zhan-uitextview-and-uitextfieldzhi-chi-jiu-gong-ge-dui-qi-fang-shi/">UITextView &amp; UITextField的九宫格对齐方式</a>
       	</li>
     	
      	<li>
-      	  <a href="/blog/2016/01/29/sdwebimagehuan-cun-zhi-tu-pian-urlbu-bian/">SDWebImage缓存之图片URL不变</a>
+      	  <a href="/blog/2016/01/29/sdwebimagehuan-cun-zhi-tu-pian-urlbu-bian/">SDWebImage支持URL不变时更新图片内容</a>
       	</li>
     	
      	<li>

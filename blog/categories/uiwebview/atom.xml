@@ -4,7 +4,7 @@
   <title><![CDATA[Category: UIWebView | Handy's]]></title>
   <link href="http://blog.handy.wang/blog/categories/uiwebview/atom.xml" rel="self"/>
   <link href="http://blog.handy.wang/"/>
-  <updated>2016-05-21T21:46:34+08:00</updated>
+  <updated>2016-05-21T22:52:34+08:00</updated>
   <id>http://blog.handy.wang/</id>
   <author>
     <name><![CDATA[Handy.Wang]]></name>
@@ -14,21 +14,21 @@
 
   
   <entry>
-    <title type="html"><![CDATA[UIWebView的cookie]]></title>
+    <title type="html"><![CDATA[手动管理UIWebView的cookie]]></title>
     <link href="http://blog.handy.wang/blog/2014/03/14/uiwebviewde-cookie/"/>
     <updated>2014-03-14T17:18:03+08:00</updated>
     <id>http://blog.handy.wang/blog/2014/03/14/uiwebviewde-cookie</id>
-    <content type="html"><![CDATA[<h3>场景描述</h3>
+    <content type="html"><![CDATA[<!--more-->
+
+
+
+
+<h3>场景描述</h3>
 
 
 <p>我们以实际例子驱动的方式来开始这个话题。<br />
 实际例子描述：在App里内嵌一个UIWebView，通过UIWebView打开<a href="http://weibo.com">http://weibo.com</a> 微博首页，在UIWebView里登录我的账号，登录成功后kill App，再次启动App打开UIWebView时微博仍为登录状态。<br />
 实现这个Demo的整体业务代码很简单，主要是怎么实现“再次启动App打开UIWebView时微博仍为登录状态”。这就涉及到UIWebView的cookie问题。</p>
-
-<!--more-->
-
-
-
 
 <h3>Session、Cookie</h3>
 

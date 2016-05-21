@@ -6,13 +6,13 @@
 <html class="no-js" lang="zh-CN"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Runtime（一）之 Message转发浅析 - Handy's</title>
+  <title>Runtime之Message转发浅析 - Handy's</title>
   <meta name="author" content="Handy.Wang">
   <!--[if lt IE 9]>
     <script src="http://x.papaapp.com/farm1/a571d2/8dda131d/html5shiv.js"></script>
     <![endif]-->
   
-  <meta name="description" content="Runtime（一）之 Message转发浅析 Mar 10th, 2014 Objective-C对象模型 本文假定您对Objective-C对象模型已了解 消息转发两大流程 一）方法的动态决议 二）完整的消息转发机制 一）方法的动态决议 即程序运行时动态提供方法的实现，运行时是没有方法实现的 &hellip;">
+  <meta name="description" content="Runtime之Message转发浅析 Mar 10th, 2014 Objective-C对象模型 本文假定您对Objective-C对象模型已了解 消息转发两大流程 一）方法的动态决议 二）完整的消息转发机制 一）方法的动态决议 即程序运行时动态提供方法的实现，运行时是没有方法实现的。 &hellip;">
   
 
   <meta name="HandheldFriendly" content="True">
@@ -58,7 +58,7 @@
   
   <header>
     
-      <h1 class="post-title">Runtime（一）之 Message转发浅析</h1>
+      <h1 class="post-title">Runtime之Message转发浅析</h1>
     
     
       <p class="post-meta">
@@ -81,7 +81,12 @@
   </header>
 
 
-<div class="post-content"><h3>Objective-C对象模型</h3>
+<div class="post-content"><!--more-->
+
+
+
+
+<h3>Objective-C对象模型</h3>
 
 
 <p>本文假定您对Objective-C对象模型已了解</p>
@@ -95,9 +100,6 @@
 
 
 <h6>二）完整的消息转发机制</h6>
-
-
-<!--more-->
 
 
 
@@ -241,7 +243,7 @@ forwardInvocation:本身是在NSObject里面定义的，如果你需要重载这
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/message/'>Message</a>, <a class='category' href='/blog/categories/nsobject/'>NSObject</a>, <a class='category' href='/blog/categories/runtime/'>Runtime</a>
+    <a class='category' href='/blog/categories/runtime/'>Runtime</a>
   
 </span>
 
@@ -259,10 +261,10 @@ forwardInvocation:本身是在NSObject里面定义的，如果你需要重载这
     
     <div class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/01/03/ios-app-uidiao-shi-gong-ju-san-reveal/" title="Previous Post: iOS App UI调试工具（三）· Reveal App">&laquo; iOS App UI调试工具（三）· Reveal App</a>
+        <a class="basic-alignment left" href="/blog/2013/12/26/you-kios6memorywarningyin-fa-de-si-kao/" title="Previous Post: iOS6+应该怎样覆盖didReceiveMemoryWarning">&laquo; iOS6+应该怎样覆盖didReceiveMemoryWarning</a>
       
       
-        <a class="basic-alignment right" href="/blog/2014/03/14/uiwebviewde-cookie/" title="Next Post: UIWebView的cookie">UIWebView的cookie &raquo;</a>
+        <a class="basic-alignment right" href="/blog/2014/03/14/uiwebviewde-cookie/" title="Next Post: 手动管理UIWebView的cookie">手动管理UIWebView的cookie &raquo;</a>
       
     </div>
   </footer>
@@ -289,11 +291,11 @@ forwardInvocation:本身是在NSObject里面定义的，如果你需要重载这
       	</li>
     	
      	<li>
-      	  <a href="/blog/2016/05/04/kuo-zhan-uitextview-and-uitextfieldzhi-chi-jiu-gong-ge-dui-qi-fang-shi/">扩展UITextView &amp; UITextField支持九宫格对齐方式</a>
+      	  <a href="/blog/2016/05/04/kuo-zhan-uitextview-and-uitextfieldzhi-chi-jiu-gong-ge-dui-qi-fang-shi/">UITextView &amp; UITextField的九宫格对齐方式</a>
       	</li>
     	
      	<li>
-      	  <a href="/blog/2016/01/29/sdwebimagehuan-cun-zhi-tu-pian-urlbu-bian/">SDWebImage缓存之图片URL不变</a>
+      	  <a href="/blog/2016/01/29/sdwebimagehuan-cun-zhi-tu-pian-urlbu-bian/">SDWebImage支持URL不变时更新图片内容</a>
       	</li>
     	
      	<li>

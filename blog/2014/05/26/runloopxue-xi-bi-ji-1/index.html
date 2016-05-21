@@ -82,7 +82,10 @@
   </header>
 
 
-<div class="post-content"><p>在iOS实际开发中，大家一定遇到过以下问题：</p>
+<div class="post-content"><!--more-->
+
+
+<p>在iOS实际开发中，大家一定遇到过以下问题：</p>
 
 <ul>
 <li>在一个线程里启动一个timer，但是这个timer一次也不会被调用？</li>
@@ -117,9 +120,6 @@
 
 
 <p>下面，我就从实际问题出发，来分享一下关于RunLoop的基本知识，同时解决上面三个问题。</p>
-
-<!-- more -->
-
 
 <h2>什么是RunLoop</h2>
 
@@ -513,6 +513,12 @@ dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), di
  and 
       File under 
 
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/runloop/'>RunLoop</a>
+  
+</span>
+
 
     </div>
     
@@ -527,7 +533,7 @@ dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), di
     
     <div class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/03/27/ru-he-zhong-zhi-tui-song-she-zhi-ti-xing/" title="Previous Post: 如何重置推送设置提醒(转)">&laquo; 如何重置推送设置提醒(转)</a>
+        <a class="basic-alignment left" href="/blog/2014/03/27/ru-he-zhong-zhi-tui-song-she-zhi-ti-xing/" title="Previous Post: 重置推送设置提醒(转)">&laquo; 重置推送设置提醒(转)</a>
       
       
         <a class="basic-alignment right" href="/blog/2014/06/11/runloopxue-xi-bi-ji-ren-er-afnetworkingzhong-de-ying-yong/" title="Next Post: RunLoop学习笔记(二) AFNetworking中的应用">RunLoop学习笔记(二) AFNetworking中的应用 &raquo;</a>
@@ -557,11 +563,11 @@ dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), di
       	</li>
     	
      	<li>
-      	  <a href="/blog/2016/05/04/kuo-zhan-uitextview-and-uitextfieldzhi-chi-jiu-gong-ge-dui-qi-fang-shi/">扩展UITextView &amp; UITextField支持九宫格对齐方式</a>
+      	  <a href="/blog/2016/05/04/kuo-zhan-uitextview-and-uitextfieldzhi-chi-jiu-gong-ge-dui-qi-fang-shi/">UITextView &amp; UITextField的九宫格对齐方式</a>
       	</li>
     	
      	<li>
-      	  <a href="/blog/2016/01/29/sdwebimagehuan-cun-zhi-tu-pian-urlbu-bian/">SDWebImage缓存之图片URL不变</a>
+      	  <a href="/blog/2016/01/29/sdwebimagehuan-cun-zhi-tu-pian-urlbu-bian/">SDWebImage支持URL不变时更新图片内容</a>
       	</li>
     	
      	<li>

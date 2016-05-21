@@ -4,7 +4,7 @@
   <title><![CDATA[Category: 推送 | Handy's]]></title>
   <link href="http://blog.handy.wang/blog/categories/tui-song/atom.xml" rel="self"/>
   <link href="http://blog.handy.wang/"/>
-  <updated>2016-05-21T21:46:34+08:00</updated>
+  <updated>2016-05-21T22:52:34+08:00</updated>
   <id>http://blog.handy.wang/</id>
   <author>
     <name><![CDATA[Handy.Wang]]></name>
@@ -14,11 +14,44 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Mac OS下搭建APNS推送服务器(Apache+PHP)]]></title>
+    <title type="html"><![CDATA[重置推送设置提醒(转)]]></title>
+    <link href="http://blog.handy.wang/blog/2014/03/27/ru-he-zhong-zhi-tui-song-she-zhi-ti-xing/"/>
+    <updated>2014-03-27T12:33:35+08:00</updated>
+    <id>http://blog.handy.wang/blog/2014/03/27/ru-he-zhong-zhi-tui-song-she-zhi-ti-xing</id>
+    <content type="html"><![CDATA[<!--more-->
+
+
+
+
+<h6>步骤很简单，就是有点麻烦。如下：</h6>
+
+
+<pre><code>1 删除app
+2 重启
+3 设置里修改系统时间为至少1天后
+4 重启，重新安装app，打开app，就能再次看到“是否允许推送”确认框
+5 把系统时间调回正常当前时间即可(这一点是为了保证时间的正常使用与推送无关)
+</code></pre>
+
+<h3>参考</h3>
+
+
+<p><a href="http://stackoverflow.com/questions/2438400/reset-push-notification-settings-for-app">http://stackoverflow.com/questions/2438400/reset-push-notification-settings-for-app</a><br />
+<a target="_blank" href="http://weibo.com/danc?topnav=1&wvr=5&topsug=1">@Dan</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[搭建iOS推送(Apache+PHP)]]></title>
     <link href="http://blog.handy.wang/blog/2013/12/19/mac-osxia-da-jian-apnstui-song-fu-wu-qi/"/>
     <updated>2013-12-19T21:16:04+08:00</updated>
     <id>http://blog.handy.wang/blog/2013/12/19/mac-osxia-da-jian-apnstui-song-fu-wu-qi</id>
-    <content type="html"><![CDATA[<h3>配置Apache+PHP</h3>
+    <content type="html"><![CDATA[<!--more-->
+
+
+
+
+<h3>配置Apache+PHP</h3>
 
 
 <p>Mac OS自带Apache服务器和PHP，所以只需少许配置便可将它派上用场
@@ -44,9 +77,6 @@
 </code></pre>
 
 <p>```</p>
-
-<!--more-->
-
 
 <h3>制作Pem文件</h3>
 

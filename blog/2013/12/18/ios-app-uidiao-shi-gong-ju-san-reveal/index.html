@@ -6,13 +6,14 @@
 <html class="no-js" lang="zh-CN"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>重生 - Handy's</title>
+  <title>iOS App UI调试工具（三）· Reveal App - Handy's</title>
   <meta name="author" content="Handy.Wang">
   <!--[if lt IE 9]>
     <script src="http://x.papaapp.com/farm1/a571d2/8dda131d/html5shiv.js"></script>
     <![endif]-->
   
-  <meta name="description" content="重生 Dec 8th, 2013 『重生』－佛经天龙八部中提到的迦楼罗，500年涅磐一次，凤凰涅槃。笔者也是想了许久决定引用此名作为第一篇文章的名字。 其实，对于笔者来说，这里有几个意思，细细道来。 这其一，便是许久没有写博文了，大致也有一年吧。 这其二，那是，额。。。其实， &hellip;">
+  <meta name="description" content="iOS App UI调试工具（三）· Reveal App Dec 18th, 2013 昨天，经@Dan推荐又了解到一款UI调试神器Reveal App 官方地址在这里
+注意：我今天下的试用版试用总是提示已过期，一气之下就把系统日期改成2013年01月03日了，再启动，可以试用了。 集成向导 &hellip;">
   
 
   <meta name="HandheldFriendly" content="True">
@@ -20,7 +21,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.handy.wang/blog/2013/12/08/zhong-sheng/">
+  <link rel="canonical" href="http://blog.handy.wang/blog/2013/12/18/ios-app-uidiao-shi-gong-ju-san-reveal/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script type="text/javascript" src="http://t.papaapp.com/js/libs/jquery/1.7.2/jquery.js"></script>
@@ -58,7 +59,7 @@
   
   <header>
     
-      <h1 class="post-title">重生</h1>
+      <h1 class="post-title">iOS App UI调试工具（三）· Reveal App</h1>
     
     
       <p class="post-meta">
@@ -74,7 +75,7 @@
   
 
 
-<time datetime="2013-12-08T21:35:09+08:00" pubdate data-updated="true">Dec 8<span>th</span>, 2013</time>
+<time datetime="2013-12-18T20:53:01+08:00" pubdate data-updated="true">Dec 18<span>th</span>, 2013</time>
         
       </p>
     
@@ -84,28 +85,17 @@
 <div class="post-content"><!--more-->
 
 
-<p>『重生』－佛经天龙八部中提到的迦楼罗，500年涅磐一次，凤凰涅槃。笔者也是想了许久决定引用此名作为第一篇文章的名字。</p>
+<p>昨天，经<a target="_blank" href="http://weibo.com/danc">@Dan</a>推荐又了解到一款UI调试神器<code>Reveal App</code>
+<video width='640' height='320' preload='none' controls poster='http://revealapp.com/img/testimonial-flipboard.jpg'><source src='http://revealapp.com/video/Reveal.mp4' type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'></video></p>
 
-<p>其实，对于笔者来说，这里有几个意思，细细道来。</p>
+<p>官方地址在<a target="_blank" href="http://revealapp.com/">这里</a>
+<code>注意：我今天下的试用版试用总是提示已过期，一气之下就把系统日期改成2013年01月03日了，再启动，可以试用了。</code></p>
 
-<p>这其一，便是许久没有写博文了，大致也有一年吧。</p>
+<p>集成向导：
+Reveal App安装完成后，点开菜单Help->Getting Started，会出现一个界面，界面里有三个步骤，点界面左下角的“View Integration Guide”会打开一个本地的网页，这个网页里详细的描述了
+集成静态库和动态库的步骤。</p>
 
-<p>这其二，那是，额。。。其实，有一个事儿我已经纠结了几年。刚才工作那会儿，对技术的渴望是发自内心的狂野的，所以只要是浏览到自以为好的技术就要收藏到浏览器里，但是重装系统时总会
-忘备份，又或是那个网页在要用的时候打不开了；后来，我开始在JavaEye上写博文了，关键技术、心得、笔记等都一股脑儿的往上放，也分了些类别，但是我觉得麻烦，还觉得乱，
-界面不Too Simple Too Easy；再后来，我觉得把重要东西放在网上不靠谱，遇到要记录或笔记的都虚拟打印成PDF文件存在电脑里；再再后来，貌似EverNote开始流行了，我也开始臭屁了，
-各种Note stack、Note分类搞了一片一片的，那个看上去NB呀，但是每次都要登录再往里写，现在时间一长我找个文章好一个费劲；再再再后来。。。，好了不说了。这么多种方式我必须在这里
-把它们统一起来。</p>
-
-<p>这其三，额，理由好难想。。。，嗯，对了，昨天『蛋蛋』借了我一本《淘宝技术这十年》，看了三分之一了，各种NB技术术语，各种NB的Cache，各种NB的FS(FileSystem)，这，更坚定了我写博文
-的决心，平时必须要有技术积累，各种架构重构。</p>
-
-<p>这其四，真的，Octopress的UI风格纯净，我喜欢！目标很单纯，就是为了写博客而写博客，而且目前我所它架在github里了。</p>
-
-<p>这些理由充分吗，呵呵，其实就是想自己的博文在这里改头换面并一直坚持下去，让每一篇文章都充满故事。</p>
-
-<p>这篇也有故事。写到这里，Octopress让我有一种似曾相识的感觉，是的，多年前我就在github上用Liquid写过主页，向我推荐的这个人是一位故友－Zigzag</p>
-
-<p>已逝的行为、精神、灵魂，涅槃重生吧。</p>
+<p>OK，大家可以试用一下。截止目前介绍的三款中，感觉这款的UE最NB，绝对产品级的。</p>
 </div>
 
 
@@ -120,7 +110,7 @@
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/xin-qing/'>心情</a>
+    <a class='category' href='/blog/categories/diao-shi/'>调试</a>
   
 </span>
 
@@ -129,7 +119,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.handy.wang/blog/2013/12/08/zhong-sheng/" data-via="" data-counturl="http://blog.handy.wang/blog/2013/12/08/zhong-sheng/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.handy.wang/blog/2013/12/18/ios-app-uidiao-shi-gong-ju-san-reveal/" data-via="" data-counturl="http://blog.handy.wang/blog/2013/12/18/ios-app-uidiao-shi-gong-ju-san-reveal/" >Tweet</a>
   
   
   
@@ -138,8 +128,10 @@
     
     <div class="meta">
       
+        <a class="basic-alignment left" href="/blog/2013/12/17/ios-app-uidiao-shi-gong-ju2/" title="Previous Post: iOS App UI调试工具（二）· Realtime Debug Portal">&laquo; iOS App UI调试工具（二）· Realtime Debug Portal</a>
       
-        <a class="basic-alignment right" href="/blog/2013/12/09/chu-shi-cocos2d/" title="Next Post: 初识Cocos2d">初识Cocos2d &raquo;</a>
+      
+        <a class="basic-alignment right" href="/blog/2013/12/19/mac-osxia-da-jian-apnstui-song-fu-wu-qi/" title="Next Post: 搭建iOS推送(Apache+PHP)">搭建iOS推送(Apache+PHP) &raquo;</a>
       
     </div>
   </footer>

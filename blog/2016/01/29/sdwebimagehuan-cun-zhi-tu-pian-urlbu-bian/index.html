@@ -6,13 +6,13 @@
 <html class="no-js" lang="zh-CN"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>SDWebImage缓存之图片URL不变 - Handy's</title>
+  <title>SDWebImage支持URL不变时更新图片内容 - Handy's</title>
   <meta name="author" content="Handy.Wang">
   <!--[if lt IE 9]>
     <script src="http://x.papaapp.com/farm1/a571d2/8dda131d/html5shiv.js"></script>
     <![endif]-->
   
-  <meta name="description" content="SDWebImage缓存之图片URL不变 Jan 29th, 2016 SDWebImage在iOS项目中是一个很常用的开源库，而且众所周知的是，它是基于URL作为Key来实现图片缓存机制的。在90%左右的情况下，
+  <meta name="description" content="SDWebImage支持URL不变时更新图片内容 Jan 29th, 2016 SDWebImage在iOS项目中是一个很常用的开源库，而且众所周知的是，它是基于URL作为Key来实现图片缓存机制的。在90%左右的情况下，
 图片与URL是一一对应的，即使服务器修改了图片也会相应的变更URL。 &hellip;">
   
 
@@ -59,7 +59,7 @@
   
   <header>
     
-      <h1 class="post-title">SDWebImage缓存之图片URL不变</h1>
+      <h1 class="post-title">SDWebImage支持URL不变时更新图片内容</h1>
     
     
       <p class="post-meta">
@@ -82,16 +82,16 @@
   </header>
 
 
-<div class="post-content"><pre><code>SDWebImage在iOS项目中是一个很常用的开源库，而且众所周知的是，它是基于URL作为Key来实现图片缓存机制的。在90%左右的情况下，
+<div class="post-content"><!--more-->
+
+
+<pre><code>SDWebImage在iOS项目中是一个很常用的开源库，而且众所周知的是，它是基于URL作为Key来实现图片缓存机制的。在90%左右的情况下，
 图片与URL是一一对应的，即使服务器修改了图片也会相应的变更URL。但是在少数情况下，服务器修改了图片后不会变更相应的URL，也就是
 说图片本身的内容变了然而它的URL没有变化，那么按照对SDWebImage的常规使用方法的话，客户端肯定更新不到同一URL对应到服务器已变
 更的图片内容。
 </code></pre>
 
 <p>基于这一现象，我们来进行分析。</p>
-
-<!--more-->
-
 
 <p>客户端第一次请求图片时，Charles抓包得知response header里有一个名为Last-Modified、数据是时间戳的键值对。</p>
 
@@ -152,7 +152,7 @@ imgDownloader.headersFilter  = ^NSDictionary *(NSURL *url, NSDictionary *headers
 
 <p>OK，到此这次的主题已得到完美解决。</p>
 
-<p><strong>知识扩展</strong></p>
+<h1>知识扩展</h1>
 
 <pre><code>其实，在抓取服务器返回的数据包时，还发现response header中还有一个ETag，与之相对应的request header中可以追加一个
 If-None-Match的key，这对header与Last-Modified、If-Modified-Since的作用是相同的，即服务器是否需要返回最新的图片，
@@ -160,7 +160,7 @@ If-None-Match的key，这对header与Last-Modified、If-Modified-Since的作用�
 关系。
 </code></pre>
 
-<p><strong>参考资料</strong></p>
+<h1>参考资料</h1>
 
 <ol>
 <li><a href="https://console.upyun.com">又拍云</a></li>
@@ -183,6 +183,12 @@ If-None-Match的key，这对header与Last-Modified、If-Modified-Since的作用�
  and 
       File under 
 
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/uikit/'>UIKit</a>
+  
+</span>
+
 
     </div>
     
@@ -200,7 +206,7 @@ If-None-Match的key，这对header与Last-Modified、If-Modified-Since的作用�
         <a class="basic-alignment left" href="/blog/2016/01/26/ios-crashfen-xi/" title="Previous Post: iOS Crash快速分析实战">&laquo; iOS Crash快速分析实战</a>
       
       
-        <a class="basic-alignment right" href="/blog/2016/05/04/kuo-zhan-uitextview-and-uitextfieldzhi-chi-jiu-gong-ge-dui-qi-fang-shi/" title="Next Post: 扩展UITextView &amp; UITextField支持九宫格对齐方式">扩展UITextView &amp; UITextField支持九宫格对齐方式 &raquo;</a>
+        <a class="basic-alignment right" href="/blog/2016/05/04/kuo-zhan-uitextview-and-uitextfieldzhi-chi-jiu-gong-ge-dui-qi-fang-shi/" title="Next Post: UITextView &amp; UITextField的九宫格对齐方式">UITextView &amp; UITextField的九宫格对齐方式 &raquo;</a>
       
     </div>
   </footer>
@@ -227,11 +233,11 @@ If-None-Match的key，这对header与Last-Modified、If-Modified-Since的作用�
       	</li>
     	
      	<li>
-      	  <a href="/blog/2016/05/04/kuo-zhan-uitextview-and-uitextfieldzhi-chi-jiu-gong-ge-dui-qi-fang-shi/">扩展UITextView &amp; UITextField支持九宫格对齐方式</a>
+      	  <a href="/blog/2016/05/04/kuo-zhan-uitextview-and-uitextfieldzhi-chi-jiu-gong-ge-dui-qi-fang-shi/">UITextView &amp; UITextField的九宫格对齐方式</a>
       	</li>
     	
      	<li>
-      	  <a href="/blog/2016/01/29/sdwebimagehuan-cun-zhi-tu-pian-urlbu-bian/">SDWebImage缓存之图片URL不变</a>
+      	  <a href="/blog/2016/01/29/sdwebimagehuan-cun-zhi-tu-pian-urlbu-bian/">SDWebImage支持URL不变时更新图片内容</a>
       	</li>
     	
      	<li>

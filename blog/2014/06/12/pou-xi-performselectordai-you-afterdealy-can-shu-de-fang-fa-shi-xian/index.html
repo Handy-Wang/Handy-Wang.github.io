@@ -1,0 +1,276 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!-->
+<html class="no-js" lang="zh-CN"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>RunLoop学习笔记(三)performSelector:afterDealy:方法簇 - Handy's</title>
+  <meta name="author" content="Handy.Wang">
+  <!--[if lt IE 9]>
+    <script src="http://x.papaapp.com/farm1/a571d2/8dda131d/html5shiv.js"></script>
+    <![endif]-->
+  
+  <meta name="description" content="RunLoop学习笔记(三)performSelector:afterDealy:方法簇 Jun 12th, 2014 主要从performSelector:afterDealy:的实现原理来分析为什么在主线程中调用此方法后不会阻塞主线程里业务代码的顺序执行。 示例代码如下： - (void) &hellip;">
+  
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.handy.wang/blog/2014/06/12/pou-xi-performselectordai-you-afterdealy-can-shu-de-fang-fa-shi-xian/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script type="text/javascript" src="http://t.papaapp.com/js/libs/jquery/1.7.2/jquery.js"></script>
+  <link href="/atom.xml" rel="alternate" title="Handy's" type="application/atom+xml">
+
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+
+  
+
+</head>
+<body   >
+  <header id="header" class="clearfix">    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                <a id="logo" href="/">
+                   Handy's
+                </a>
+                <p class="description">Stay hungry, stay foolish.</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="index-nav current" href="/">Blog</a>
+<a class="archives-nav" href="/blog/archives">Archives</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+  <div id="body">
+    <div class="container">
+    	<div class="col-group">
+			<div class="col-8" id="main">
+  <div class="res-cons">
+  <article class="post clearfix">
+  
+  <header>
+    
+      <h1 class="post-title">RunLoop学习笔记(三)performSelector:afterDealy:方法簇</h1>
+    
+    
+      <p class="post-meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-12T15:46:02+08:00" pubdate data-updated="true">Jun 12<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="post-content"><!--more-->
+
+
+<p>主要从performSelector:afterDealy:的实现原理来分析为什么在主线程中调用此方法后不会阻塞主线程里业务代码的顺序执行。</p>
+
+<p>示例代码如下：</p>
+
+<pre><code>- (void)doSomething {
+    NSLog(@"Begin doSomething...");
+    for (int i = 0; i &lt; 10; i++) {
+        if (i == 5) {
+            NSLog(@"++++++++++%f", CFAbsoluteTimeGetCurrent());
+            [self performSelector:@selector(printIData:) withObject:@(i) afterDelay:0.2];
+        }
+        else {
+            [NSThread sleepForTimeInterval:0.2];
+            [self printIData:@(i)];
+        }
+    }
+    NSLog(@"Finish doSomething...");
+}
+
+- (void)printIData:(NSNumber *)i {
+    int iv = [i intValue];
+
+    if (iv == 5) {
+        NSLog(@"===================i is %d, %f", iv, CFAbsoluteTimeGetCurrent());
+    }
+    else {
+        NSLog(@"i is %d, %f", iv, CFAbsoluteTimeGetCurrent());
+    }
+}
+</code></pre>
+
+<p>[[AboutRunloop sharedInstance] doSomething];</p>
+
+<p>输出的结果是：<br/>
+2014-03-19 14:44:26.054 RuntimePractice[9750:60b] i is 0, 416904266.054601<br/>
+2014-03-19 14:44:26.256 RuntimePractice[9750:60b] i is 1, 416904266.256110<br/>
+2014-03-19 14:44:26.457 RuntimePractice[9750:60b] i is 2, 416904266.457738<br/>
+2014-03-19 14:44:26.659 RuntimePractice[9750:60b] i is 3, 416904266.659130<br/>
+2014-03-19 14:44:26.860 RuntimePractice[9750:60b] i is 4, 416904266.860487<br/>
+2014-03-19 14:44:26.861 RuntimePractice[9750:60b] ++++++++++416904266.861006<br/>
+2014-03-19 14:44:27.061 RuntimePractice[9750:60b] i is 6, 416904267.061459<br/>
+2014-03-19 14:44:27.263 RuntimePractice[9750:60b] i is 7, 416904267.263020<br/>
+2014-03-19 14:44:27.464 RuntimePractice[9750:60b] i is 8, 416904267.464554<br/>
+2014-03-19 14:44:27.666 RuntimePractice[9750:60b] i is 9, 416904267.666095<br/>
+2014-03-19 14:44:27.666 RuntimePractice[9750:60b] Finish doSomething&hellip;<br/>
+2014-03-19 14:44:27.672 RuntimePractice[9750:60b] =====i is 5, 416904267.672478<br/></p>
+
+<p>通过示例代码充分说明了：
+在主线程中调用performSelector:afterDealy方法后不会阻塞主线程里业务代码的顺序执行。</p>
+
+<p>分析(主线程中调用)：带有afterDealy:参数的performSelector方法内部采用了timer实现，我们知道timer不放到runloop里的话timer是不会触发的，所以这个timer肯定会放到runloop里，又因为主线程的runloop默认是运行着的，所以这个timer一定会被触发即Selector会被runloop触发回调。</p>
+
+<p>回到示例程序上下文里面，当i==5时，执行了performSelector:afterDealy，所以此时一个timer源会被添加加到主线程的runloop里。又根据示例代码的日志输出可以看到doSomething 方法完全执行完后 runloop才触发i==5时的selector调用，这说明在线程中(包括主线程)是先执行线程的代码逻辑，最后才会检测Runloop里有没有注册的监听源，如果有则检测是不是应该触发源对应的外部处理方法，所以最后才会触发i==5的performSelector:afterDealy。</p>
+
+<p>另注：<br/>
+1) 示例代码中非i==5的情况下故意sleep了0.2秒(6/7/8/9 4个数x0.2 > delay的0.2)，这是为了充分证明[self performSelector:@selector(printIData:) withObject:@(i) afterDelay:0.2];一定是在doSomething 方法执行完返回后再运行的。<br/>
+2) [self performSelector:@selector(printIData:) withObject:@(i) afterDelay:0.2];中的0.2秒按timer的时间触发原理，它是Timer被加到runloop里后的0.2秒，但是在本示例代码环境下，线程里有长时任务正做着，所以这个触发的时间点是从timer被加到runloop里开始计时，等长时任务做完后的最近的0.2秒整数倍的时间点。</p>
+
+<p>综上，performSelector带有afterDealy:参数的方法，哪怕是delay为0，也在当前线程的runloop里注册一个timer源，等线程里的逻辑做完后，会去检测runloop并按runloop里源注册的条件触发对应的事件处理方法，所以这个方法簇不会阻塞原线程中的代码执行流程。</p>
+
+<p>参考：<br/>
+1）方法的说明:：NSObject Reference里performSelector:withObject:afterDelay:<br/>
+2）Runloop相关： <a href="http://www.hrchen.com/2013/06/multi-threading-programming-of-ios-part-1/">http://www.hrchen.com/2013/06/multi-threading-programming-of-ios-part-1/</a><br/>
+3）Timer和Runloop相关： <a href="http://www.hrchen.com/2013/07/tricky-runloop-on-ios/">http://www.hrchen.com/2013/07/tricky-runloop-on-ios/</a><br/>
+4）Timer的触发: <a href="http://www.cnblogs.com/smileEvday/archive/2012/12/21/NSTimer.html">http://www.cnblogs.com/smileEvday/archive/2012/12/21/NSTimer.html</a><br/></p>
+</div>
+
+
+  <footer class="post-footer">
+    <div class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Handy.Wang</span></span>
+ and 
+      File under 
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/runloop/'>RunLoop</a>
+  
+</span>
+
+
+    </div>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.handy.wang/blog/2014/06/12/pou-xi-performselectordai-you-afterdealy-can-shu-de-fang-fa-shi-xian/" data-via="" data-counturl="http://blog.handy.wang/blog/2014/06/12/pou-xi-performselectordai-you-afterdealy-can-shu-de-fang-fa-shi-xian/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <div class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/06/11/runloopxue-xi-bi-ji-ren-er-afnetworkingzhong-de-ying-yong/" title="Previous Post: RunLoop学习笔记(二) AFNetworking中的应用">&laquo; RunLoop学习笔记(二) AFNetworking中的应用</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/10/03/uiviewyu-calayerxie-zuo-xuan-ran-jie-mian-de-guo-cheng/" title="Next Post: UIView与CALayer协作渲染界面的过程">UIView与CALayer协作渲染界面的过程 &raquo;</a>
+      
+    </div>
+  </footer>
+</article>
+
+  </div>
+</div>
+
+  <aside id="secondary">
+  
+    <section class="widget">
+    <form id="search" action="https://www.google.com/search" method="get">
+    	<input type="hidden" name="q" value="site:blog.handy.wang"/>
+    	<input type="text" name="q" results="0" class="text" placeholder="Google搜索"/>
+    </form>
+</section>
+
+<section class="widget">
+	<h3 class="widget-title">最新文章</h3>
+	<ul class="widget-list">
+		
+     	<li>
+      	  <a href="/blog/2016/05/13/uiimage-stretch/">UIImage stretch</a>
+      	</li>
+    	
+     	<li>
+      	  <a href="/blog/2016/05/04/kuo-zhan-uitextview-and-uitextfieldzhi-chi-jiu-gong-ge-dui-qi-fang-shi/">UITextView &amp; UITextField的九宫格对齐方式</a>
+      	</li>
+    	
+     	<li>
+      	  <a href="/blog/2016/01/29/sdwebimagehuan-cun-zhi-tu-pian-urlbu-bian/">SDWebImage支持URL不变时更新图片内容</a>
+      	</li>
+    	
+     	<li>
+      	  <a href="/blog/2016/01/26/ios-crashfen-xi/">iOS Crash快速分析实战</a>
+      	</li>
+    	
+     	<li>
+      	  <a href="/blog/2015/12/10/software-architecture-patterns/">软件架构模式（译）</a>
+      	</li>
+    	
+	</ul>
+</section>
+
+
+
+
+  
+</aside>
+
+
+      	</div>
+    </div>
+  </div>
+  <footer id="footer">
+  	<div class="container">
+	Copyright &copy; 2016 - Handy.Wang -
+  <span class="credit">Powered by <a rel="nofollow" href="http://octopress.org">Octopress</a> on <a rel="nofollow" href="http://pages.github.com/">GitHubPages</a>
+  </span>
+  - <span class="credit">Theme by <a rel="nofollow" href="http://pagecho.com">Cho</a></span>
+
+
+</div>
+
+  </footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

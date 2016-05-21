@@ -4,7 +4,7 @@
   <title><![CDATA[Handy's]]></title>
   <link href="http://blog.handy.wang/atom.xml" rel="self"/>
   <link href="http://blog.handy.wang/"/>
-  <updated>2016-05-21T21:46:34+08:00</updated>
+  <updated>2016-05-21T22:52:34+08:00</updated>
   <id>http://blog.handy.wang/</id>
   <author>
     <name><![CDATA[Handy.Wang]]></name>
@@ -18,17 +18,15 @@
     <link href="http://blog.handy.wang/blog/2016/05/13/uiimage-stretch/"/>
     <updated>2016-05-13T15:05:40+08:00</updated>
     <id>http://blog.handy.wang/blog/2016/05/13/uiimage-stretch</id>
-    <content type="html"><![CDATA[<h2>一张可拉伸图片的定义－译自<a href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIImage_Class/#Defining%20a%20Stretchable%20Image">iOS原文</a></h2>
+    <content type="html"><![CDATA[<!--more-->
+
+
+<h1>可拉伸图片的定义（ 译自<a href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIImage_Class/#Defining%20a%20Stretchable%20Image">iOS原文</a> ）</h1>
 
 <br />
 
 
 <p>一张可拉伸的图片其实给自己定义了一个区域，在这个区域内的图片内容以一种更美观优雅的方式被重复显示。可拉伸图片通常用于视图的背景，因为这种图片可以按拉伸区域的定义被撑大或缩小，从而以一种更美观的方式来填充视图区域。</p>
-
-<!--more-->
-
-
-
 
 <br />
 
@@ -52,7 +50,7 @@
 
 <hr />
 
-<h2>图片保护区域</h2>
+<h1>图片保护区域</h1>
 
 <p>基于上面Apple对图片拉伸的描述，下面从实例例子出发来讲讲图片的保护区域</p>
 
@@ -92,7 +90,7 @@
 
 <blockquote><p><img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/image_stretch4.png" alt="image_stretch4.png" /></p></blockquote>
 
-<h2>iOS Xcode里的image slicing功能</h2>
+<h1>iOS Xcode里的image slicing功能</h1>
 
 <p>看完以上内容已经完全可以了解stretch的概念了，那么既然已经看到这里了，我再多聊聊<code>iOS Xcode里的image slicing功能</code>。</p>
 
@@ -125,7 +123,7 @@
 
 <p>完结。</p>
 
-<h2>参考</h2>
+<h1>参考</h1>
 
 <ul>
 <li><a href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIImage_Class/">Defining a Stretchable Image</a></li>
@@ -136,20 +134,20 @@
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[扩展UITextView &amp; UITextField支持九宫格对齐方式]]></title>
+    <title type="html"><![CDATA[UITextView &amp; UITextField的九宫格对齐方式]]></title>
     <link href="http://blog.handy.wang/blog/2016/05/04/kuo-zhan-uitextview-and-uitextfieldzhi-chi-jiu-gong-ge-dui-qi-fang-shi/"/>
     <updated>2016-05-04T21:27:05+08:00</updated>
     <id>http://blog.handy.wang/blog/2016/05/04/kuo-zhan-uitextview-and-uitextfieldzhi-chi-jiu-gong-ge-dui-qi-fang-shi</id>
-    <content type="html"><![CDATA[<h3>目标</h3>
+    <content type="html"><![CDATA[<!-- more -->
+
+
+<h1>目标</h1>
 
 <p>iOS原生的 UITextField 和 UITextView 只支持文本内容的左、中、右对齐，但是目前我的需求是需要让UITextField 和 UITextView 支持9宫格对齐方式，并能按此对齐方式进行正常输入，如下图：</p>
 
-<!-- more -->
-
-
 <p><img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/9point_alignment_textfield_textview1.png" title="目标" alt="目标" /></p>
 
-<h3>知识铺垫</h3>
+<h1>知识铺垫</h1>
 
 <p>iOS7之后，UILabel / UITextField / UITextView的实现采用TextKit进行了替换，所以对于这个命题我主要需要关注TextKit.
 下面以一张图来说明TextKit内部的关键类与UITextView的逻辑关系.</p>
@@ -176,11 +174,11 @@
 </ul>
 
 
-<h3>源码</h3>
+<h1>源码</h1>
 
 <p>加微博 @我是小山我是坏人</p>
 
-<h3>参考</h3>
+<h1>参考</h1>
 
 <ul>
 <li><a href="http://esoftmobile.com/2013/10/17/text-kit%E5%85%A5%E9%97%A8/">Text Kit入门</a></li>
@@ -197,20 +195,20 @@
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[SDWebImage缓存之图片URL不变]]></title>
+    <title type="html"><![CDATA[SDWebImage支持URL不变时更新图片内容]]></title>
     <link href="http://blog.handy.wang/blog/2016/01/29/sdwebimagehuan-cun-zhi-tu-pian-urlbu-bian/"/>
     <updated>2016-01-29T10:35:08+08:00</updated>
     <id>http://blog.handy.wang/blog/2016/01/29/sdwebimagehuan-cun-zhi-tu-pian-urlbu-bian</id>
-    <content type="html"><![CDATA[<pre><code>SDWebImage在iOS项目中是一个很常用的开源库，而且众所周知的是，它是基于URL作为Key来实现图片缓存机制的。在90%左右的情况下，
+    <content type="html"><![CDATA[<!--more-->
+
+
+<pre><code>SDWebImage在iOS项目中是一个很常用的开源库，而且众所周知的是，它是基于URL作为Key来实现图片缓存机制的。在90%左右的情况下，
 图片与URL是一一对应的，即使服务器修改了图片也会相应的变更URL。但是在少数情况下，服务器修改了图片后不会变更相应的URL，也就是
 说图片本身的内容变了然而它的URL没有变化，那么按照对SDWebImage的常规使用方法的话，客户端肯定更新不到同一URL对应到服务器已变
 更的图片内容。
 </code></pre>
 
 <p>基于这一现象，我们来进行分析。</p>
-
-<!--more-->
-
 
 <p>客户端第一次请求图片时，Charles抓包得知response header里有一个名为Last-Modified、数据是时间戳的键值对。</p>
 
@@ -271,7 +269,7 @@ imgDownloader.headersFilter  = ^NSDictionary *(NSURL *url, NSDictionary *headers
 
 <p>OK，到此这次的主题已得到完美解决。</p>
 
-<p><strong>知识扩展</strong></p>
+<h1>知识扩展</h1>
 
 <pre><code>其实，在抓取服务器返回的数据包时，还发现response header中还有一个ETag，与之相对应的request header中可以追加一个
 If-None-Match的key，这对header与Last-Modified、If-Modified-Since的作用是相同的，即服务器是否需要返回最新的图片，
@@ -279,7 +277,7 @@ If-None-Match的key，这对header与Last-Modified、If-Modified-Since的作用�
 关系。
 </code></pre>
 
-<p><strong>参考资料</strong></p>
+<h1>参考资料</h1>
 
 <ol>
 <li><a href="https://console.upyun.com">又拍云</a></li>
@@ -298,12 +296,12 @@ If-None-Match的key，这对header与Last-Modified、If-Modified-Since的作用�
     <link href="http://blog.handy.wang/blog/2016/01/26/ios-crashfen-xi/"/>
     <updated>2016-01-26T10:57:50+08:00</updated>
     <id>http://blog.handy.wang/blog/2016/01/26/ios-crashfen-xi</id>
-    <content type="html"><![CDATA[<pre><code>实际开发中或使用App过程中遇到App crash是一件很常见的事儿，但是要能快速定位是哪一行代码导致的可能就不一定是件易事儿了。
+    <content type="html"><![CDATA[<!--more-->
+
+
+<pre><code>实际开发中或使用App过程中遇到App crash是一件很常见的事儿，但是要能快速定位是哪一行代码导致的可能就不一定是件易事儿了。
 在这里我结合自己与别人遇到过的坑，总结了一下。
 </code></pre>
-
-<!--more-->
-
 
 <ul>
 <li>ObjC Crash
@@ -413,7 +411,10 @@ If-None-Match的key，这对header与Last-Modified、If-Modified-Since的作用�
     <link href="http://blog.handy.wang/blog/2015/12/10/software-architecture-patterns/"/>
     <updated>2015-12-10T16:10:37+08:00</updated>
     <id>http://blog.handy.wang/blog/2015/12/10/software-architecture-patterns</id>
-    <content type="html"><![CDATA[<p>原文：<a href="http://www.oreilly.com/programming/free/files/software-architecture-patterns.pdf">《Software Architecture Patterns》</a></p>
+    <content type="html"><![CDATA[<!--more-->
+
+
+<p>原文：<a href="http://www.oreilly.com/programming/free/files/software-architecture-patterns.pdf">《Software Architecture Patterns》</a></p>
 
 <br/>
 
@@ -427,9 +428,6 @@ If-None-Match的key，这对header与Last-Modified、If-Modified-Since的作用�
 <p>诸多架构模式可以辅助我们定义应用程序的基本特性和行为。例如，某些架构模式偏向于高可伸缩性，某些架构模式偏向于高度敏捷性。所以，在选择一种适合于某个项目的架构之前，了解不同架构模式的特点、优点和缺点是非常有必要的。</p>
 
 <p>作为一名架构师，你需要经常检验你的架构决策，尤其是在选择某种特别的架构或方案的时候。</p>
-
-<!--more-->
-
 
 <br/>
 
@@ -1029,7 +1027,10 @@ down机的时长。
     <link href="http://blog.handy.wang/blog/2015/12/06/2015nian-wo-du-gan-ma-liao/"/>
     <updated>2015-12-06T11:33:18+08:00</updated>
     <id>http://blog.handy.wang/blog/2015/12/06/2015nian-wo-du-gan-ma-liao</id>
-    <content type="html"><![CDATA[<p>2015年即将结束，那这一年我到底都干嘛了？</p>
+    <content type="html"><![CDATA[<!--more-->
+
+
+<p>2015年即将结束，那这一年我到底都干嘛了？</p>
 
 <pre><code>从去年(2014)的12月份就开始暗无天日的加班忙碌，直到今天下半年才好了很多，眼看这就要要2016了，
 也该回顾一下2015年的工作了。
@@ -1040,9 +1041,6 @@ down机的时长。
 <p>2015年12月，加入了一个新团队－嗨购，仍然是负责iOS项目开发，人员上加上我两人，版本处于0.0.1版本。</p>
 
 <p>当时接收项目后，发现这个项目的界面采用storyboard+autolayout开发，另外那个哥们去AutoLayout的使用也处于学习阶段，所以遇到的主要问题就是修改界面的Bug。由于我之前没有使用过storyboard和autolayout，再加上UI设计师对界面的细节控制要求很高，所以有些应付不了了。在另一个哥们儿的辅助下，将就着开发了0.1.0版本(仍采用storyboard+autolayout)，其实这个过程非常苦恼，“是好好学习一下AutoLayout，然后在项目里继续使用AutoLayout呢？” 还是 “采用自己熟悉的纯代码方式来编写？”</p>
-
-<!--more-->
-
 
 <p>最后，综合考虑项目的进度压力、质量的可控性、学习的时间成本后，决定还是暂时放弃Storyboard+AutoLayout，转而使用保守的纯代码方式开发。</p>
 
@@ -1328,7 +1326,10 @@ down机的时长。
     <link href="http://blog.handy.wang/blog/2015/10/11/uiviewyu-calayerzhong-dong-hua-de-chuang-jian-he-zhi-xing-guo-cheng/"/>
     <updated>2015-10-11T22:49:40+08:00</updated>
     <id>http://blog.handy.wang/blog/2015/10/11/uiviewyu-calayerzhong-dong-hua-de-chuang-jian-he-zhi-xing-guo-cheng</id>
-    <content type="html"><![CDATA[<h2>写在最前面</h2>
+    <content type="html"><![CDATA[<!--more-->
+
+
+<h2>写在最前面</h2>
 
 <p>本文假设您已有RunLoop和CAAnimation的相关知识，所以这里不对<a href="http://blog.handy.wang/blog/2014/05/26/runloopxue-xi-bi-ji-1/">RunLoop</a>和CAAnimation的细节进行介绍。但是，这里仍然要提前提及几个知识点：CFRunLoopActivity、CAAction、CAAnimation、CATransaction</p>
 
@@ -1505,7 +1506,10 @@ _animView.center = CGPointMake(_animView.center.x, _animView.center.y - 10);
     <link href="http://blog.handy.wang/blog/2015/10/03/uiviewyu-calayerxie-zuo-xuan-ran-jie-mian-de-guo-cheng/"/>
     <updated>2015-10-03T01:38:49+08:00</updated>
     <id>http://blog.handy.wang/blog/2015/10/03/uiviewyu-calayerxie-zuo-xuan-ran-jie-mian-de-guo-cheng</id>
-    <content type="html"><![CDATA[<h2>预热</h2>
+    <content type="html"><![CDATA[<!--more-->
+
+
+<h2>预热</h2>
 
 <p>在聊这个话题前，我先简单的说说与本文相关的几个iOS核心Framework及它们之间的关系：UIKit Framework、QuartzCore Framework(CoreAnimation)、CoreGraphics Framework.</p>
 
@@ -1526,9 +1530,6 @@ _animView.center = CGPointMake(_animView.center.x, _animView.center.y - 10);
 </code></pre>
 
 <p><strong>注意2</strong>：提前了解这几个Framework非常重要，可以辅助我们理解它们各自的职责，以便进一步理解后面会讲解的UIView与CALayer的协作时为什么不同的协作点是相应Framework来参与。</p>
-
-<!-- more -->
-
 
 <p><img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/UIKit-QuarzCore-CoreGraphics-relations.jpg" title="UIKit|QuarzCore|CoreGraphics关系图" alt="UIKit|QuarzCore|CoreGraphics关系图" /></p>
 
@@ -1647,14 +1648,90 @@ _animView.center = CGPointMake(_animView.center.x, _animView.center.y - 10);
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[RunLoop学习笔记(三)performSelector:afterDealy:方法簇]]></title>
+    <link href="http://blog.handy.wang/blog/2014/06/12/pou-xi-performselectordai-you-afterdealy-can-shu-de-fang-fa-shi-xian/"/>
+    <updated>2014-06-12T15:46:02+08:00</updated>
+    <id>http://blog.handy.wang/blog/2014/06/12/pou-xi-performselectordai-you-afterdealy-can-shu-de-fang-fa-shi-xian</id>
+    <content type="html"><![CDATA[<!--more-->
+
+
+<p>主要从performSelector:afterDealy:的实现原理来分析为什么在主线程中调用此方法后不会阻塞主线程里业务代码的顺序执行。</p>
+
+<p>示例代码如下：</p>
+
+<pre><code>- (void)doSomething {
+    NSLog(@"Begin doSomething...");
+    for (int i = 0; i &lt; 10; i++) {
+        if (i == 5) {
+            NSLog(@"++++++++++%f", CFAbsoluteTimeGetCurrent());
+            [self performSelector:@selector(printIData:) withObject:@(i) afterDelay:0.2];
+        }
+        else {
+            [NSThread sleepForTimeInterval:0.2];
+            [self printIData:@(i)];
+        }
+    }
+    NSLog(@"Finish doSomething...");
+}
+
+- (void)printIData:(NSNumber *)i {
+    int iv = [i intValue];
+
+    if (iv == 5) {
+        NSLog(@"===================i is %d, %f", iv, CFAbsoluteTimeGetCurrent());
+    }
+    else {
+        NSLog(@"i is %d, %f", iv, CFAbsoluteTimeGetCurrent());
+    }
+}
+</code></pre>
+
+<p>[[AboutRunloop sharedInstance] doSomething];</p>
+
+<p>输出的结果是：<br/>
+2014-03-19 14:44:26.054 RuntimePractice[9750:60b] i is 0, 416904266.054601<br/>
+2014-03-19 14:44:26.256 RuntimePractice[9750:60b] i is 1, 416904266.256110<br/>
+2014-03-19 14:44:26.457 RuntimePractice[9750:60b] i is 2, 416904266.457738<br/>
+2014-03-19 14:44:26.659 RuntimePractice[9750:60b] i is 3, 416904266.659130<br/>
+2014-03-19 14:44:26.860 RuntimePractice[9750:60b] i is 4, 416904266.860487<br/>
+2014-03-19 14:44:26.861 RuntimePractice[9750:60b] ++++++++++416904266.861006<br/>
+2014-03-19 14:44:27.061 RuntimePractice[9750:60b] i is 6, 416904267.061459<br/>
+2014-03-19 14:44:27.263 RuntimePractice[9750:60b] i is 7, 416904267.263020<br/>
+2014-03-19 14:44:27.464 RuntimePractice[9750:60b] i is 8, 416904267.464554<br/>
+2014-03-19 14:44:27.666 RuntimePractice[9750:60b] i is 9, 416904267.666095<br/>
+2014-03-19 14:44:27.666 RuntimePractice[9750:60b] Finish doSomething&hellip;<br/>
+2014-03-19 14:44:27.672 RuntimePractice[9750:60b] =====i is 5, 416904267.672478<br/></p>
+
+<p>通过示例代码充分说明了：
+在主线程中调用performSelector:afterDealy方法后不会阻塞主线程里业务代码的顺序执行。</p>
+
+<p>分析(主线程中调用)：带有afterDealy:参数的performSelector方法内部采用了timer实现，我们知道timer不放到runloop里的话timer是不会触发的，所以这个timer肯定会放到runloop里，又因为主线程的runloop默认是运行着的，所以这个timer一定会被触发即Selector会被runloop触发回调。</p>
+
+<p>回到示例程序上下文里面，当i==5时，执行了performSelector:afterDealy，所以此时一个timer源会被添加加到主线程的runloop里。又根据示例代码的日志输出可以看到doSomething 方法完全执行完后 runloop才触发i==5时的selector调用，这说明在线程中(包括主线程)是先执行线程的代码逻辑，最后才会检测Runloop里有没有注册的监听源，如果有则检测是不是应该触发源对应的外部处理方法，所以最后才会触发i==5的performSelector:afterDealy。</p>
+
+<p>另注：<br/>
+1) 示例代码中非i==5的情况下故意sleep了0.2秒(6/7/8/9 4个数x0.2 > delay的0.2)，这是为了充分证明[self performSelector:@selector(printIData:) withObject:@(i) afterDelay:0.2];一定是在doSomething 方法执行完返回后再运行的。<br/>
+2) [self performSelector:@selector(printIData:) withObject:@(i) afterDelay:0.2];中的0.2秒按timer的时间触发原理，它是Timer被加到runloop里后的0.2秒，但是在本示例代码环境下，线程里有长时任务正做着，所以这个触发的时间点是从timer被加到runloop里开始计时，等长时任务做完后的最近的0.2秒整数倍的时间点。</p>
+
+<p>综上，performSelector带有afterDealy:参数的方法，哪怕是delay为0，也在当前线程的runloop里注册一个timer源，等线程里的逻辑做完后，会去检测runloop并按runloop里源注册的条件触发对应的事件处理方法，所以这个方法簇不会阻塞原线程中的代码执行流程。</p>
+
+<p>参考：<br/>
+1）方法的说明:：NSObject Reference里performSelector:withObject:afterDelay:<br/>
+2）Runloop相关： <a href="http://www.hrchen.com/2013/06/multi-threading-programming-of-ios-part-1/">http://www.hrchen.com/2013/06/multi-threading-programming-of-ios-part-1/</a><br/>
+3）Timer和Runloop相关： <a href="http://www.hrchen.com/2013/07/tricky-runloop-on-ios/">http://www.hrchen.com/2013/07/tricky-runloop-on-ios/</a><br/>
+4）Timer的触发: <a href="http://www.cnblogs.com/smileEvday/archive/2012/12/21/NSTimer.html">http://www.cnblogs.com/smileEvday/archive/2012/12/21/NSTimer.html</a><br/></p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[RunLoop学习笔记(二) AFNetworking中的应用]]></title>
     <link href="http://blog.handy.wang/blog/2014/06/11/runloopxue-xi-bi-ji-ren-er-afnetworkingzhong-de-ying-yong/"/>
     <updated>2014-06-11T11:16:27+08:00</updated>
     <id>http://blog.handy.wang/blog/2014/06/11/runloopxue-xi-bi-ji-ren-er-afnetworkingzhong-de-ying-yong</id>
-    <content type="html"><![CDATA[<p>如果理解了上一篇RunLoop原理的内容，那么再来看AFNetworking的核心网络请求部分就很简单了。</p>
+    <content type="html"><![CDATA[<!--more-->
 
-<!--more-->
 
+<p>如果理解了上一篇RunLoop原理的内容，那么再来看AFNetworking的核心网络请求部分就很简单了。</p>
 
 <p>对于AFNetworking来说核心的有两大部分：网络请求和缓存。</p>
 
@@ -1721,7 +1798,10 @@ _animView.center = CGPointMake(_animView.center.x, _animView.center.y - 10);
     <link href="http://blog.handy.wang/blog/2014/05/26/runloopxue-xi-bi-ji-1/"/>
     <updated>2014-05-26T17:20:41+08:00</updated>
     <id>http://blog.handy.wang/blog/2014/05/26/runloopxue-xi-bi-ji-1</id>
-    <content type="html"><![CDATA[<p>在iOS实际开发中，大家一定遇到过以下问题：</p>
+    <content type="html"><![CDATA[<!--more-->
+
+
+<p>在iOS实际开发中，大家一定遇到过以下问题：</p>
 
 <ul>
 <li>在一个线程里启动一个timer，但是这个timer一次也不会被调用？</li>
@@ -1756,9 +1836,6 @@ _animView.center = CGPointMake(_animView.center.x, _animView.center.y - 10);
 
 
 <p>下面，我就从实际问题出发，来分享一下关于RunLoop的基本知识，同时解决上面三个问题。</p>
-
-<!-- more -->
-
 
 <h2>什么是RunLoop</h2>
 
@@ -2144,11 +2221,16 @@ dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), di
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[如何重置推送设置提醒(转)]]></title>
+    <title type="html"><![CDATA[重置推送设置提醒(转)]]></title>
     <link href="http://blog.handy.wang/blog/2014/03/27/ru-he-zhong-zhi-tui-song-she-zhi-ti-xing/"/>
     <updated>2014-03-27T12:33:35+08:00</updated>
     <id>http://blog.handy.wang/blog/2014/03/27/ru-he-zhong-zhi-tui-song-she-zhi-ti-xing</id>
-    <content type="html"><![CDATA[<h6>步骤很简单，就是有点麻烦。如下：</h6>
+    <content type="html"><![CDATA[<!--more-->
+
+
+
+
+<h6>步骤很简单，就是有点麻烦。如下：</h6>
 
 
 <pre><code>1 删除app
@@ -2167,90 +2249,14 @@ dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), di
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[剖析带有afterDealy参数的performSelector方法实现]]></title>
-    <link href="http://blog.handy.wang/blog/2014/03/19/pou-xi-performselectordai-you-afterdealy-can-shu-de-fang-fa-shi-xian/"/>
-    <updated>2014-03-19T15:46:02+08:00</updated>
-    <id>http://blog.handy.wang/blog/2014/03/19/pou-xi-performselectordai-you-afterdealy-can-shu-de-fang-fa-shi-xian</id>
-    <content type="html"><![CDATA[<p>主要从performSelector:afterDealy:的实现原理来分析为什么在主线程中调用此方法后不会阻塞主线程里业务代码的顺序执行。</p>
-
-<!--more-->
-
-
-<p>示例代码如下：</p>
-
-<pre><code>- (void)doSomething {
-    NSLog(@"Begin doSomething...");
-    for (int i = 0; i &lt; 10; i++) {
-        if (i == 5) {
-            NSLog(@"++++++++++%f", CFAbsoluteTimeGetCurrent());
-            [self performSelector:@selector(printIData:) withObject:@(i) afterDelay:0.2];
-        }
-        else {
-            [NSThread sleepForTimeInterval:0.2];
-            [self printIData:@(i)];
-        }
-    }
-    NSLog(@"Finish doSomething...");
-}
-
-- (void)printIData:(NSNumber *)i {
-    int iv = [i intValue];
-
-    if (iv == 5) {
-        NSLog(@"===================i is %d, %f", iv, CFAbsoluteTimeGetCurrent());
-    }
-    else {
-        NSLog(@"i is %d, %f", iv, CFAbsoluteTimeGetCurrent());
-    }
-}
-</code></pre>
-
-<p>[[AboutRunloop sharedInstance] doSomething];</p>
-
-<p>输出的结果是：<br/>
-2014-03-19 14:44:26.054 RuntimePractice[9750:60b] i is 0, 416904266.054601<br/>
-2014-03-19 14:44:26.256 RuntimePractice[9750:60b] i is 1, 416904266.256110<br/>
-2014-03-19 14:44:26.457 RuntimePractice[9750:60b] i is 2, 416904266.457738<br/>
-2014-03-19 14:44:26.659 RuntimePractice[9750:60b] i is 3, 416904266.659130<br/>
-2014-03-19 14:44:26.860 RuntimePractice[9750:60b] i is 4, 416904266.860487<br/>
-2014-03-19 14:44:26.861 RuntimePractice[9750:60b] ++++++++++416904266.861006<br/>
-2014-03-19 14:44:27.061 RuntimePractice[9750:60b] i is 6, 416904267.061459<br/>
-2014-03-19 14:44:27.263 RuntimePractice[9750:60b] i is 7, 416904267.263020<br/>
-2014-03-19 14:44:27.464 RuntimePractice[9750:60b] i is 8, 416904267.464554<br/>
-2014-03-19 14:44:27.666 RuntimePractice[9750:60b] i is 9, 416904267.666095<br/>
-2014-03-19 14:44:27.666 RuntimePractice[9750:60b] Finish doSomething&hellip;<br/>
-2014-03-19 14:44:27.672 RuntimePractice[9750:60b] =====i is 5, 416904267.672478<br/></p>
-
-<p>通过示例代码充分说明了：
-在主线程中调用performSelector:afterDealy方法后不会阻塞主线程里业务代码的顺序执行。</p>
-
-<p>分析(主线程中调用)：带有afterDealy:参数的performSelector方法内部采用了timer实现，我们知道timer不放到runloop里的话timer是不会触发的，所以这个timer肯定会放到runloop里，又因为主线程的runloop默认是运行着的，所以这个timer一定会被触发即Selector会被runloop触发回调。</p>
-
-<p>回到示例程序上下文里面，当i==5时，执行了performSelector:afterDealy，所以此时一个timer源会被添加加到主线程的runloop里。又根据示例代码的日志输出可以看到doSomething 方法完全执行完后 runloop才触发i==5时的selector调用，这说明在线程中(包括主线程)是先执行线程的代码逻辑，最后才会检测Runloop里有没有注册的监听源，如果有则检测是不是应该触发源对应的外部处理方法，所以最后才会触发i==5的performSelector:afterDealy。</p>
-
-<p>另注：<br/>
-1) 示例代码中非i==5的情况下故意sleep了0.2秒(6/7/8/9 4个数x0.2 > delay的0.2)，这是为了充分证明[self performSelector:@selector(printIData:) withObject:@(i) afterDelay:0.2];一定是在doSomething 方法执行完返回后再运行的。<br/>
-2) [self performSelector:@selector(printIData:) withObject:@(i) afterDelay:0.2];中的0.2秒按timer的时间触发原理，它是Timer被加到runloop里后的0.2秒，但是在本示例代码环境下，线程里有长时任务正做着，所以这个触发的时间点是从timer被加到runloop里开始计时，等长时任务做完后的最近的0.2秒整数倍的时间点。</p>
-
-<p>综上，performSelector带有afterDealy:参数的方法，哪怕是delay为0，也在当前线程的runloop里注册一个timer源，等线程里的逻辑做完后，会去检测runloop并按runloop里源注册的条件触发对应的事件处理方法，所以这个方法簇不会阻塞原线程中的代码执行流程。</p>
-
-<p>参考：<br/>
-1）方法的说明:：NSObject Reference里performSelector:withObject:afterDelay:<br/>
-2）Runloop相关： <a href="http://www.hrchen.com/2013/06/multi-threading-programming-of-ios-part-1/">http://www.hrchen.com/2013/06/multi-threading-programming-of-ios-part-1/</a><br/>
-3）Timer和Runloop相关： <a href="http://www.hrchen.com/2013/07/tricky-runloop-on-ios/">http://www.hrchen.com/2013/07/tricky-runloop-on-ios/</a><br/>
-4）Timer的触发: <a href="http://www.cnblogs.com/smileEvday/archive/2012/12/21/NSTimer.html">http://www.cnblogs.com/smileEvday/archive/2012/12/21/NSTimer.html</a><br/></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[浅谈内存布局(Memory Layout)即虚拟地址空间]]></title>
+    <title type="html"><![CDATA[浅谈内存布局(Memory Layout)]]></title>
     <link href="http://blog.handy.wang/blog/2014/03/18/qian-tan-nei-cun-bu-ju-memory-layout/"/>
     <updated>2014-03-18T15:14:37+08:00</updated>
     <id>http://blog.handy.wang/blog/2014/03/18/qian-tan-nei-cun-bu-ju-memory-layout</id>
-    <content type="html"><![CDATA[<p>对于高级语言的程序员(Java、OC)来说，一定听过堆栈、数据段、代码段，但可能没有细细研究过。本文在此分享对它们的理解。</p>
+    <content type="html"><![CDATA[<!--more-->
 
-<!--more-->
 
+<p>对于高级语言的程序员(Java、OC)来说，一定听过堆栈、数据段、代码段，但可能没有细细研究过。本文在此分享对它们的理解。</p>
 
 <h3>C语言的内存布局</h3>
 
@@ -2376,18 +2382,18 @@ C++内存分配、函数调用： <a href="http://www.cnblogs.com/dolphin0520/ar
     <link href="http://blog.handy.wang/blog/2014/03/14/uinavigationcontrollerfen-xi/"/>
     <updated>2014-03-14T18:55:47+08:00</updated>
     <id>http://blog.handy.wang/blog/2014/03/14/uinavigationcontrollerfen-xi</id>
-    <content type="html"><![CDATA[<h3>UINavigationController结构</h3>
+    <content type="html"><![CDATA[<!--more-->
+
+
+
+
+<h3>UINavigationController结构</h3>
 
 
 <p>导航条层次结构<br/>
 UINavigationController &ndash;(1:1)&ndash;> UINavigationBar &ndash;(1:多)&ndash;> UINavigationItem &ndash;(1:多)&ndash;> UIBarButtonItem &ndash;(1:1)&ndash;> CustomView<br/>
 其中UINavigationBar是UIView的子类，UINavigationItem和UIBarButtonItem都是NSObject的子类，也就是说UINavigationItem和UIBarButtonItem都是
 UINavigationBar用于显示的model数据。</p>
-
-<!--more-->
-
-
-
 
 <h6>UINavigationBar与UINavigationItem</h6>
 
@@ -2475,21 +2481,21 @@ UINavigationController也提供了类似于UINavigationBar push/pop的方法，�
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[UIWebView的cookie]]></title>
+    <title type="html"><![CDATA[手动管理UIWebView的cookie]]></title>
     <link href="http://blog.handy.wang/blog/2014/03/14/uiwebviewde-cookie/"/>
     <updated>2014-03-14T17:18:03+08:00</updated>
     <id>http://blog.handy.wang/blog/2014/03/14/uiwebviewde-cookie</id>
-    <content type="html"><![CDATA[<h3>场景描述</h3>
+    <content type="html"><![CDATA[<!--more-->
+
+
+
+
+<h3>场景描述</h3>
 
 
 <p>我们以实际例子驱动的方式来开始这个话题。<br />
 实际例子描述：在App里内嵌一个UIWebView，通过UIWebView打开<a href="http://weibo.com">http://weibo.com</a> 微博首页，在UIWebView里登录我的账号，登录成功后kill App，再次启动App打开UIWebView时微博仍为登录状态。<br />
 实现这个Demo的整体业务代码很简单，主要是怎么实现“再次启动App打开UIWebView时微博仍为登录状态”。这就涉及到UIWebView的cookie问题。</p>
-
-<!--more-->
-
-
-
 
 <h3>Session、Cookie</h3>
 
@@ -2550,11 +2556,16 @@ Session是客户端第一次请求时在服务器创建的，Session维持的过
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Runtime（一）之 Message转发浅析]]></title>
+    <title type="html"><![CDATA[Runtime之Message转发浅析]]></title>
     <link href="http://blog.handy.wang/blog/2014/03/10/runtime-1rd-message/"/>
     <updated>2014-03-10T15:52:57+08:00</updated>
     <id>http://blog.handy.wang/blog/2014/03/10/runtime-1rd-message</id>
-    <content type="html"><![CDATA[<h3>Objective-C对象模型</h3>
+    <content type="html"><![CDATA[<!--more-->
+
+
+
+
+<h3>Objective-C对象模型</h3>
 
 
 <p>本文假定您对Objective-C对象模型已了解</p>
@@ -2568,9 +2579,6 @@ Session是客户端第一次请求时在服务器创建的，Session维持的过
 
 
 <h6>二）完整的消息转发机制</h6>
-
-
-<!--more-->
 
 
 
@@ -2704,33 +2712,14 @@ forwardInvocation:本身是在NSObject里面定义的，如果你需要重载这
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[iOS App UI调试工具（三）· Reveal App]]></title>
-    <link href="http://blog.handy.wang/blog/2014/01/03/ios-app-uidiao-shi-gong-ju-san-reveal/"/>
-    <updated>2014-01-03T20:53:01+08:00</updated>
-    <id>http://blog.handy.wang/blog/2014/01/03/ios-app-uidiao-shi-gong-ju-san-reveal</id>
-    <content type="html"><![CDATA[<p>昨天，经<a target="_blank" href="http://weibo.com/danc">@Dan</a>推荐又了解到一款UI调试神器<code>Reveal App</code>
-<video width='640' height='320' preload='none' controls poster='http://revealapp.com/img/testimonial-flipboard.jpg'><source src='http://revealapp.com/video/Reveal.mp4' type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'></video></p>
-
-<!--more-->
-
-
-<p>官方地址在<a target="_blank" href="http://revealapp.com/">这里</a>
-<code>注意：我今天下的试用版试用总是提示已过期，一气之下就把系统日期改成2013年01月03日了，再启动，可以试用了。</code></p>
-
-<p>集成向导：
-Reveal App安装完成后，点开菜单Help->Getting Started，会出现一个界面，界面里有三个步骤，点界面左下角的“View Integration Guide”会打开一个本地的网页，这个网页里详细的描述了
-集成静态库和动态库的步骤。</p>
-
-<p>OK，大家可以试用一下。截止目前介绍的三款中，感觉这款的UE最NB，绝对产品级的。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[由kIOS6MEMORYWARNING引发的思考]]></title>
+    <title type="html"><![CDATA[iOS6+应该怎样覆盖didReceiveMemoryWarning]]></title>
     <link href="http://blog.handy.wang/blog/2013/12/26/you-kios6memorywarningyin-fa-de-si-kao/"/>
     <updated>2013-12-26T21:09:31+08:00</updated>
     <id>http://blog.handy.wang/blog/2013/12/26/you-kios6memorywarningyin-fa-de-si-kao</id>
-    <content type="html"><![CDATA[<p>昨晚，在Review搜狐新闻客户端代码时发现iOS6+时ViewController类里的didReceiveMemoryWarning方法实现被宏kIOS6MEMORYWARNING(它的值是0)屏蔽了。(<a target="_blank" href="http://weibo.com/chh1980?topnav=1&wvr=5&topsug=1">@陈宏-Wesley</a>)</p>
+    <content type="html"><![CDATA[<!--more-->
+
+
+<p>昨晚，在Review搜狐新闻客户端代码时发现iOS6+时ViewController类里的didReceiveMemoryWarning方法实现被宏kIOS6MEMORYWARNING(它的值是0)屏蔽了。(<a target="_blank" href="http://weibo.com/chh1980?topnav=1&wvr=5&topsug=1">@陈宏-Wesley</a>)</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -2792,9 +2781,6 @@ Reveal App安装完成后，点开菜单Help->Getting Started，会出现一个�
 
 
 <p>刹那间觉得很奇怪，一定有一些不为人知的原因，所以我打算一探究竟。</p>
-
-<!--more-->
-
 
 <p>经过和 <a target="_blank" href="http://weibo.com/iqipei?topnav=1&wvr=5&topsug=1">@单eye皮</a> <a target="_blank" href="http://weibo.com/u/1620329427?topnav=1&wvr=5&topsug=1">@Aaron_亚伦007</a> 一天的激烈讨论得出了一些我们认为正确的答案，特总结如下。</p>
 
@@ -2869,11 +2855,16 @@ iOS6的这种设计高明在两个地方：1）视图结构和视图数据的分
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Mac OS下搭建APNS推送服务器(Apache+PHP)]]></title>
+    <title type="html"><![CDATA[搭建iOS推送(Apache+PHP)]]></title>
     <link href="http://blog.handy.wang/blog/2013/12/19/mac-osxia-da-jian-apnstui-song-fu-wu-qi/"/>
     <updated>2013-12-19T21:16:04+08:00</updated>
     <id>http://blog.handy.wang/blog/2013/12/19/mac-osxia-da-jian-apnstui-song-fu-wu-qi</id>
-    <content type="html"><![CDATA[<h3>配置Apache+PHP</h3>
+    <content type="html"><![CDATA[<!--more-->
+
+
+
+
+<h3>配置Apache+PHP</h3>
 
 
 <p>Mac OS自带Apache服务器和PHP，所以只需少许配置便可将它派上用场</p>
@@ -2914,7 +2905,6 @@ iOS6的这种设计高明在两个地方：1）视图结构和视图数据的分
 </span><span class='line'>有关PHP的信息，比如10.8中内置PHP版本号是5.3.13。</span></code></pre></td></tr></table></div></figure>
 
 
-<!--more-->
 
 
 <h3>制作Pem文件</h3>
@@ -3361,19 +3351,41 @@ iOS6的这种设计高明在两个地方：1）视图结构和视图数据的分
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[iOS App UI调试工具（三）· Reveal App]]></title>
+    <link href="http://blog.handy.wang/blog/2013/12/18/ios-app-uidiao-shi-gong-ju-san-reveal/"/>
+    <updated>2013-12-18T20:53:01+08:00</updated>
+    <id>http://blog.handy.wang/blog/2013/12/18/ios-app-uidiao-shi-gong-ju-san-reveal</id>
+    <content type="html"><![CDATA[<!--more-->
+
+
+<p>昨天，经<a target="_blank" href="http://weibo.com/danc">@Dan</a>推荐又了解到一款UI调试神器<code>Reveal App</code>
+<video width='640' height='320' preload='none' controls poster='http://revealapp.com/img/testimonial-flipboard.jpg'><source src='http://revealapp.com/video/Reveal.mp4' type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'></video></p>
+
+<p>官方地址在<a target="_blank" href="http://revealapp.com/">这里</a>
+<code>注意：我今天下的试用版试用总是提示已过期，一气之下就把系统日期改成2013年01月03日了，再启动，可以试用了。</code></p>
+
+<p>集成向导：
+Reveal App安装完成后，点开菜单Help->Getting Started，会出现一个界面，界面里有三个步骤，点界面左下角的“View Integration Guide”会打开一个本地的网页，这个网页里详细的描述了
+集成静态库和动态库的步骤。</p>
+
+<p>OK，大家可以试用一下。截止目前介绍的三款中，感觉这款的UE最NB，绝对产品级的。</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[iOS App UI调试工具（二）· Realtime Debug Portal]]></title>
     <link href="http://blog.handy.wang/blog/2013/12/17/ios-app-uidiao-shi-gong-ju2/"/>
     <updated>2013-12-17T05:30:58+08:00</updated>
     <id>http://blog.handy.wang/blog/2013/12/17/ios-app-uidiao-shi-gong-ju2</id>
-    <content type="html"><![CDATA[<p><img src="https://github-camo.global.ssl.fastly.net/03548ab74978beee15b711ab26b5ed1bd71714f2/687474703a2f2f7777772e76696e716f6e2e636f6d2f636f6465626c6f672f66636b656469746f722f75706c6f61642f696d6167652f323031332d30362f325f322e706e67"></p>
+    <content type="html"><![CDATA[<!--more-->
+
+
+<p><img src="https://github-camo.global.ssl.fastly.net/03548ab74978beee15b711ab26b5ed1bd71714f2/687474703a2f2f7777772e76696e716f6e2e636f6d2f636f6465626c6f672f66636b656469746f722f75706c6f61642f696d6167652f323031332d30362f325f322e706e67"></p>
 
 <h3>Realtime Debug Portal简介</h3>
 
 
 <blockquote><p>RDP是一个类似Web Inspector的工具，把这个工具引入我们的项目工程，并做一些简单的配置，然后启动应用，<br/>在浏览器输入手机的IP地址，就可以看到UIView的树状结构和Log信息，还可以在浏览器中对View进行移动，<br/>隐藏，选中高亮等操作。</p><footer><strong>Realtime Debug Portal</strong> <cite><a href='https://github.com/vinqon/Realtime-Debug-Portal'>Read On</a></cite></footer></blockquote>
-
-
-<!--more-->
 
 
 

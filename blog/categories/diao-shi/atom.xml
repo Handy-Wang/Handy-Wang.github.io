@@ -4,7 +4,7 @@
   <title><![CDATA[Category: 调试 | Handy's]]></title>
   <link href="http://blog.handy.wang/blog/categories/diao-shi/atom.xml" rel="self"/>
   <link href="http://blog.handy.wang/"/>
-  <updated>2016-05-21T21:46:34+08:00</updated>
+  <updated>2016-05-21T22:52:34+08:00</updated>
   <id>http://blog.handy.wang/</id>
   <author>
     <name><![CDATA[Handy.Wang]]></name>
@@ -14,15 +14,130 @@
 
   
   <entry>
+    <title type="html"><![CDATA[iOS Crash快速分析实战]]></title>
+    <link href="http://blog.handy.wang/blog/2016/01/26/ios-crashfen-xi/"/>
+    <updated>2016-01-26T10:57:50+08:00</updated>
+    <id>http://blog.handy.wang/blog/2016/01/26/ios-crashfen-xi</id>
+    <content type="html"><![CDATA[<!--more-->
+
+
+<pre><code>实际开发中或使用App过程中遇到App crash是一件很常见的事儿，但是要能快速定位是哪一行代码导致的可能就不一定是件易事儿了。
+在这里我结合自己与别人遇到过的坑，总结了一下。
+</code></pre>
+
+<ul>
+<li>ObjC Crash
+
+<ul>
+<li><p>制造一个Crash，代码如下
+<img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/ios_app_crash_debug_1.png" title="图1" alt="图1" /></p></li>
+<li><p>Crash了，假装不知道是由于什么导致的：
+<img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/ios_app_crash_debug_2.png" title="图2" alt="图2" /></p></li>
+<li><p>左侧的Crash trace 也是很让人无语
+<img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/ios_app_crash_debug_3.png" title="图3" alt="图3" /></p></li>
+<li><p>展开看一下更详细的crash trace
+<img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/ios_app_crash_debug_4.png" title="图4" alt="图4" /></p></li>
+<li><p>想办法排查：</p>
+
+<ul>
+<li>全局断点法（All Exceptions）
+
+<ul>
+<li>适用于：停留到main里的crash，可能是EXC_CRASH（SIGABRT）或EXC_BAD_ACCESS（SIGBUG/SIGSEGV）导致的</li>
+<li>加上全局断点再run，就可以看见哪一行导致crash了。
+<img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/ios_app_crash_debug_5.png" title="图5" alt="图5" />
+<img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/ios_app_crash_debug_6.png" title="图6" alt="图6" /></li>
+</ul>
+</li>
+<li>Xcode Zoombie法
+
+<ul>
+<li>适用于：EXC_BAD_ACCESS（SIGBUG/SIGSEGV）</li>
+<li>修改scheme的配置项
+<img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/ios_app_crash_debug_7.png" title="图7" alt="图7" /></li>
+</ul>
+</li>
+<li>UncaughtExceptionHandler收集日志
+
+<ul>
+<li>适用于：收集crash日志并上报给服务器</li>
+<li><a href="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/UncaughtExceptionHandler.zip">源码</a></li>
+</ul>
+</li>
+<li>符号表解析法
+
+<ul>
+<li>适用于：crash日志文件里全是二进制内容，看不出哪里crash的情况下</li>
+<li>把.app、.dSYM、.crash三个文件放到一个目录里
+<img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/ios_app_crash_debug_8.png" title="图8" alt="图8" /></li>
+<li>连上手机，把.crash文件导入到Xcode 的device log里
+<img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/ios_app_crash_debug_9.png" title="图9" alt="图9" /></li>
+<li>Xcode就会desymbol符号表，即可查看导致crash的位置。</li>
+</ul>
+</li>
+<li>NSAssert断言跟踪法
+
+<ul>
+<li>适用于：采用NSAssert跟踪代码，即时跟踪到由于服务器脏数据导致的crash</li>
+<li>如下：
+<img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/ios_app_crash_debug_10.png" title="图10" alt="图10" /></li>
+</ul>
+</li>
+<li>辅助工具：
+
+<ul>
+<li>Instruments</li>
+<li>Crashlytics</li>
+<li>Bugly</li>
+</ul>
+</li>
+<li>终极大招：注释代码、回滚代码方式的排除法</li>
+<li>总结：
+
+<ul>
+<li>分析console输出的crash日志</li>
+<li>分析crash trace</li>
+<li>分析crash log</li>
+<li>Crash到main里，建议首先采用全局断点法</li>
+<li>EXC_BAD_ACCESS时，建议首先采用enable Zombie Objects方法</li>
+<li>不要忽视Xcode里的编译警告，可能它们正是问题所在。如果你不明白编译警告的内容，那么就把它弄清楚，因为这会节约你很多不必要的调试程序的时间开销。</li>
+<li>注意用真机和模拟器调试时得到的结果可能不一样，建议以真机为准。</li>
+<li>正所谓，授之以鱼不如授之以渔，以上都是一些分析的方式，开发中需要按实际情况分析和采用不同的方法。也许以上方法并不能解你遇到的问题，这就需要我们自己趟坑了。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>JS Crash
+
+<ul>
+<li>待续</li>
+</ul>
+</li>
+<li>参考文献
+
+<ul>
+<li><a href="http://www.raywenderlich.com/10209/my-app-crashed-now-what-part-1">my-app-crashed-now-what-part-1</a></li>
+<li><a href="http://www.raywenderlich.com/10209/my-app-crashed-now-what-part-2">my-app-crashed-now-what-part-2</a></li>
+<li><a href="http://game.academy.163.com/library/2015/2/9/17717_497701.html">App Crash探析</a></li>
+</ul>
+</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[iOS App UI调试工具（三）· Reveal App]]></title>
-    <link href="http://blog.handy.wang/blog/2014/01/03/ios-app-uidiao-shi-gong-ju-san-reveal/"/>
-    <updated>2014-01-03T20:53:01+08:00</updated>
-    <id>http://blog.handy.wang/blog/2014/01/03/ios-app-uidiao-shi-gong-ju-san-reveal</id>
-    <content type="html"><![CDATA[<p>昨天，经<a target="_blank" href="http://weibo.com/danc">@Dan</a>推荐又了解到一款UI调试神器<code>Reveal App</code>
+    <link href="http://blog.handy.wang/blog/2013/12/18/ios-app-uidiao-shi-gong-ju-san-reveal/"/>
+    <updated>2013-12-18T20:53:01+08:00</updated>
+    <id>http://blog.handy.wang/blog/2013/12/18/ios-app-uidiao-shi-gong-ju-san-reveal</id>
+    <content type="html"><![CDATA[<!--more-->
+
+
+<p>昨天，经<a target="_blank" href="http://weibo.com/danc">@Dan</a>推荐又了解到一款UI调试神器<code>Reveal App</code>
 <video width='640' height='320' preload='none' controls poster=''><source src='http://revealapp.com/video/Reveal.mp4">http://revealapp.com/video/Reveal.mp4</a>' ></video></p>
-
-<!--more-->
-
 
 <p>官方地址在<a target="_blank" href="http://revealapp.com/">这里</a>
 <code>注意：我今天下的试用版试用总是提示已过期，一气之下就把系统日期改成2013年01月03日了，再启动，可以试用了。</code></p>
@@ -40,17 +155,15 @@ Reveal App安装完成后，点开菜单Help->Getting Started，会出现一个�
     <link href="http://blog.handy.wang/blog/2013/12/17/ios-app-uidiao-shi-gong-ju2/"/>
     <updated>2013-12-17T05:30:58+08:00</updated>
     <id>http://blog.handy.wang/blog/2013/12/17/ios-app-uidiao-shi-gong-ju2</id>
-    <content type="html"><![CDATA[<p><img class="<a" src="href="https://github-camo.global.ssl.fastly.net/03548ab74978beee15b711ab26b5ed1bd71714f2/687474703a2f2f7777772e76696e716f6e2e636f6d2f636f6465626c6f672f66636b656469746f722f75706c6f61642f696d6167652f323031332d30362f325f322e706e67">https://github-camo.global.ssl.fastly.net/03548ab74978beee15b711ab26b5ed1bd71714f2/687474703a2f2f7777772e76696e716f6e2e636f6d2f636f6465626c6f672f66636b656469746f722f75706c6f61642f696d6167652f323031332d30362f325f322e706e67</a>"></p>
+    <content type="html"><![CDATA[<!--more-->
+
+
+<p><img class="<a" src="href="https://github-camo.global.ssl.fastly.net/03548ab74978beee15b711ab26b5ed1bd71714f2/687474703a2f2f7777772e76696e716f6e2e636f6d2f636f6465626c6f672f66636b656469746f722f75706c6f61642f696d6167652f323031332d30362f325f322e706e67">https://github-camo.global.ssl.fastly.net/03548ab74978beee15b711ab26b5ed1bd71714f2/687474703a2f2f7777772e76696e716f6e2e636f6d2f636f6465626c6f672f66636b656469746f722f75706c6f61642f696d6167652f323031332d30362f325f322e706e67</a>"></p>
 
 <h3>Realtime Debug Portal简介</h3>
 
 
 <p><blockquote><p>RDP是一个类似Web Inspector的工具，把这个工具引入我们的项目工程，并做一些简单的配置，然后启动应用，<br/>在浏览器输入手机的IP地址，就可以看到UIView的树状结构和Log信息，还可以在浏览器中对View进行移动，<br/>隐藏，选中高亮等操作。</p><footer><strong>Realtime Debug Portal <a href="https://github.com/vinqon/Realtime-Debug-Portal">https://github.com/vinqon/Realtime-Debug-Portal</a> Read on</strong></footer></blockquote></p>
-
-<!--more-->
-
-
-
 
 <h3>配置步骤</h3>
 
@@ -112,15 +225,15 @@ Reveal App安装完成后，点开菜单Help->Getting Started，会出现一个�
     <link href="http://blog.handy.wang/blog/2013/12/14/ios-app-uidiao-shi-gong-ju/"/>
     <updated>2013-12-14T21:48:49+08:00</updated>
     <id>http://blog.handy.wang/blog/2013/12/14/ios-app-uidiao-shi-gong-ju</id>
-    <content type="html"><![CDATA[<p><img class="<a" src="href="http://blog.thepete.net/images/post_images/2012-06-24_A.png">http://blog.thepete.net/images/post_images/2012-06-24_A.png</a>"></p>
+    <content type="html"><![CDATA[<!--more-->
+
+
+<p><img class="<a" src="href="http://blog.thepete.net/images/post_images/2012-06-24_A.png">http://blog.thepete.net/images/post_images/2012-06-24_A.png</a>"></p>
 
 <h3>Frank简介</h3>
 
 
 <p><blockquote><p>Frank is &lsquo;Selenium for native iOS apps&rsquo;. It allows you to write automated acceptance tests<br/>which verify the functionality of your native iOS app.</p></p><p><p>Frank是一个iOS平台的自动化测试工具。它支持编写一些自动化验收测试用例来验收iOS App的功能。</p><footer><strong>Frank <a href="http://www.testingwithfrank.com/">http://www.testingwithfrank.com/</a> Read on</strong></footer></blockquote></p>
-
-<!--more-->
-
 
 <h3>Symbiote简介</h3>
 
@@ -132,7 +245,7 @@ Reveal App安装完成后，点开菜单Help->Getting Started，会出现一个�
 
 <p>完全按照<a href="http://blog.thepete.net/blog/2012/06/24/writing-your-first-frank-test/">Writing Your First Frank Test</a>操作即可。
 请注意：这个HowTo中会有Ruby环境和插件的安装，做好心理准备。
-Touble shoot：<a href="&#109;&#x61;&#x69;&#x6c;&#x74;&#x6f;&#58;&#x6e;&#110;&#x6e;&#x77;&#106;&#x73;&#x40;&#49;&#x32;&#x36;&#x2e;&#99;&#111;&#109;">&#110;&#x6e;&#x6e;&#x77;&#106;&#115;&#x40;&#x31;&#x32;&#x36;&#x2e;&#99;&#111;&#109;</a></p>
+Touble shoot：<a href="&#109;&#x61;&#x69;&#x6c;&#x74;&#111;&#58;&#110;&#x6e;&#x6e;&#119;&#x6a;&#x73;&#x40;&#x31;&#50;&#x36;&#46;&#99;&#x6f;&#109;">&#x6e;&#110;&#110;&#x77;&#106;&#115;&#64;&#x31;&#50;&#54;&#x2e;&#x63;&#x6f;&#109;</a></p>
 
 <h3>试用体会</h3>
 

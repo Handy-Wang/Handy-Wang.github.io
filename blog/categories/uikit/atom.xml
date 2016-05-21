@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: UIKit | Handy's]]></title>
+  <link href="http://blog.handy.wang/blog/categories/uikit/atom.xml" rel="self"/>
+  <link href="http://blog.handy.wang/"/>
+  <updated>2016-05-21T22:52:34+08:00</updated>
+  <id>http://blog.handy.wang/</id>
+  <author>
+    <name><![CDATA[Handy.Wang]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[UIImage stretch]]></title>
+    <link href="http://blog.handy.wang/blog/2016/05/13/uiimage-stretch/"/>
+    <updated>2016-05-13T15:05:40+08:00</updated>
+    <id>http://blog.handy.wang/blog/2016/05/13/uiimage-stretch</id>
+    <content type="html"><![CDATA[<!--more-->
+
+
+<h1>可拉伸图片的定义（ 译自<a href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIImage_Class/#Defining%20a%20Stretchable%20Image">iOS原文</a> ）</h1>
+
+<br />
+
+
+<p>一张可拉伸的图片其实给自己定义了一个区域，在这个区域内的图片内容以一种更美观优雅的方式被重复显示。可拉伸图片通常用于视图的背景，因为这种图片可以按拉伸区域的定义被撑大或缩小，从而以一种更美观的方式来填充视图区域。</p>
+
+<br />
+
+
+<p>iOS提供了 <code>resizableImageWithCapInsets:</code>、<code>resizableImageWithCapInsets:resizingMode:</code> 两个方法来指定图片的拉伸区域。方法中的<code>insets</code>参数(insets = (top,left,bottom,right))把图片细分为了两个或多个区域，其中的top/left/bottom/right称为inset。给insets中的每个inset指定一个非零值，就可以把图片细分为9个区域，如下图。</p>
+
+<br />
+
+
+<blockquote><p><img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/image_stretch1.png" width="610.5" height="208" /></p></blockquote>
+
+<br />
+
+
+<p>从上图可以看出，每个inset的值给图片指定了一个不可以拉伸的区域。通过top inset和bottom inset在图片的上边和下边划定了两块不可拉伸的区域，通过left inset和right inset在图片的左边和右边划定了两块不可拉伸的区域。通过下图可以看出，当图片被拉伸时，这9块区域是怎么被拉伸的。显然四个角是没有被拉伸的，因为它们同时处于横向和纵向的inset区域。</p>
+
+<br />
+
+
+<blockquote><p><img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/image_stretch2.png" width="486" height="153" /></p></blockquote>
+
+<hr />
+
+<h1>图片保护区域</h1>
+
+<p>基于上面Apple对图片拉伸的描述，下面从实例例子出发来讲讲图片的保护区域</p>
+
+<br />
+
+
+<p>开发中常常需要对图片进行拉伸操作，如果控件的宽高比例和要显示的图片的宽高比例不同的话，图片将不会按照自身宽高比进行拉伸或者收缩，导致最终显示的图片效果变差，因此常常需要对图片进行特殊处理(按一定规则进行拉伸或者收缩)。为了使得拉伸后的图片具有美观的效果，这里要提到一个“保护”或者英文“cap”的概念。
+为了保护图片在拉伸的过程中保持美观，因此我们需要知道图片要被保护的区域，即图片的上下左右各要保护多少，这样在拉伸的时候就会只拉伸非保护区域，即用非保护区域的像素来填充视图的拉伸空间。最终，水平拉伸的填充取决于左右保护区域的多少，垂直方向的填充取决于上下保护区域的多少。</p>
+
+<h3>用于描述图片保护区域的字符串格式</h3>
+
+<p>字符串内包含了上、左、下、右四个方向需要保护的大小的值：“topValue,leftValue,bottomValue,rightValue”，也可简写为"value"，"value" 等价于"value, value, value, value"，即上左下右四个方向需要保护的尺寸是一样的。</p>
+
+<p>如：“20,40,20,40”，"40"，"40" = &ldquo;40,40,40,40&rdquo;</p>
+
+<h3>示例</h3>
+
+<p>以一个宽、高分别为"130, 107"的图片为例，设置图片保护区域为： &ldquo;40, 40, 40, 40&rdquo;</p>
+
+<ul>
+<li>原图</li>
+</ul>
+
+
+<blockquote><p><img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/image_stretch3.png" alt="image_stretch3.png" /></p></blockquote>
+
+<ul>
+<li>保护区域、可拉伸区域图</li>
+</ul>
+
+
+<p>保护区域为：右则九宫格图四个角的区域</p>
+
+<p>非保护区域为：右则九宫格图的“井”字区域</p>
+
+<p>所以，最后拉伸后的效果如下图左侧模拟器里。</p>
+
+<blockquote><p><img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/image_stretch4.png" alt="image_stretch4.png" /></p></blockquote>
+
+<h1>iOS Xcode里的image slicing功能</h1>
+
+<p>看完以上内容已经完全可以了解stretch的概念了，那么既然已经看到这里了，我再多聊聊<code>iOS Xcode里的image slicing功能</code>。</p>
+
+<br />
+
+
+<p>Xcode5开始支持Image Slicing功能，即通过可视化的方式给图片指定CapInsets。一张图片通过这个功能设定好CapInsets后，在代码里不用调用上面提到的两个方法来指定保护区域，直接加载图片就可以按设定的CapInsets来拉伸图片，对于Image Slicing功能的使用很简单就不多说了。</p>
+
+<br />
+
+
+<p>下面才是我想说的主要内容。仍以上面为例｀以一个宽、高分别为"130, 107"的图片为例，设置图片保护区域为： &ldquo;40, 40, 40, 40"｀</p>
+
+<br />
+
+
+<p>Image Slicing功能默认是把可拉伸区域定义为1x1日区域(如下图红色画框部分)，运行的图片效果是左侧模拟器里上面一张黑图。左侧模拟器里下面一张黑图是通过上面提到两个SDK方法指定的保护区域，显然这两种方式运行出来的图片效果不一致。这是因为SDK方法指定的保护区域算出来的拉伸区域为50x27，即：130-2<em>40-50，107-2</em>40=27。</p>
+
+<br />
+
+
+<p><img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/image_stretch5.jpg" alt="image_stretch5.jpg" /></p>
+
+<br />
+
+
+<p>想要通过Image Slicing功能划分保护区域的图片的最终显示效果与SDK划分的一致，只需要修改Image Slicing里的拉伸区域大小(如下图)，这同时也说明了在Image Slicing功能里，虽然划定了保护区域的但仍可以调整拉伸区域的大小，而SDK方式的拉伸区域的大小是计算出来的。</p>
+
+<p><img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/image_stretch6.jpg" alt="image_stretch6.jpg" /></p>
+
+<p>完结。</p>
+
+<h1>参考</h1>
+
+<ul>
+<li><a href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIImage_Class/">Defining a Stretchable Image</a></li>
+<li><a href="https://onevcat.com/2013/06/new-in-xcode5-and-objc/">WWDC 2013 Session笔记 &ndash; Xcode5和ObjC新特性</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[UITextView &amp; UITextField的九宫格对齐方式]]></title>
+    <link href="http://blog.handy.wang/blog/2016/05/04/kuo-zhan-uitextview-and-uitextfieldzhi-chi-jiu-gong-ge-dui-qi-fang-shi/"/>
+    <updated>2016-05-04T21:27:05+08:00</updated>
+    <id>http://blog.handy.wang/blog/2016/05/04/kuo-zhan-uitextview-and-uitextfieldzhi-chi-jiu-gong-ge-dui-qi-fang-shi</id>
+    <content type="html"><![CDATA[<!-- more -->
+
+
+<h1>目标</h1>
+
+<p>iOS原生的 UITextField 和 UITextView 只支持文本内容的左、中、右对齐，但是目前我的需求是需要让UITextField 和 UITextView 支持9宫格对齐方式，并能按此对齐方式进行正常输入，如下图：</p>
+
+<p><img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/9point_alignment_textfield_textview1.png" title="目标" alt="目标" /></p>
+
+<h1>知识铺垫</h1>
+
+<p>iOS7之后，UILabel / UITextField / UITextView的实现采用TextKit进行了替换，所以对于这个命题我主要需要关注TextKit.
+下面以一张图来说明TextKit内部的关键类与UITextView的逻辑关系.</p>
+
+<p><img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/9point_alignment_textfield_textview2.png" title="TextKit类的协作" alt="TextKit类的协作" /></p>
+
+<ul>
+<li><p>说明</p>
+
+<ul>
+<li>NSTextStorage 存储着文本的样式信息且是NSAttribute的子类，可以把它近似看成NSAttributeString. NSTextStorage关联一个NSLayoutManager.</li>
+<li>NSLayoutManager  负责布局动作的类，把文本按其样式信息放到NSTextContainer里进行布局排版. NSLayoutManager关联一个NSTextContainer.</li>
+<li>NSTextContainer 提供给NSLayoutManager用于排版的布局空，当然这肯定是根据文本信息计算出来的. 图中的黑块部分就是最终文本被填充上去的区域.</li>
+<li>UITextView 以上三步都是计算的过程，从NS打头可以看出去显示无关。UITextView则提供了显示的空间，继承自UIScrollView，它包含了一个NSTextContainer用于显示以上三步计算出来的结果. 图中的黑块部分同上，蓝色部分是UITextView与NSTextContainer之间的inset，即textContainerInset .</li>
+</ul>
+</li>
+<li><p>综上</p>
+
+<ul>
+<li>有了以上对TextKit与UITextView关系的初步了解后，要做到目标图中UITextView的样式，纵向上需设置textContainerInset的top和bottom，横向上需要设置UITextView的textAlignment即可。</li>
+<li>UITextField要做目标图中的样式，</li>
+</ul>
+</li>
+</ul>
+
+
+<h1>源码</h1>
+
+<p>加微博 @我是小山我是坏人</p>
+
+<h1>参考</h1>
+
+<ul>
+<li><a href="http://esoftmobile.com/2013/10/17/text-kit%E5%85%A5%E9%97%A8/">Text Kit入门</a></li>
+<li><a href="http://esoftmobile.com/2013/10/17/text-kit%E8%BF%9B%E9%98%B6/">Text Kit进阶</a></li>
+<li><a href="http://www.ituring.com.cn/tupubarticle/2542">第 9 章　iOS 7中文字排版和渲染引擎——Text Kit</a></li>
+<li><a href="https://www.raywenderlich.com/50151/text-kit-tutorial">Text Kit Tutorial</a></li>
+<li><a href="http://orangejuiceliberationfront.com/cocoa-text-system-everywhere/">Cocoa Text System everywhere…</a></li>
+<li><a href="http://www.howwaydo.com/how-to-lose-marginpadding-in-uitextview/">How to lose margin/padding in UITextView</a></li>
+<li><a href="http://www.pixeldock.com/blog/how-to-get-rid-of-the-padding-insets-in-an-uitextview/">How to get rid of the padding / insets in an UITextView</a></li>
+<li><a href="https://developer.apple.com/library/ios/documentation/StringsTextFonts/Conceptual/TextAndWebiPhoneOS/Introduction/Introduction.html#">Text Programming Guide for iOS</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[SDWebImage支持URL不变时更新图片内容]]></title>
+    <link href="http://blog.handy.wang/blog/2016/01/29/sdwebimagehuan-cun-zhi-tu-pian-urlbu-bian/"/>
+    <updated>2016-01-29T10:35:08+08:00</updated>
+    <id>http://blog.handy.wang/blog/2016/01/29/sdwebimagehuan-cun-zhi-tu-pian-urlbu-bian</id>
+    <content type="html"><![CDATA[<!--more-->
+
+
+<pre><code>SDWebImage在iOS项目中是一个很常用的开源库，而且众所周知的是，它是基于URL作为Key来实现图片缓存机制的。在90%左右的情况下，
+图片与URL是一一对应的，即使服务器修改了图片也会相应的变更URL。但是在少数情况下，服务器修改了图片后不会变更相应的URL，也就是
+说图片本身的内容变了然而它的URL没有变化，那么按照对SDWebImage的常规使用方法的话，客户端肯定更新不到同一URL对应到服务器已变
+更的图片内容。
+</code></pre>
+
+<p>基于这一现象，我们来进行分析。</p>
+
+<p>客户端第一次请求图片时，Charles抓包得知response header里有一个名为Last-Modified、数据是时间戳的键值对。</p>
+
+<p>客户端第二次及以后请求图片时，通过Charles抓包发现，服务器返回304 not modified状态，说明服务器在接收客户端请求后通过某种判断逻辑得出结论：“客户端已缓存的图片与服务器图片都是最新的”，那么服务器如何判断的呢？</p>
+
+<p>通过查阅HTTP协议相关的资料得知，与服务器返回的Last-Modified相对应的request header里可以加一个名为If-Modified-Since的key，value即是服务器回传的服务端图片最后被修改的时间，第一次图片请求时If-Modified-Since的值为空，第二次及以后的客户端请求会把服务器回传的Last-Modified值作为If-Modified-Since的值传给服务器，这样服务器每次接收到图片请求时就将If-Modified-Since与Last-Modified进行比较，如果客户端图片已陈旧那么返回状态码200、Last-Modified、图片内容，客户端存储Last-Modified和图片；如果客户端图片是最新的那么返回304 Not Modified、不会返回Last-Modified、图片内容。</p>
+
+<p>关于服务器的比较逻辑，需要强调一下。</p>
+
+<p>经查资料得知，Apache比较时是看If-Modified-Since之后有没有更新图片，Nginx比较时是看If-Modified-Since与Last-Modified是否相等，所以对于Apache服务器环境客户端每次都要严格的存储服务器回传的Last-Modified以便下次请求时作为If-Modified-Since的值传给服务器，对于Nginx服务器环境客户端不必存储服务器回传的Last-Modified，每次请求时只需将图片自身的fileModificationDate作为If-Modified-Since的值传服务器即可。在实际开发中，如果遇到明明传了If-Modified-Since、服务器图片也变更了、但是客户端却请求不到最新的图片的情况时，那么就需要查看一下服务器对这两个时间戳的比较逻辑。</p>
+
+<p>那么，现在我们可以回到SDWebImage上来了。通过查看SDWebImageDownloader的源码得知，它开放了一个headersFilter的block，意在让开发者可以对所有图片请求追加一些额外的header，这正合我意。那么我们就可以在诸如AppDelegate didFinishLaunching的地方追加如下代码：</p>
+
+<pre><code>SDWebImageDownloader *imgDownloader = SDWebImageManager.sharedManager.imageDownloader;
+imgDownloader.headersFilter  = ^NSDictionary *(NSURL *url, NSDictionary *headers) {
+
+    NSFileManager *fm = [[NSFileManager alloc] init];
+    NSString *imgKey = [SDWebImageManager.sharedManager cacheKeyForURL:url];
+    NSString *imgPath = [SDWebImageManager.sharedManager.imageCache defaultCachePathForKey:imgKey];
+    NSDictionary *fileAttr = [fm attributesOfItemAtPath:imgPath error:nil];
+
+    NSMutableDictionary *mutableHeaders = [headers mutableCopy];
+
+    NSDate *lastModifiedDate = nil;
+
+    if (fileAttr.count &gt; 0) {
+        if (fileAttr.count &gt; 0) {
+            lastModifiedDate = (NSDate *)fileAttr[NSFileModificationDate];
+        }
+
+    }
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.timeZone = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
+    formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    formatter.dateFormat = @"EEE, dd MMM yyyy HH:mm:ss z";
+
+    NSString *lastModifiedStr = [formatter stringFromDate:lastModifiedDate];
+    lastModifiedStr = lastModifiedStr.length &gt; 0 ? lastModifiedStr : @"";
+    [mutableHeaders setValue:lastModifiedStr forKey:@"If-Modified-Since"];
+
+    return mutableHeaders;
+};
+</code></pre>
+
+<p>然后，加载图片的地方以前怎么写还是怎么写，但别忘了Option是SDWebImageRefreshCached</p>
+
+<pre><code>NSURL *imgURL = [NSURL URLWithString:@"http://handy-img-storage.b0.upaiyun.com/3.jpg"];
+[[self imageView] sd_setImageWithURL:imgURL
+                    placeholderImage:nil
+                             options:SDWebImageRefreshCached];
+</code></pre>
+
+<p>经测试，服务器只修改图片不变更URL的时候，客户端也可以更新到最新的图片。</p>
+
+<p>从以上第一段代码内容可以看出我采用的是与ngix服务器比较逻辑对应的代码，BTW:我测试的服务器是<strong>又拍云</strong>，说明<strong>又拍云</strong>的比较逻辑是等与不等的关系判断，不是大小关系的判断。</p>
+
+<p>这里顺便说一下，如果服务器的环境是类似于Apache的比较逻辑时，客户端可以把Last-Modified存放在图片的名称上(这需要修改SDWebImage源码，不建议)，或者用一个plist文件存放图片key名称与时间的对应关系(这个不用修改源码)。</p>
+
+<p>OK，到此这次的主题已得到完美解决。</p>
+
+<h1>知识扩展</h1>
+
+<pre><code>其实，在抓取服务器返回的数据包时，还发现response header中还有一个ETag，与之相对应的request header中可以追加一个
+If-None-Match的key，这对header与Last-Modified、If-Modified-Since的作用是相同的，即服务器是否需要返回最新的图片，
+当然它们在服务器端的判断逻辑应该是等与不等的判断，Etag在客户端的存储同样可以采用在plist文件中存放图片key名称与Etag的对应
+关系。
+</code></pre>
+
+<h1>参考资料</h1>
+
+<ol>
+<li><a href="https://console.upyun.com">又拍云</a></li>
+<li><a href="http://blog.csdn.net/taipingliebeiluo/article/details/5842766">有关Last-Modified 与 If-Modified-Since</a></li>
+<li><a href="https://github.com/rs/SDWebImage/blob/master/SDWebImage/SDWebImageDownloader.m">SDWebImageDownloader源码</a></li>
+<li><a href="http://stackoverflow.com/questions/32492414/sdwebimage-load-pictures-and-something-about-setting-http-headers">SDWebImage load pictures and something about setting HTTP headers</a></li>
+<li><a href="http://blog.csdn.net/u010165653/article/details/46473247"><strong>重点推荐</strong>-AFNetWorking 和 SDWebImage 图片缓存对比</a></li>
+<li><a href="http://blog.originate.com/blog/2014/02/20/afimagecache-vs-nsurlcache/"><strong>重点推荐</strong>-How Does Caching Work in AFNetworking? : AFImageCache &amp; NSUrlCache Explained</a></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+</feed>

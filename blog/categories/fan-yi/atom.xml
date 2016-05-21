@@ -1,87 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
 
-<!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!-->
-<html class="no-js" lang="zh-CN"><!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  <title>软件架构模式（译） - Handy's</title>
-  <meta name="author" content="Handy.Wang">
-  <!--[if lt IE 9]>
-    <script src="http://x.papaapp.com/farm1/a571d2/8dda131d/html5shiv.js"></script>
-    <![endif]-->
-  
-  <meta name="description" content="软件架构模式（译） Dec 10th, 2015 原文：《Software Architecture Patterns》 前言 对于很多开发人员来说，在着手开发时并没有一套有条理的架构体系来指导他们，这简直是一件太正常的事情了。在没有一套清晰的、经过推敲过的架构体系时， &hellip;">
-  
-
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  
-  <link rel="canonical" href="http://blog.handy.wang/blog/2015/12/10/software-architecture-patterns/">
-  <link href="/favicon.png" rel="icon">
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <script type="text/javascript" src="http://t.papaapp.com/js/libs/jquery/1.7.2/jquery.js"></script>
-  <link href="/atom.xml" rel="alternate" title="Handy's" type="application/atom+xml">
-
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-
-  
-
-</head>
-<body   >
-  <header id="header" class="clearfix">    <div class="container">
-        <div class="col-group">
-            <div class="site-name ">
-                <a id="logo" href="/">
-                   Handy's
-                </a>
-                <p class="description">Stay hungry, stay foolish.</p>
-            </div>
-            <div>
-                <nav id="nav-menu" class="clearfix">
-                    <a class="index-nav current" href="/">Blog</a>
-<a class="archives-nav" href="/blog/archives">Archives</a>
-                </nav>
-            </div>
-        </div>
-    </div>
-</header>
-  <div id="body">
-    <div class="container">
-    	<div class="col-group">
-			<div class="col-8" id="main">
-  <div class="res-cons">
-  <article class="post clearfix">
-  
-  <header>
+  <title><![CDATA[Category: 翻译 | Handy's]]></title>
+  <link href="http://blog.handy.wang/blog/categories/fan-yi/atom.xml" rel="self"/>
+  <link href="http://blog.handy.wang/"/>
+  <updated>2016-05-21T22:52:34+08:00</updated>
+  <id>http://blog.handy.wang/</id>
+  <author>
+    <name><![CDATA[Handy.Wang]]></name>
     
-      <h1 class="post-title">软件架构模式（译）</h1>
-    
-    
-      <p class="post-meta">
-        
-
-
-
-
-
-
-
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
 
   
-
-
-<time datetime="2015-12-10T16:10:37+08:00" pubdate data-updated="true">Dec 10<span>th</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-<div class="post-content"><!--more-->
+  <entry>
+    <title type="html"><![CDATA[软件架构模式（译）]]></title>
+    <link href="http://blog.handy.wang/blog/2015/12/10/software-architecture-patterns/"/>
+    <updated>2015-12-10T16:10:37+08:00</updated>
+    <id>http://blog.handy.wang/blog/2015/12/10/software-architecture-patterns</id>
+    <content type="html"><![CDATA[<!--more-->
 
 
 <p>原文：<a href="http://www.oreilly.com/programming/free/files/software-architecture-patterns.pdf">《Software Architecture Patterns》</a></p>
@@ -689,128 +626,7 @@ down机的时长。
 </ol>
 </div>
 
-</div>
-
-
-  <footer class="post-footer">
-    <div class="meta">
-      
+]]></content>
+  </entry>
   
-
-<span class="byline author vcard">Posted by <span class="fn">Handy.Wang</span></span>
- and 
-      File under 
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/fan-yi/'>翻译</a>
-  
-</span>
-
-
-    </div>
-    
-      <div class="sharing">
-  
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.handy.wang/blog/2015/12/10/software-architecture-patterns/" data-via="" data-counturl="http://blog.handy.wang/blog/2015/12/10/software-architecture-patterns/" >Tweet</a>
-  
-  
-  
-</div>
-
-    
-    <div class="meta">
-      
-        <a class="basic-alignment left" href="/blog/2015/12/06/2015nian-wo-du-gan-ma-liao/" title="Previous Post: 2015年我都干嘛了">&laquo; 2015年我都干嘛了</a>
-      
-      
-        <a class="basic-alignment right" href="/blog/2016/01/26/ios-crashfen-xi/" title="Next Post: iOS Crash快速分析实战">iOS Crash快速分析实战 &raquo;</a>
-      
-    </div>
-  </footer>
-</article>
-
-  </div>
-</div>
-
-  <aside id="secondary">
-  
-    <section class="widget">
-    <form id="search" action="https://www.google.com/search" method="get">
-    	<input type="hidden" name="q" value="site:blog.handy.wang"/>
-    	<input type="text" name="q" results="0" class="text" placeholder="Google搜索"/>
-    </form>
-</section>
-
-<section class="widget">
-	<h3 class="widget-title">最新文章</h3>
-	<ul class="widget-list">
-		
-     	<li>
-      	  <a href="/blog/2016/05/13/uiimage-stretch/">UIImage stretch</a>
-      	</li>
-    	
-     	<li>
-      	  <a href="/blog/2016/05/04/kuo-zhan-uitextview-and-uitextfieldzhi-chi-jiu-gong-ge-dui-qi-fang-shi/">UITextView &amp; UITextField的九宫格对齐方式</a>
-      	</li>
-    	
-     	<li>
-      	  <a href="/blog/2016/01/29/sdwebimagehuan-cun-zhi-tu-pian-urlbu-bian/">SDWebImage支持URL不变时更新图片内容</a>
-      	</li>
-    	
-     	<li>
-      	  <a href="/blog/2016/01/26/ios-crashfen-xi/">iOS Crash快速分析实战</a>
-      	</li>
-    	
-     	<li>
-      	  <a href="/blog/2015/12/10/software-architecture-patterns/">软件架构模式（译）</a>
-      	</li>
-    	
-	</ul>
-</section>
-
-
-
-
-  
-</aside>
-
-
-      	</div>
-    </div>
-  </div>
-  <footer id="footer">
-  	<div class="container">
-	Copyright &copy; 2016 - Handy.Wang -
-  <span class="credit">Powered by <a rel="nofollow" href="http://octopress.org">Octopress</a> on <a rel="nofollow" href="http://pages.github.com/">GitHubPages</a>
-  </span>
-  - <span class="credit">Theme by <a rel="nofollow" href="http://pagecho.com">Cho</a></span>
-
-
-</div>
-
-  </footer>
-  
-
-
-
-
-
-
-
-  <script type="text/javascript">
-    (function(){
-      var twitterWidgets = document.createElement('script');
-      twitterWidgets.type = 'text/javascript';
-      twitterWidgets.async = true;
-      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
-      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
-    })();
-  </script>
-
-
-
-
-
-</body>
-</html>
+</feed>

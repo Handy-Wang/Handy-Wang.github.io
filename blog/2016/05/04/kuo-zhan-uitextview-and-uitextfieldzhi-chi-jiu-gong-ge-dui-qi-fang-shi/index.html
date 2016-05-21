@@ -6,13 +6,13 @@
 <html class="no-js" lang="zh-CN"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>扩展UITextView &amp; UITextField支持九宫格对齐方式 - Handy's</title>
+  <title>UITextView &amp; UITextField的九宫格对齐方式 - Handy's</title>
   <meta name="author" content="Handy.Wang">
   <!--[if lt IE 9]>
     <script src="http://x.papaapp.com/farm1/a571d2/8dda131d/html5shiv.js"></script>
     <![endif]-->
   
-  <meta name="description" content="扩展UITextView &amp; UITextField支持九宫格对齐方式 May 4th, 2016 目标 iOS原生的 UITextField 和 UITextView 只支持文本内容的左、中、右对齐，但是目前我的需求是需要让UITextField 和 UITextView &hellip;">
+  <meta name="description" content="UITextView &amp; UITextField的九宫格对齐方式 May 4th, 2016 目标 iOS原生的 UITextField 和 UITextView 只支持文本内容的左、中、右对齐，但是目前我的需求是需要让UITextField 和 UITextView 支持9宫格对齐方式 &hellip;">
   
 
   <meta name="HandheldFriendly" content="True">
@@ -58,7 +58,7 @@
   
   <header>
     
-      <h1 class="post-title">扩展UITextView &amp; UITextField支持九宫格对齐方式</h1>
+      <h1 class="post-title">UITextView &amp; UITextField的九宫格对齐方式</h1>
     
     
       <p class="post-meta">
@@ -81,16 +81,16 @@
   </header>
 
 
-<div class="post-content"><h3>目标</h3>
+<div class="post-content"><!-- more -->
+
+
+<h1>目标</h1>
 
 <p>iOS原生的 UITextField 和 UITextView 只支持文本内容的左、中、右对齐，但是目前我的需求是需要让UITextField 和 UITextView 支持9宫格对齐方式，并能按此对齐方式进行正常输入，如下图：</p>
 
-<!-- more -->
-
-
 <p><img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/9point_alignment_textfield_textview1.png" title="目标" alt="目标" /></p>
 
-<h3>知识铺垫</h3>
+<h1>知识铺垫</h1>
 
 <p>iOS7之后，UILabel / UITextField / UITextView的实现采用TextKit进行了替换，所以对于这个命题我主要需要关注TextKit.
 下面以一张图来说明TextKit内部的关键类与UITextView的逻辑关系.</p>
@@ -117,11 +117,11 @@
 </ul>
 
 
-<h3>源码</h3>
+<h1>源码</h1>
 
 <p>加微博 @我是小山我是坏人</p>
 
-<h3>参考</h3>
+<h1>参考</h1>
 
 <ul>
 <li><a href="http://esoftmobile.com/2013/10/17/text-kit%E5%85%A5%E9%97%A8/">Text Kit入门</a></li>
@@ -146,6 +146,12 @@
  and 
       File under 
 
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/uikit/'>UIKit</a>
+  
+</span>
+
 
     </div>
     
@@ -160,7 +166,7 @@
     
     <div class="meta">
       
-        <a class="basic-alignment left" href="/blog/2016/01/29/sdwebimagehuan-cun-zhi-tu-pian-urlbu-bian/" title="Previous Post: SDWebImage缓存之图片URL不变">&laquo; SDWebImage缓存之图片URL不变</a>
+        <a class="basic-alignment left" href="/blog/2016/01/29/sdwebimagehuan-cun-zhi-tu-pian-urlbu-bian/" title="Previous Post: SDWebImage支持URL不变时更新图片内容">&laquo; SDWebImage支持URL不变时更新图片内容</a>
       
       
         <a class="basic-alignment right" href="/blog/2016/05/13/uiimage-stretch/" title="Next Post: UIImage stretch">UIImage stretch &raquo;</a>
@@ -190,11 +196,11 @@
       	</li>
     	
      	<li>
-      	  <a href="/blog/2016/05/04/kuo-zhan-uitextview-and-uitextfieldzhi-chi-jiu-gong-ge-dui-qi-fang-shi/">扩展UITextView &amp; UITextField支持九宫格对齐方式</a>
+      	  <a href="/blog/2016/05/04/kuo-zhan-uitextview-and-uitextfieldzhi-chi-jiu-gong-ge-dui-qi-fang-shi/">UITextView &amp; UITextField的九宫格对齐方式</a>
       	</li>
     	
      	<li>
-      	  <a href="/blog/2016/01/29/sdwebimagehuan-cun-zhi-tu-pian-urlbu-bian/">SDWebImage缓存之图片URL不变</a>
+      	  <a href="/blog/2016/01/29/sdwebimagehuan-cun-zhi-tu-pian-urlbu-bian/">SDWebImage支持URL不变时更新图片内容</a>
       	</li>
     	
      	<li>

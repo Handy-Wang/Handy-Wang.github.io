@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Cocos2d | Handy's]]></title>
   <link href="http://blog.handy.wang/blog/categories/cocos2d/atom.xml" rel="self"/>
   <link href="http://blog.handy.wang/"/>
-  <updated>2016-05-21T21:46:34+08:00</updated>
+  <updated>2016-05-21T22:52:34+08:00</updated>
   <id>http://blog.handy.wang/</id>
   <author>
     <name><![CDATA[Handy.Wang]]></name>
@@ -18,10 +18,10 @@
     <link href="http://blog.handy.wang/blog/2013/12/09/chu-shi-cocos2d/"/>
     <updated>2013-12-09T21:26:00+08:00</updated>
     <id>http://blog.handy.wang/blog/2013/12/09/chu-shi-cocos2d</id>
-    <content type="html"><![CDATA[<p>俗话说『山不转水转，水不转人转，人不转需求转，需求不转代码转』，好扯，总之，各种机缘巧合已经让我无法逃离地要去了解一下这个该死的让人望而生畏的Cocos家族。</p>
+    <content type="html"><![CDATA[<!--more-->
 
-<!--more-->
 
+<p>俗话说『山不转水转，水不转人转，人不转需求转，需求不转代码转』，好扯，总之，各种机缘巧合已经让我无法逃离地要去了解一下这个该死的让人望而生畏的Cocos家族。</p>
 
 <p>记忆中从去年开始Cocos2d这个字眼时不时的出现在互联网上、同事谈论中，打那时起我也就只知道他是跟游戏开发相关，毕竟开发<code>搜狐新闻客户端</code>用不到它，而且在我这种长期做应用型开发的
 苦逼攻城师的认识里开发游戏是一件既高级又复杂的事情，渐渐对它产生了距离感和畏惧心理。</p>

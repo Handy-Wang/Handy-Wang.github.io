@@ -6,14 +6,14 @@
 <html class="no-js" lang="zh-CN"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>UIWebView的cookie - Handy's</title>
+  <title>手动管理UIWebView的cookie - Handy's</title>
   <meta name="author" content="Handy.Wang">
   <!--[if lt IE 9]>
     <script src="http://x.papaapp.com/farm1/a571d2/8dda131d/html5shiv.js"></script>
     <![endif]-->
   
-  <meta name="description" content="UIWebView的cookie Mar 14th, 2014 场景描述 我们以实际例子驱动的方式来开始这个话题。
-实际例子描述：在App里内嵌一个UIWebView，通过UIWebView打开http://weibo.com 微博首页，在UIWebView里登录我的账号，登录成功后kill &hellip;">
+  <meta name="description" content="手动管理UIWebView的cookie Mar 14th, 2014 场景描述 我们以实际例子驱动的方式来开始这个话题。
+实际例子描述：在App里内嵌一个UIWebView，通过UIWebView打开http://weibo.com 微博首页，在UIWebView里登录我的账号， &hellip;">
   
 
   <meta name="HandheldFriendly" content="True">
@@ -59,7 +59,7 @@
   
   <header>
     
-      <h1 class="post-title">UIWebView的cookie</h1>
+      <h1 class="post-title">手动管理UIWebView的cookie</h1>
     
     
       <p class="post-meta">
@@ -82,17 +82,17 @@
   </header>
 
 
-<div class="post-content"><h3>场景描述</h3>
+<div class="post-content"><!--more-->
+
+
+
+
+<h3>场景描述</h3>
 
 
 <p>我们以实际例子驱动的方式来开始这个话题。<br />
 实际例子描述：在App里内嵌一个UIWebView，通过UIWebView打开<a href="http://weibo.com">http://weibo.com</a> 微博首页，在UIWebView里登录我的账号，登录成功后kill App，再次启动App打开UIWebView时微博仍为登录状态。<br />
 实现这个Demo的整体业务代码很简单，主要是怎么实现“再次启动App打开UIWebView时微博仍为登录状态”。这就涉及到UIWebView的cookie问题。</p>
-
-<!--more-->
-
-
-
 
 <h3>Session、Cookie</h3>
 
@@ -163,7 +163,7 @@ Session是客户端第一次请求时在服务器创建的，Session维持的过
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/cookie/'>Cookie</a>, <a class='category' href='/blog/categories/uiwebview/'>UIWebView</a>
+    <a class='category' href='/blog/categories/uiwebview/'>UIWebView</a>
   
 </span>
 
@@ -181,7 +181,7 @@ Session是客户端第一次请求时在服务器创建的，Session维持的过
     
     <div class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/03/10/runtime-1rd-message/" title="Previous Post: Runtime（一）之 Message转发浅析">&laquo; Runtime（一）之 Message转发浅析</a>
+        <a class="basic-alignment left" href="/blog/2014/03/10/runtime-1rd-message/" title="Previous Post: Runtime之Message转发浅析">&laquo; Runtime之Message转发浅析</a>
       
       
         <a class="basic-alignment right" href="/blog/2014/03/14/uinavigationcontrollerfen-xi/" title="Next Post: UINavigationController分析">UINavigationController分析 &raquo;</a>
@@ -211,11 +211,11 @@ Session是客户端第一次请求时在服务器创建的，Session维持的过
       	</li>
     	
      	<li>
-      	  <a href="/blog/2016/05/04/kuo-zhan-uitextview-and-uitextfieldzhi-chi-jiu-gong-ge-dui-qi-fang-shi/">扩展UITextView &amp; UITextField支持九宫格对齐方式</a>
+      	  <a href="/blog/2016/05/04/kuo-zhan-uitextview-and-uitextfieldzhi-chi-jiu-gong-ge-dui-qi-fang-shi/">UITextView &amp; UITextField的九宫格对齐方式</a>
       	</li>
     	
      	<li>
-      	  <a href="/blog/2016/01/29/sdwebimagehuan-cun-zhi-tu-pian-urlbu-bian/">SDWebImage缓存之图片URL不变</a>
+      	  <a href="/blog/2016/01/29/sdwebimagehuan-cun-zhi-tu-pian-urlbu-bian/">SDWebImage支持URL不变时更新图片内容</a>
       	</li>
     	
      	<li>
