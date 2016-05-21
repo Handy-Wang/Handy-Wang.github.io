@@ -12,7 +12,7 @@
     <script src="http://x.papaapp.com/farm1/a571d2/8dda131d/html5shiv.js"></script>
     <![endif]-->
   
-  <meta name="description" content="RunLoop学习笔记(三)performSelector:afterDealy:方法簇 Jun 12th, 2014 主要从performSelector:afterDealy:的实现原理来分析为什么在主线程中调用此方法后不会阻塞主线程里业务代码的顺序执行。 示例代码如下： - (void) &hellip;">
+  <meta name="description" content="RunLoop学习笔记(三)performSelector:afterDealy:方法簇 Jun 12th, 2014 | Comments 主要从performSelector:afterDealy:的实现原理来分析为什么在主线程中调用此方法后不会阻塞主线程里业务代码的顺序执行。 示例代码如下 &hellip;">
   
 
   <meta name="HandheldFriendly" content="True">
@@ -75,6 +75,8 @@
 
 
 <time datetime="2014-06-12T15:46:02+08:00" pubdate data-updated="true">Jun 12<span>th</span>, 2014</time>
+        
+         | <a href="#disqus_thread">Comments</a>
         
       </p>
     
@@ -190,6 +192,12 @@
   </footer>
 </article>
 
+  <section>
+    <h3>Comments</h3>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
   </div>
 </div>
 
@@ -251,6 +259,22 @@
 
   </footer>
   
+
+<script type="text/javascript">
+      var disqus_shortname = 'bloghandywang';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://blog.handy.wang/blog/2014/06/12/pou-xi-performselectordai-you-afterdealy-can-shu-de-fang-fa-shi-xian/';
+        var disqus_url = 'http://blog.handy.wang/blog/2014/06/12/pou-xi-performselectordai-you-afterdealy-can-shu-de-fang-fa-shi-xian/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
 
 
 

@@ -12,7 +12,7 @@
     <script src="http://x.papaapp.com/farm1/a571d2/8dda131d/html5shiv.js"></script>
     <![endif]-->
   
-  <meta name="description" content="RunLoop学习笔记(一) 基本原理介绍 May 26th, 2014 在iOS实际开发中，大家一定遇到过以下问题： 在一个线程里启动一个timer，但是这个timer一次也不会被调用？
+  <meta name="description" content="RunLoop学习笔记(一) 基本原理介绍 May 26th, 2014 | Comments 在iOS实际开发中，大家一定遇到过以下问题： 在一个线程里启动一个timer，但是这个timer一次也不会被调用？
 在一个线程里发起一个NSURLConnection网络数据请求， &hellip;">
   
 
@@ -76,6 +76,8 @@
 
 
 <time datetime="2014-05-26T17:20:41+08:00" pubdate data-updated="true">May 26<span>th</span>, 2014</time>
+        
+         | <a href="#disqus_thread">Comments</a>
         
       </p>
     
@@ -542,6 +544,12 @@ dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), di
   </footer>
 </article>
 
+  <section>
+    <h3>Comments</h3>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
   </div>
 </div>
 
@@ -603,6 +611,22 @@ dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), di
 
   </footer>
   
+
+<script type="text/javascript">
+      var disqus_shortname = 'bloghandywang';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://blog.handy.wang/blog/2014/05/26/runloopxue-xi-bi-ji-1/';
+        var disqus_url = 'http://blog.handy.wang/blog/2014/05/26/runloopxue-xi-bi-ji-1/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
 
 
 

@@ -12,7 +12,7 @@
     <script src="http://x.papaapp.com/farm1/a571d2/8dda131d/html5shiv.js"></script>
     <![endif]-->
   
-  <meta name="description" content="Runtime之Message转发浅析 Mar 10th, 2014 Objective-C对象模型 本文假定您对Objective-C对象模型已了解 消息转发两大流程 一）方法的动态决议 二）完整的消息转发机制 一）方法的动态决议 即程序运行时动态提供方法的实现，运行时是没有方法实现的。 &hellip;">
+  <meta name="description" content="Runtime之Message转发浅析 Mar 10th, 2014 | Comments Objective-C对象模型 本文假定您对Objective-C对象模型已了解 消息转发两大流程 一）方法的动态决议 二）完整的消息转发机制 一）方法的动态决议 即程序运行时动态提供方法的实现， &hellip;">
   
 
   <meta name="HandheldFriendly" content="True">
@@ -75,6 +75,8 @@
 
 
 <time datetime="2014-03-10T15:52:57+08:00" pubdate data-updated="true">Mar 10<span>th</span>, 2014</time>
+        
+         | <a href="#disqus_thread">Comments</a>
         
       </p>
     
@@ -270,6 +272,12 @@ forwardInvocation:本身是在NSObject里面定义的，如果你需要重载这
   </footer>
 </article>
 
+  <section>
+    <h3>Comments</h3>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
   </div>
 </div>
 
@@ -331,6 +339,22 @@ forwardInvocation:本身是在NSObject里面定义的，如果你需要重载这
 
   </footer>
   
+
+<script type="text/javascript">
+      var disqus_shortname = 'bloghandywang';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://blog.handy.wang/blog/2014/03/10/runtime-1rd-message/';
+        var disqus_url = 'http://blog.handy.wang/blog/2014/03/10/runtime-1rd-message/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
 
 
 
