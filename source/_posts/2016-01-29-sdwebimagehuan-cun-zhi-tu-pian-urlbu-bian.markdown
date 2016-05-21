@@ -1,10 +1,12 @@
 ---
 layout: post
-title: "SDWebImage缓存之图片URL不变"
+title: "SDWebImage支持URL不变时更新图片内容"
 date: 2016-01-29 10:35:08 +0800
 comments: true
-categories: 
+categories: [UIKit]
 ---
+
+<!--more-->
 	SDWebImage在iOS项目中是一个很常用的开源库，而且众所周知的是，它是基于URL作为Key来实现图片缓存机制的。在90%左右的情况下，
 	图片与URL是一一对应的，即使服务器修改了图片也会相应的变更URL。但是在少数情况下，服务器修改了图片后不会变更相应的URL，也就是
 	说图片本身的内容变了然而它的URL没有变化，那么按照对SDWebImage的常规使用方法的话，客户端肯定更新不到同一URL对应到服务器已变
@@ -12,7 +14,6 @@ categories:
 	
 基于这一现象，我们来进行分析。
 
-<!--more-->
 客户端第一次请求图片时，Charles抓包得知response header里有一个名为Last-Modified、数据是时间戳的键值对。
 
 客户端第二次及以后请求图片时，通过Charles抓包发现，服务器返回304 not modified状态，说明服务器在接收客户端请求后通过某种判断逻辑得出结论：“客户端已缓存的图片与服务器图片都是最新的”，那么服务器如何判断的呢？
@@ -70,14 +71,14 @@ categories:
 
 OK，到此这次的主题已得到完美解决。
 
-**知识扩展**
+# 知识扩展
 
 	其实，在抓取服务器返回的数据包时，还发现response header中还有一个ETag，与之相对应的request header中可以追加一个
 	If-None-Match的key，这对header与Last-Modified、If-Modified-Since的作用是相同的，即服务器是否需要返回最新的图片，
 	当然它们在服务器端的判断逻辑应该是等与不等的判断，Etag在客户端的存储同样可以采用在plist文件中存放图片key名称与Etag的对应
 	关系。
 	
-**参考资料**
+# 参考资料
 
 1. [又拍云](https://console.upyun.com)
 2. [有关Last-Modified 与 If-Modified-Since](http://blog.csdn.net/taipingliebeiluo/article/details/5842766)

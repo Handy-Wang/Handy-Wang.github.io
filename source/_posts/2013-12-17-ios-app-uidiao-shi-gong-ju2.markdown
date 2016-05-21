@@ -5,6 +5,9 @@ date: 2013-12-17 05:30:58 +0800
 comments: true
 categories: [调试]
 ---
+
+<!--more-->
+
 {% img https://github-camo.global.ssl.fastly.net/03548ab74978beee15b711ab26b5ed1bd71714f2/687474703a2f2f7777772e76696e716f6e2e636f6d2f636f6465626c6f672f66636b656469746f722f75706c6f61642f696d6167652f323031332d30362f325f322e706e67 %}
 <h3>Realtime Debug Portal简介</h3>
 {% blockquote Realtime Debug Portal https://github.com/vinqon/Realtime-Debug-Portal Read on %}
@@ -12,7 +15,6 @@ RDP是一个类似Web Inspector的工具，把这个工具引入我们的项目�
 在浏览器输入手机的IP地址，就可以看到UIView的树状结构和Log信息，还可以在浏览器中对View进行移动，
 隐藏，选中高亮等操作。
 {% endblockquote %}
-<!--more-->
 
 <h3>配置步骤</h3>
 ```

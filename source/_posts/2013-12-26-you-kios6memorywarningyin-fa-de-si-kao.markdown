@@ -1,10 +1,13 @@
 ---
 layout: post
-title: "由kIOS6MEMORYWARNING引发的思考"
+title: "iOS6+应该怎样覆盖didReceiveMemoryWarning"
 date: 2013-12-26 21:09:31 +0800
 comments: true
-categories: [UIViewController, didReceiveMemoryWarning, viewDidUnload, CABackingStore]
+categories: [内存管理]
 ---
+
+<!--more-->
+
 昨晚，在Review搜狐新闻客户端代码时发现iOS6+时ViewController类里的didReceiveMemoryWarning方法实现被宏kIOS6MEMORYWARNING(它的值是0)屏蔽了。(<a target="_blank" href="http://weibo.com/chh1980?topnav=1&wvr=5&topsug=1">@陈宏-Wesley</a>)
 ``` objc
 - (void)didReceiveMemoryWarning {
@@ -37,7 +40,7 @@ categories: [UIViewController, didReceiveMemoryWarning, viewDidUnload, CABacking
 }
 ```
 刹那间觉得很奇怪，一定有一些不为人知的原因，所以我打算一探究竟。
-<!--more-->
+
 经过和 <a target="_blank" href="http://weibo.com/iqipei?topnav=1&wvr=5&topsug=1">@单eye皮</a> <a target="_blank" href="http://weibo.com/u/1620329427?topnav=1&wvr=5&topsug=1">@Aaron_亚伦007</a> 一天的激烈讨论得出了一些我们认为正确的答案，特总结如下。
 
 iOS6以前(不包括iOS6)，内存警告后，我们都会在viewDidUnload方法里手动的回收ViewController里的子View以及ViewController的View([self.view removeFromSuperview];self.view = nil;)，当ViewController通过loadView重建时ViewController的View和子View全部会被重建(一般在loadView和viewDidLoad里)。所以，iOS6以前(不包括iOS6)两个关键点：1）MemoryWarning时viewDidUnload一定会被调到；2）为了重建loadView被调用多次；

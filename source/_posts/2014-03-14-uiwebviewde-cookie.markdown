@@ -1,16 +1,18 @@
 ---
 layout: post
-title: "UIWebView的cookie"
+title: "手动管理UIWebView的cookie"
 date: 2014-03-14 17:18:03 +0800
 comments: true
-categories: [UIWebView, Cookie]
+categories: [UIWebView]
 ---
+
+<!--more-->
+
 <h3>场景描述</h3>
 
 我们以实际例子驱动的方式来开始这个话题。<br />
 实际例子描述：在App里内嵌一个UIWebView，通过UIWebView打开http://weibo.com 微博首页，在UIWebView里登录我的账号，登录成功后kill App，再次启动App打开UIWebView时微博仍为登录状态。<br />
 实现这个Demo的整体业务代码很简单，主要是怎么实现“再次启动App打开UIWebView时微博仍为登录状态”。这就涉及到UIWebView的cookie问题。
-<!--more-->
 
 <h3>Session、Cookie</h3>
 

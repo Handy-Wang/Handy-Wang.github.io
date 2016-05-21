@@ -1,13 +1,15 @@
 ---
 layout: post
 title: "iOS App UI调试工具（三）· Reveal App"
-date: 2014-01-03 20:53:01 +0800
+date: 2013-12-18 20:53:01 +0800
 comments: true
 categories:  [调试]
 ---
+
+<!--more-->
+
 昨天，经<a target="_blank" href="http://weibo.com/danc">@Dan</a>推荐又了解到一款UI调试神器```Reveal App```
 {% video http://revealapp.com/video/Reveal.mp4 640 320 http://revealapp.com/img/testimonial-flipboard.jpg %}
-<!--more-->
 
 官方地址在<a target="_blank" href="http://revealapp.com/">这里</a>
 ```注意：我今天下的试用版试用总是提示已过期，一气之下就把系统日期改成2013年01月03日了，再启动，可以试用了。```

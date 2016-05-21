@@ -1,13 +1,15 @@
 ---
 layout: post
-title: "剖析带有afterDealy参数的performSelector方法实现"
-date: 2014-03-19 15:46:02 +0800
+title: "RunLoop学习笔记(三)performSelector:afterDealy:方法簇"
+date: 2014-06-12 15:46:02 +0800
 comments: true
-categories: [NSTimer,Runloop]
+categories: [RunLoop]
 ---
 
-主要从performSelector:afterDealy:的实现原理来分析为什么在主线程中调用此方法后不会阻塞主线程里业务代码的顺序执行。
 <!--more-->
+
+主要从performSelector:afterDealy:的实现原理来分析为什么在主线程中调用此方法后不会阻塞主线程里业务代码的顺序执行。
+
 示例代码如下：
 	- (void)doSomething {
 	    NSLog(@"Begin doSomething...");

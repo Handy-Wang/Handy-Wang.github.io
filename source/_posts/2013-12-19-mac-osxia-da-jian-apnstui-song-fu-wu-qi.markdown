@@ -1,10 +1,13 @@
 ---
 layout: post
-title: "Mac OS下搭建APNS推送服务器(Apache+PHP)"
+title: "搭建iOS推送(Apache+PHP)"
 date: 2013-12-19 21:16:04 +0800
 comments: true
-categories: [iOS, APNS, 推送, PHP, Apache]
+categories: [推送]
 ---
+
+<!--more-->
+
 <h3>配置Apache+PHP</h3>
 Mac OS自带Apache服务器和PHP，所以只需少许配置便可将它派上用场
 ```
@@ -26,7 +29,7 @@ Mac OS自带Apache服务器和PHP，所以只需少许配置便可将它派上�
     在“It’s works!”后面加上“<?php phpinfo(); ?>”，然后保存之。如此就可以在http://localhost/info.php中看到
     有关PHP的信息，比如10.8中内置PHP版本号是5.3.13。
 ```
-<!--more-->
+
 <h3>制作Pem文件</h3>
 ```
     1）打开keychain，选择左上Keychains区域中的login，再选择左下Category区域中的My Certificates，

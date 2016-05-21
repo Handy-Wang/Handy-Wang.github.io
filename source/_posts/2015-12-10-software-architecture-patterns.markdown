@@ -3,8 +3,11 @@ layout: post
 title: "软件架构模式（译）"
 date: 2015-12-10 16:10:37 +0800
 comments: true
-categories: 
+categories: [翻译]
 ---
+
+<!--more-->
+
 原文：[《Software Architecture Patterns》](http://www.oreilly.com/programming/free/files/software-architecture-patterns.pdf)
 
 <br/>
@@ -19,7 +22,6 @@ categories:
 
 作为一名架构师，你需要经常检验你的架构决策，尤其是在选择某种特别的架构或方案的时候。
 
-<!--more-->
 <br/>
 #第一章 分层架构模式
 

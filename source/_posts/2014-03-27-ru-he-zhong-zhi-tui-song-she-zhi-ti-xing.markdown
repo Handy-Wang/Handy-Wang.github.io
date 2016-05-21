@@ -1,10 +1,13 @@
 ---
 layout: post
-title: "如何重置推送设置提醒(转)"
+title: "重置推送设置提醒(转)"
 date: 2014-03-27 12:33:35 +0800
 comments: true
-categories: 
+categories: [推送]
 ---
+
+<!--more-->
+
 <h6>步骤很简单，就是有点麻烦。如下：</h6>
 	1 删除app
 	2 重启

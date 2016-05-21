@@ -3,8 +3,11 @@ layout: post
 title: "UIView与CALayer协作渲染界面的过程"
 date: 2015-10-03 01:38:49 +0800
 comments: true
-categories: 
+categories: [Runtime]
 ---
+
+<!--more-->
+
 ##预热
 
 在聊这个话题前，我先简单的说说与本文相关的几个iOS核心Framework及它们之间的关系：UIKit Framework、QuartzCore Framework(CoreAnimation)、CoreGraphics Framework.
@@ -25,8 +28,6 @@ categories:
 	#endif /* QUARTZCORE_H */
 
 **注意2**：提前了解这几个Framework非常重要，可以辅助我们理解它们各自的职责，以便进一步理解后面会讲解的UIView与CALayer的协作时为什么不同的协作点是相应Framework来参与。
-
-<!-- more -->
 
 ![UIKit|QuarzCore|CoreGraphics关系图](https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/UIKit-QuarzCore-CoreGraphics-relations.jpg "UIKit|QuarzCore|CoreGraphics关系图")
 

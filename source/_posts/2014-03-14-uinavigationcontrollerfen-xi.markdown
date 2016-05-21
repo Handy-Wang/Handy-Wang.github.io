@@ -3,15 +3,16 @@ layout: post
 title: "UINavigationController分析"
 date: 2014-03-14 18:55:47 +0800
 comments: true
-categories: [UINavigationController, UINavigationBar, UINavigationItem, UIBarButtonItem]
+categories: [UINavigationController]
 ---
+
+<!--more-->
 
 <h3>UINavigationController结构</h3>
 导航条层次结构<br/>
 UINavigationController -(1:1)-> UINavigationBar -(1:多)-> UINavigationItem -(1:多)-> UIBarButtonItem -(1:1)-> CustomView<br/>
 其中UINavigationBar是UIView的子类，UINavigationItem和UIBarButtonItem都是NSObject的子类，也就是说UINavigationItem和UIBarButtonItem都是
 UINavigationBar用于显示的model数据。
-<!--more-->
 
 <h6>UINavigationBar与UINavigationItem</h6>
     UINavigationBar与UINavigationItem是一对多的关系，UINavigationItem存放UINavigationBar用于显示的数据(title, UIBarButtonItem等)。

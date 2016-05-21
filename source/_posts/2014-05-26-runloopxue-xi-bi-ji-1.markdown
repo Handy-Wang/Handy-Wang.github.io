@@ -3,8 +3,11 @@ layout: post
 title: "RunLoop学习笔记(一) 基本原理介绍"
 date: 2014-05-26 17:20:41 +0800
 comments: true
-categories: 
+categories: [RunLoop]
 ---
+
+<!--more-->
+
 在iOS实际开发中，大家一定遇到过以下问题：
 
 * 在一个线程里启动一个timer，但是这个timer一次也不会被调用？
@@ -36,8 +39,6 @@ categories:
 		2016-02-21 16:43:03.736 RunLoopXX[3782:200607] My name is Handy.Wang ...
 
 下面，我就从实际问题出发，来分享一下关于RunLoop的基本知识，同时解决上面三个问题。
-
-<!-- more -->
 
 ##什么是RunLoop
 顾名思义，RunLoop就是一个一直在运行着的(带条件的)循环。从用户在iPhone上点开一个App开始，这个App就可以接收用户的操作、可以向远程的服务器发起数据请求、在App里展示各种数据列表，所以这个App给用户的感觉就是它是一直活着的，一直在手机上运行的着，这就是RunLoop起到的作用。即，保持住App主线程，同时接收用户的事件，让用户可以一直在App里进行操作并得到在界面上的反馈。

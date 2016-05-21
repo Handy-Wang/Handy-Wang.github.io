@@ -1,10 +1,12 @@
 ---
 layout: post
-title: "Runtime（一）之 Message转发浅析"
+title: "Runtime之Message转发浅析"
 date: 2014-03-10 15:52:57 +0800
 comments: true
-categories: [NSObject, Message, Runtime]
+categories: [Runtime]
 ---
+
+<!--more-->
 
 <h3>Objective-C对象模型</h3>
 本文假定您对Objective-C对象模型已了解
@@ -15,7 +17,6 @@ categories: [NSObject, Message, Runtime]
 <h3>消息转发两大流程</h3>
 <h6>一）方法的动态决议</h6>
 <h6>二）完整的消息转发机制</h6>
-<!--more-->
 	
 <h3>一）方法的动态决议</h3>
 

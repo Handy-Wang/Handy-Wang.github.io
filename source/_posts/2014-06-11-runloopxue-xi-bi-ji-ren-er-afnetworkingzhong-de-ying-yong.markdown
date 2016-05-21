@@ -3,10 +3,12 @@ layout: post
 title: "RunLoop学习笔记(二) AFNetworking中的应用"
 date: 2014-06-11 11:16:27 +0800
 comments: true
-categories: 
+categories: [RunLoop]
 ---
-如果理解了上一篇RunLoop原理的内容，那么再来看AFNetworking的核心网络请求部分就很简单了。
+
 <!--more-->
+
+如果理解了上一篇RunLoop原理的内容，那么再来看AFNetworking的核心网络请求部分就很简单了。
 
 对于AFNetworking来说核心的有两大部分：网络请求和缓存。
 

@@ -3,8 +3,10 @@ layout: post
 title: "UIView与CALayer中动画的创建和执行过程"
 date: 2015-10-11 22:49:40 +0800
 comments: true
-categories: 
+categories: [Runtime]
 ---
+
+<!--more-->
 
 ##写在最前面
 本文假设您已有RunLoop和CAAnimation的相关知识，所以这里不对[RunLoop](http://blog.handy.wang/blog/2014/05/26/runloopxue-xi-bi-ji-1/)和CAAnimation的细节进行介绍。但是，这里仍然要提前提及几个知识点：CFRunLoopActivity、CAAction、CAAnimation、CATransaction

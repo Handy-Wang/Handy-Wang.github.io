@@ -3,14 +3,14 @@ layout: post
 title: "UIImage stretch"
 date: 2016-05-13 15:05:40 +0800
 comments: true
-categories: 
+categories: [UIKit]
 ---
 
-## 一张可拉伸图片的定义－译自[iOS原文](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIImage_Class/#Defining a Stretchable Image)
+<!--more-->
+
+# 可拉伸图片的定义（ 译自[iOS原文](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIImage_Class/#Defining a Stretchable Image) ）
 <br />
 一张可拉伸的图片其实给自己定义了一个区域，在这个区域内的图片内容以一种更美观优雅的方式被重复显示。可拉伸图片通常用于视图的背景，因为这种图片可以按拉伸区域的定义被撑大或缩小，从而以一种更美观的方式来填充视图区域。
-
-<!--more-->
 
 <br />
 iOS提供了 `resizableImageWithCapInsets:`、`resizableImageWithCapInsets:resizingMode:` 两个方法来指定图片的拉伸区域。方法中的`insets`参数(insets = (top,left,bottom,right))把图片细分为了两个或多个区域，其中的top/left/bottom/right称为inset。给insets中的每个inset指定一个非零值，就可以把图片细分为9个区域，如下图。
@@ -25,7 +25,7 @@ iOS提供了 `resizableImageWithCapInsets:`、`resizableImageWithCapInsets:resiz
 
 ***
 
-## 图片保护区域
+# 图片保护区域
 
 基于上面Apple对图片拉伸的描述，下面从实例例子出发来讲讲图片的保护区域
 
@@ -57,7 +57,7 @@ iOS提供了 `resizableImageWithCapInsets:`、`resizableImageWithCapInsets:resiz
 
 > ![image_stretch4.png](https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/image_stretch4.png)
 
-## iOS Xcode里的image slicing功能
+# iOS Xcode里的image slicing功能
 
 看完以上内容已经完全可以了解stretch的概念了，那么既然已经看到这里了，我再多聊聊`iOS Xcode里的image slicing功能`。
 
@@ -80,7 +80,7 @@ Image Slicing功能默认是把可拉伸区域定义为1x1日区域(如下图红
 
 完结。
 
-## 参考
+# 参考
 
 * [Defining a Stretchable Image](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIImage_Class/)
 * [WWDC 2013 Session笔记 - Xcode5和ObjC新特性](https://onevcat.com/2013/06/new-in-xcode5-and-objc/)

@@ -1,20 +1,20 @@
 ---
 layout: post
-title: "扩展UITextView &amp; UITextField支持九宫格对齐方式"
+title: "UITextView &amp; UITextField的九宫格对齐方式"
 date: 2016-05-04 21:27:05 +0800
 comments: true
-categories: 
+categories: [UIKit]
 ---
-
-###目标
-
-iOS原生的 UITextField 和 UITextView 只支持文本内容的左、中、右对齐，但是目前我的需求是需要让UITextField 和 UITextView 支持9宫格对齐方式，并能按此对齐方式进行正常输入，如下图：
 
 <!-- more -->
 
+#目标
+
+iOS原生的 UITextField 和 UITextView 只支持文本内容的左、中、右对齐，但是目前我的需求是需要让UITextField 和 UITextView 支持9宫格对齐方式，并能按此对齐方式进行正常输入，如下图：
+
 ![目标](https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/9point_alignment_textfield_textview1.png "目标")
 
-###知识铺垫
+#知识铺垫
 
 iOS7之后，UILabel / UITextField / UITextView的实现采用TextKit进行了替换，所以对于这个命题我主要需要关注TextKit. 
 下面以一张图来说明TextKit内部的关键类与UITextView的逻辑关系. 
@@ -31,11 +31,11 @@ iOS7之后，UILabel / UITextField / UITextView的实现采用TextKit进行了�
   * 有了以上对TextKit与UITextView关系的初步了解后，要做到目标图中UITextView的样式，纵向上需设置textContainerInset的top和bottom，横向上需要设置UITextView的textAlignment即可。
   * UITextField要做目标图中的样式，
 
-###源码
+#源码
 
 加微博 @我是小山我是坏人
 
-###参考
+#参考
 * [Text Kit入门](http://esoftmobile.com/2013/10/17/text-kit%E5%85%A5%E9%97%A8/)
 * [Text Kit进阶](http://esoftmobile.com/2013/10/17/text-kit%E8%BF%9B%E9%98%B6/)
 * [第 9 章　iOS 7中文字排版和渲染引擎——Text Kit](http://www.ituring.com.cn/tupubarticle/2542)
