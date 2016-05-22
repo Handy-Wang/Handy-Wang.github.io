@@ -4,7 +4,7 @@
   <title><![CDATA[Handy's]]></title>
   <link href="http://blog.handy.wang/atom.xml" rel="self"/>
   <link href="http://blog.handy.wang/"/>
-  <updated>2016-05-22T12:07:35+08:00</updated>
+  <updated>2016-05-22T14:58:57+08:00</updated>
   <id>http://blog.handy.wang/</id>
   <author>
     <name><![CDATA[Handy.Wang]]></name>
@@ -1766,72 +1766,138 @@ _animView.center = CGPointMake(_animView.center.x, _animView.center.y - 10);
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[RunLoop学习笔记(二) AFNetworking中的应用]]></title>
+    <title type="html"><![CDATA[RunLoop学习笔记(二) AFNetworking的守护线程]]></title>
     <link href="http://blog.handy.wang/blog/2014/06/11/runloopxue-xi-bi-ji-ren-er-afnetworkingzhong-de-ying-yong/"/>
     <updated>2014-06-11T11:16:27+08:00</updated>
     <id>http://blog.handy.wang/blog/2014/06/11/runloopxue-xi-bi-ji-ren-er-afnetworkingzhong-de-ying-yong</id>
     <content type="html"><![CDATA[<!--more-->
 
 
-<p>如果理解了上一篇RunLoop原理的内容，那么再来看AFNetworking的核心网络请求部分就很简单了。</p>
+<p>如果理解了上一篇<a href="http://blog.handy.wang/blog/2014/05/26/runloopxue-xi-bi-ji-1/">《RunLoop学习笔记(一) 基本原理介绍》</a>，那么再来看AFNetworking的核心网络请求部分就很简单了。</p>
 
-<p>对于AFNetworking来说核心的有两大部分：网络请求和缓存。</p>
-
-<p>本文只讲AFNetworking的网络请求部分，以及是如何与RunLoop产生关系的。</p>
+<p>对于AFNetworking来说核心的有两大部分：网络请求和缓存，本文只讲AFNetworking的网络请求部分以及是如何与RunLoop产生联系的.</p>
 
 <p>在类AFURLConnectionOperation.m的163行左右有以下代码</p>
 
-<pre><code>+ (void)networkRequestThreadEntryPoint:(id)__unused object {
-@autoreleasepool {
-    [[NSThread currentThread] setName:@"AFNetworking"];
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='objectivec'><span class='line'><span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">networkRequestThreadEntryPoint:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">__unused</span> <span class="n">object</span> <span class="p">{</span>
+</span><span class='line'>  <span class="err">@</span><span class="n">autoreleasepool</span> <span class="p">{</span>
+</span><span class='line'>      <span class="p">[[</span><span class="n">NSThread</span> <span class="n">currentThread</span><span class="p">]</span> <span class="nl">setName:</span><span class="s">@&quot;AFNetworking&quot;</span><span class="p">];</span>
+</span><span class='line'>  
+</span><span class='line'>      <span class="n">NSRunLoop</span> <span class="o">*</span><span class="n">runLoop</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSRunLoop</span> <span class="n">currentRunLoop</span><span class="p">];</span>
+</span><span class='line'>      <span class="p">[</span><span class="n">runLoop</span> <span class="nl">addPort:</span><span class="p">[</span><span class="n">NSMachPort</span> <span class="n">port</span><span class="p">]</span> <span class="nl">forMode:</span><span class="n">NSDefaultRunLoopMode</span><span class="p">];</span>
+</span><span class='line'>      <span class="p">[</span><span class="n">runLoop</span> <span class="n">run</span><span class="p">];</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>  
+</span><span class='line'><span class="o">+</span> <span class="p">(</span><span class="n">NSThread</span> <span class="o">*</span><span class="p">)</span><span class="n">networkRequestThread</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">static</span> <span class="n">NSThread</span> <span class="o">*</span><span class="n">_networkRequestThread</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">static</span> <span class="n">dispatch_once_t</span> <span class="n">oncePredicate</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">dispatch_once</span><span class="p">(</span><span class="o">&amp;</span><span class="n">oncePredicate</span><span class="p">,</span> <span class="o">^</span><span class="p">{</span>
+</span><span class='line'>        <span class="n">_networkRequestThread</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSThread</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithTarget:</span><span class="n">self</span> <span class="nl">selector:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">networkRequestThreadEntryPoint:</span><span class="p">)</span> <span class="nl">object:</span><span class="nb">nil</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">_networkRequestThread</span> <span class="n">start</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="n">_networkRequestThread</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
-    NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
-    [runLoop addPort:[NSMachPort port] forMode:NSDefaultRunLoopMode];
-    [runLoop run];
-}
-}
 
-+ (NSThread *)networkRequestThread {
-    static NSThread *_networkRequestThread = nil;
-    static dispatch_once_t oncePredicate;
-    dispatch_once(&amp;oncePredicate, ^{
-        _networkRequestThread = [[NSThread alloc] initWithTarget:self selector:@selector(networkRequestThreadEntryPoint:) object:nil];
-        [_networkRequestThread start];
-    });
+<p>此代码片断创建了一个名为AFNetworking单例的线程，给这个线程的RunLoop设定了一个[NSMachPort port]，让RunLoop一直监听NSMachPort实例上的消息，但是，可以看到这个port实例没有被保存，所以在整个AFNetworking源代码里是不会有线程给这个port实例发消息的，也就是变相的将此线程一直维持住，即这个线程的RunLoop是“死循环”，我把这个单例线程称为AFNetworking的守护线程.</p>
 
-    return _networkRequestThread;
-}
-</code></pre>
+<p>我们在这个类里再搜下networkRequestThread方法的调用，可以看到下面的代码：</p>
 
-<p>此代码片断创建了一个名为AFNetworking单例的线程，给这个线程的RunLoop设定了一个[NSMachPort port]，让RunLoop一直监听NSMachPort实例上的消息，但是，可以看到这个port实例没有被保存，所以在整个AFNetworking源代码里是不会有线程给这个port实例发消息的，也就是变相的将此线程一直维持住，即这个线程的RunLoop是“死循环”。</p>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+</pre></td><td class='code'><pre><code class='objectivec'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">start</span> <span class="p">{</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">lock</span> <span class="n">lock</span><span class="p">];</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">([</span><span class="n">self</span> <span class="n">isCancelled</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">self</span> <span class="nl">performSelector:</span><span class="k">@selector</span><span class="p">(</span><span class="n">cancelConnection</span><span class="p">)</span> <span class="nl">onThread:</span><span class="p">[[</span><span class="n">self</span> <span class="n">class</span><span class="p">]</span> <span class="n">networkRequestThread</span><span class="p">]</span> <span class="nl">withObject:</span><span class="nb">nil</span> <span class="nl">waitUntilDone:</span><span class="n">NO</span> <span class="nl">modes:</span><span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">runLoopModes</span> <span class="n">allObjects</span><span class="p">]];</span>
+</span><span class='line'>    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">([</span><span class="n">self</span> <span class="n">isReady</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">self</span><span class="p">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">AFOperationExecutingState</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="p">[</span><span class="n">self</span> <span class="nl">performSelector:</span><span class="k">@selector</span><span class="p">(</span><span class="n">operationDidStart</span><span class="p">)</span> <span class="nl">onThread:</span><span class="p">[[</span><span class="n">self</span> <span class="n">class</span><span class="p">]</span> <span class="n">networkRequestThread</span><span class="p">]</span> <span class="nl">withObject:</span><span class="nb">nil</span> <span class="nl">waitUntilDone:</span><span class="n">NO</span> <span class="nl">modes:</span><span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">runLoopModes</span> <span class="n">allObjects</span><span class="p">]];</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">lock</span> <span class="n">unlock</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">operationDidStart</span> <span class="p">{</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">lock</span> <span class="n">lock</span><span class="p">];</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">[</span><span class="n">self</span> <span class="n">isCancelled</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">self</span><span class="p">.</span><span class="n">connection</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSURLConnection</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithRequest:</span><span class="n">self</span><span class="p">.</span><span class="n">request</span> <span class="nl">delegate:</span><span class="n">self</span> <span class="nl">startImmediately:</span><span class="n">NO</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">NSRunLoop</span> <span class="o">*</span><span class="n">runLoop</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSRunLoop</span> <span class="n">currentRunLoop</span><span class="p">];</span>
+</span><span class='line'>        <span class="k">for</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="n">runLoopMode</span> <span class="k">in</span> <span class="n">self</span><span class="p">.</span><span class="n">runLoopModes</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">connection</span> <span class="nl">scheduleInRunLoop:</span><span class="n">runLoop</span> <span class="nl">forMode:</span><span class="n">runLoopMode</span><span class="p">];</span>
+</span><span class='line'>            <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">outputStream</span> <span class="nl">scheduleInRunLoop:</span><span class="n">runLoop</span> <span class="nl">forMode:</span><span class="n">runLoopMode</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">outputStream</span> <span class="n">open</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">connection</span> <span class="n">start</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">lock</span> <span class="n">unlock</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">dispatch_async</span><span class="p">(</span><span class="n">dispatch_get_main_queue</span><span class="p">(),</span> <span class="o">^</span><span class="p">{</span>
+</span><span class='line'>        <span class="p">[[</span><span class="n">NSNotificationCenter</span> <span class="n">defaultCenter</span><span class="p">]</span> <span class="nl">postNotificationName:</span><span class="n">AFNetworkingOperationDidStartNotification</span> <span class="nl">object:</span><span class="n">self</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">});</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
-<p>我们在这个类里再搜下networkRequestThread的调用时，可以看到下面的代码：</p>
 
-<pre><code>- (void)operationDidStart {
-    [self.lock lock];
-    if (![self isCancelled]) {
-        self.connection = [[NSURLConnection alloc] initWithRequest:self.request delegate:self startImmediately:NO];
+<p>这是发起网络请求的代码。创建了一个NSURLConnection并将它加入到守护线程中执行。同时，在AFURLConnectionOperation.m文件中还可以看到其它围绕A这个单例线程展开的逻辑，比如operationDidPause、cancelConnection。所以，在这个单例线程中采用RunLoop监听NSMachPort来维持住线程的方式才是核心。</p>
 
-        NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
-        for (NSString *runLoopMode in self.runLoopModes) {
-            [self.connection scheduleInRunLoop:runLoop forMode:runLoopMode];
-            [self.outputStream scheduleInRunLoop:runLoop forMode:runLoopMode];
-        }
+<p><strong>综上</strong></p>
 
-        [self.outputStream open];
-        [self.connection start];
-    }
-    [self.lock unlock];
-
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [[NSNotificationCenter defaultCenter] postNotificationName:AFNetworkingOperationDidStartNotification object:self];
-    });
-}
-</code></pre>
-
-<p>这是发起网络请求的代码。创建了一个NSURLConnection并将它加入到刚才的单线程中执行。同时，在AFURLConnectionOperation.m文件中还可以看到其它围绕networkRequestThread这个线程展开的逻辑，比如operationDidPause、cancelConnection。所以，这个单例线程以及采用NSMachPort的方式维持RunLoop的方式才是核心。</p>
-
-<p><strong>综上</strong>，AFNetoworking的网络请求的核心是：<strong>单例线程</strong> + <strong>NSRunLoop</strong> + <strong>NSMachPort</strong> + <strong>NSURLConnection</strong>。</p>
+<p>AFNetoworking的网络请求的核心是：<strong>单例线程</strong>(NSRunLoop + NSMachPort) + <strong>NSURLConnection</strong>。</p>
 ]]></content>
   </entry>
   
