@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "UIView与CALayer协作渲染界面的过程"
+title: "界面渲染的整体流程"
 date: 2015-10-03 01:38:49 +0800
 comments: true
 categories: [Runtime]
