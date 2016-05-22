@@ -4,7 +4,7 @@
   <title><![CDATA[Category: UIKit | Handy's]]></title>
   <link href="http://blog.handy.wang/blog/categories/uikit/atom.xml" rel="self"/>
   <link href="http://blog.handy.wang/"/>
-  <updated>2016-05-22T17:34:50+08:00</updated>
+  <updated>2016-05-22T17:36:07+08:00</updated>
   <id>http://blog.handy.wang/</id>
   <author>
     <name><![CDATA[Handy.Wang]]></name>
@@ -288,6 +288,42 @@ If-None-Match的key，这对header与Last-Modified、If-Modified-Since的作用�
 <li><a href="http://blog.originate.com/blog/2014/02/20/afimagecache-vs-nsurlcache/"><strong>重点推荐</strong>-How Does Caching Work in AFNetworking? : AFImageCache &amp; NSUrlCache Explained</a></li>
 </ol>
 
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[界面渲染续之CALayer的显示流程]]></title>
+    <link href="http://blog.handy.wang/blog/2015/10/06/jie-mian-xuan-ran-de-zheng-ti-liu-cheng-xu-calayerde-xian-shi-liu-cheng/"/>
+    <updated>2015-10-06T17:11:22+08:00</updated>
+    <id>http://blog.handy.wang/blog/2015/10/06/jie-mian-xuan-ran-de-zheng-ti-liu-cheng-xu-calayerde-xian-shi-liu-cheng</id>
+    <content type="html"><![CDATA[<h1>总结</h1>
+
+<ul>
+<li>研究CALayer的display流程。</li>
+</ul>
+
+
+<p>```objectivec</p>
+
+<pre><code>1.1 第一步：setNeedDisplay(UIView) -&gt; setNeedDisplay(CALayer)
+
+1.2 第二步：View Drawing Cycle(Found dirty data) -&gt; display(CALayer) -&gt; displayInContext:(CALayer) 
+-&gt; drawLayer:InContext:(CALayerDelegate&lt;UIView&gt;) -&gt; drawRect:(CALayerDelegate&lt;UIView&gt;)
+
+1.3 第三步：View Drawing Cycle(Get layer model) -&gt; Compositing Layers(OpenGLES) -&gt; Render in device screen(GPU)
+</code></pre>
+
+<p>```</p>
+
+<ul>
+<li><p>setNeedDisplay时，是有BackingStore的参与的，通过符号断点CABackingStoreUpdate_可知。注：只创建CALayer时，需要调用setNeedDisplay才会使drawing cycle发起display流程；而创建UIView时设置frame时就会在UIView的内部调用setNeedDisplay，但是如果不把创建的view添加到父View上的话，CALayer的display方法同样也不会被调用，因为没有父View与说明不需要显示，那么肯定不会有display流程。</p></li>
+<li><p>不setNeedDisplay时，即直接修改layer的content时，无BackingStore参与，不会走display流程，conten不经过BackingStore这个缓冲区而直接被OpenGLES合成后加载到了GPU，而被显示了。相当于少了一道工序。这个流程应该与1.3一致。</p></li>
+</ul>
+
+
+<h1>测试代码</h1>
+
+<p><a href="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/CALayer_testcode.zip">下载测试代码</a></p>
 ]]></content>
   </entry>
   
