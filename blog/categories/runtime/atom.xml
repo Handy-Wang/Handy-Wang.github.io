@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Runtime | Handy's]]></title>
   <link href="http://blog.handy.wang/blog/categories/runtime/atom.xml" rel="self"/>
   <link href="http://blog.handy.wang/"/>
-  <updated>2016-05-22T16:49:45+08:00</updated>
+  <updated>2016-05-22T17:18:52+08:00</updated>
   <id>http://blog.handy.wang/</id>
   <author>
     <name><![CDATA[Handy.Wang]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[UIView和CALayer中动画的创建和执行过程]]></title>
+    <title type="html"><![CDATA[动画的创建和执行过程]]></title>
     <link href="http://blog.handy.wang/blog/2015/10/11/uiviewyu-calayerzhong-dong-hua-de-chuang-jian-he-zhi-xing-guo-cheng/"/>
     <updated>2015-10-11T22:49:40+08:00</updated>
     <id>http://blog.handy.wang/blog/2015/10/11/uiviewyu-calayerzhong-dong-hua-de-chuang-jian-he-zhi-xing-guo-cheng</id>
@@ -237,7 +237,7 @@ _animView.layer.position = CGPointMake(_animView.layer.position.x, _animView.lay
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[UIView与CALayer协作渲染界面的过程]]></title>
+    <title type="html"><![CDATA[界面渲染的整体流程]]></title>
     <link href="http://blog.handy.wang/blog/2015/10/03/uiviewyu-calayerxie-zuo-xuan-ran-jie-mian-de-guo-cheng/"/>
     <updated>2015-10-03T01:38:49+08:00</updated>
     <id>http://blog.handy.wang/blog/2015/10/03/uiviewyu-calayerxie-zuo-xuan-ran-jie-mian-de-guo-cheng</id>

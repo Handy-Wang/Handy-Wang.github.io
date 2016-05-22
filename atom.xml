@@ -4,7 +4,7 @@
   <title><![CDATA[Handy's]]></title>
   <link href="http://blog.handy.wang/atom.xml" rel="self"/>
   <link href="http://blog.handy.wang/"/>
-  <updated>2016-05-22T16:49:45+08:00</updated>
+  <updated>2016-05-22T17:18:52+08:00</updated>
   <id>http://blog.handy.wang/</id>
   <author>
     <name><![CDATA[Handy.Wang]]></name>
@@ -1322,7 +1322,7 @@ down机的时长。
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[UIView和CALayer中动画的创建和执行过程]]></title>
+    <title type="html"><![CDATA[动画的创建和执行过程]]></title>
     <link href="http://blog.handy.wang/blog/2015/10/11/uiviewyu-calayerzhong-dong-hua-de-chuang-jian-he-zhi-xing-guo-cheng/"/>
     <updated>2015-10-11T22:49:40+08:00</updated>
     <id>http://blog.handy.wang/blog/2015/10/11/uiviewyu-calayerzhong-dong-hua-de-chuang-jian-he-zhi-xing-guo-cheng</id>
@@ -1603,7 +1603,34 @@ down机的时长。
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[UIView与CALayer协作渲染界面的过程]]></title>
+    <title type="html"><![CDATA[界面渲染的整体流程(续)CALayer的显示流程]]></title>
+    <link href="http://blog.handy.wang/blog/2015/10/06/jie-mian-xuan-ran-de-zheng-ti-liu-cheng-xu-calayerde-xian-shi-liu-cheng/"/>
+    <updated>2015-10-06T17:11:22+08:00</updated>
+    <id>http://blog.handy.wang/blog/2015/10/06/jie-mian-xuan-ran-de-zheng-ti-liu-cheng-xu-calayerde-xian-shi-liu-cheng</id>
+    <content type="html"><![CDATA[<h1>总结</h1>
+
+<ol>
+<li><p>研究CALayer的display流程。</p>
+
+<p> <code>objectivec
+ 1.1 第一步：setNeedDisplay(UIView) -&gt; setNeedDisplay(CALayer)
+ 1.2 第二步：View Drawing Cycle(Found dirty data) -&gt; display(CALayer) -&gt; displayInContext:(CALayer)
+ -&gt; drawLayer:InContext:(CALayerDelegate&lt;UIView&gt;) -&gt; drawRect:(CALayerDelegate&lt;UIView&gt;)
+ 1.3 第三步：View Drawing Cycle(Get layer model) -&gt; Compositing Layers(OpenGLES) -&gt; Render in device screen(GPU)
+</code></p></li>
+<li><p>setNeedDisplay时，是有BackingStore的参与的，通过符号断点CABackingStoreUpdate_可知。注：只创建CALayer时，需要调用setNeedDisplay才会使drawing cycle发起display流程；而创建UIView时设置frame时就会在UIView的内部调用setNeedDisplay，但是如果不把创建的view添加到父View上的话，CALayer的display方法同样也不会被调用，因为没有父View与说明不需要显示，那么肯定不会有display流程。</p></li>
+<li>不setNeedDisplay时，即直接修改layer的content时，无BackingStore参与，不会走display流程，conten不经过BackingStore这个缓冲区而直接被OpenGLES合成后加载到了GPU，而被显示了。相当于少了一道工序。这个流程应该与1.3一致。</li>
+</ol>
+
+
+<h1>测试代码</h1>
+
+<p><a href="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/CALayer_testcode.zip">下载测试代码</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[界面渲染的整体流程]]></title>
     <link href="http://blog.handy.wang/blog/2015/10/03/uiviewyu-calayerxie-zuo-xuan-ran-jie-mian-de-guo-cheng/"/>
     <updated>2015-10-03T01:38:49+08:00</updated>
     <id>http://blog.handy.wang/blog/2015/10/03/uiviewyu-calayerxie-zuo-xuan-ran-jie-mian-de-guo-cheng</id>
@@ -3760,91 +3787,6 @@ Reveal App安装完成后，点开菜单Help->Getting Started，会出现一个�
 集成静态库和动态库的步骤。</p>
 
 <p>OK，大家可以试用一下。截止目前介绍的三款中，感觉这款的UE最NB，绝对产品级的。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[iOS App UI调试工具（二）· Realtime Debug Portal]]></title>
-    <link href="http://blog.handy.wang/blog/2013/12/17/ios-app-uidiao-shi-gong-ju2/"/>
-    <updated>2013-12-17T05:30:58+08:00</updated>
-    <id>http://blog.handy.wang/blog/2013/12/17/ios-app-uidiao-shi-gong-ju2</id>
-    <content type="html"><![CDATA[<!--more-->
-
-
-<p><img src="https://github-camo.global.ssl.fastly.net/03548ab74978beee15b711ab26b5ed1bd71714f2/687474703a2f2f7777772e76696e716f6e2e636f6d2f636f6465626c6f672f66636b656469746f722f75706c6f61642f696d6167652f323031332d30362f325f322e706e67"></p>
-
-<h3>Realtime Debug Portal简介</h3>
-
-
-<blockquote><p>RDP是一个类似Web Inspector的工具，把这个工具引入我们的项目工程，并做一些简单的配置，然后启动应用，<br/>在浏览器输入手机的IP地址，就可以看到UIView的树状结构和Log信息，还可以在浏览器中对View进行移动，<br/>隐藏，选中高亮等操作。</p><footer><strong>Realtime Debug Portal</strong> <cite><a href='https://github.com/vinqon/Realtime-Debug-Portal'>Read On</a></cite></footer></blockquote>
-
-
-
-
-<h3>配置步骤</h3>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>把库文件、头文件以及资源文件(bundle)引入项目即可，有两点需要注意一下：
-</span><span class='line'>
-</span><span class='line'>把工程中的Build Settings中的Other Linker Flags设置为-ObjC;
-</span><span class='line'>使用iOS5或以上SDK;
-</span><span class='line'>然后在合适位置调用以下代码：
-</span><span class='line'>#import "libRDP.h"
-</span><span class='line'>[RDP startServer];
-</span><span class='line'>启动应用之后，状态栏会显示出你需要访问的地址，模拟器一般会显示http://127.0.0.1:8080 ，
-</span><span class='line'>请使用Chrome或者Safari打开。
-</span><span class='line'>
-</span><span class='line'>当选中某个view之后，RDP会在这个view上面盖一层蓝色透明遮罩以便开发者区别。
-</span><span class='line'>用户可以通过按下方向键来移动view，每次会移动1个逻辑像素；按住shift加方向键可以移动10个逻辑像素；
-</span><span class='line'>按住w字母键，加方向键可以调整大小；
-</span><span class='line'>点击h可以切换hidden状态；</span></code></pre></td></tr></table></div></figure>
-
-
-<p>也可参考github上<a target="_blank" href="https://github.com/vinqon/Realtime-Debug-Portal">这里</a></p>
-
-<h3>试用体会</h3>
-
-
-<div>
-    1）目前，支持视图的Inspect、position和size调整、隐藏或显示
-</div>
-
-
-<div>
-    2）方便集成到项目，UE简单明了很容易上手，基本能满足界面布局调试需求
-</div>
-
-
-
-
-<h3>参考</h3>
-
-
-<ol style="margin-top:-18px; padding-left:28px;">
-    <li style="padding-bottom:10px;">
-        <a target="_blank" href="http://www.vinqon.com/codeblog/?detail/11109">Redesign Your App for iOS 7 之 页面布局</a><br/>
-    </li>
-    <li>
-        <a target="_blank" href="https://github.com/vinqon/Realtime-Debug-Portal">Realtime Debug Portal的github</a><br/>
-    </li>
-</ol>
-
-
-
 ]]></content>
   </entry>
   
