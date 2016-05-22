@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "RunLoop学习笔记(三)单聊performSelector:afterDealy:方法簇"
+title: "RunLoop学习笔记(三)详聊performSelector:afterDealy:方法簇"
 date: 2014-06-12 15:46:02 +0800
 comments: true
 categories: [RunLoop]
