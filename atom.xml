@@ -4,7 +4,7 @@
   <title><![CDATA[Handy's]]></title>
   <link href="http://blog.handy.wang/atom.xml" rel="self"/>
   <link href="http://blog.handy.wang/"/>
-  <updated>2016-05-22T16:47:50+08:00</updated>
+  <updated>2016-05-22T16:48:33+08:00</updated>
   <id>http://blog.handy.wang/</id>
   <author>
     <name><![CDATA[Handy.Wang]]></name>
@@ -1322,7 +1322,7 @@ down机的时长。
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[UIView与CALayer中动画的创建和执行过程]]></title>
+    <title type="html"><![CDATA[UIView和CALayer中动画的创建和执行过程]]></title>
     <link href="http://blog.handy.wang/blog/2015/10/11/uiviewyu-calayerzhong-dong-hua-de-chuang-jian-he-zhi-xing-guo-cheng/"/>
     <updated>2015-10-11T22:49:40+08:00</updated>
     <id>http://blog.handy.wang/blog/2015/10/11/uiviewyu-calayerzhong-dong-hua-de-chuang-jian-he-zhi-xing-guo-cheng</id>
