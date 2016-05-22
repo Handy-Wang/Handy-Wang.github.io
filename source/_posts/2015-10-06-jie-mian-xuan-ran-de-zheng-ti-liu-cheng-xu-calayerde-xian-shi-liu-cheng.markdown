@@ -3,7 +3,7 @@ layout: post
 title: "界面渲染续之CALayer的显示流程"
 date: 2015-10-06 17:11:22 +0800
 comments: true
-categories: 
+categories: [UIKit]
 ---
 
 # 总结
