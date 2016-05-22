@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "UIView与CALayer中动画的创建和执行过程"
+title: "UIView和CALayer中动画的创建和执行过程"
 date: 2015-10-11 22:49:40 +0800
 comments: true
 categories: [Runtime]
@@ -179,7 +179,7 @@ _animView.center = CGPointMake(_animView.center.x, _animView.center.y - 10);
 
 以上内容就是本章的全部内容.
 
-## 参考
+# 参考
 * [RunLoop学习笔记(一) 基本原理介绍](http://blog.handy.wang/blog/2014/05/26/runloopxue-xi-bi-ji-1/)
 * [Core Animation 高级动画技巧](http://blog.csdn.net/yaozhuoyu/article/details/9533909)
 * [谈谈iOS Animation](http://geeklu.com/2012/09/animation-in-ios/)
