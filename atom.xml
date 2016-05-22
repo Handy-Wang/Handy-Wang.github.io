@@ -4,7 +4,7 @@
   <title><![CDATA[Handy's]]></title>
   <link href="http://blog.handy.wang/atom.xml" rel="self"/>
   <link href="http://blog.handy.wang/"/>
-  <updated>2016-05-22T11:52:08+08:00</updated>
+  <updated>2016-05-22T11:54:11+08:00</updated>
   <id>http://blog.handy.wang/</id>
   <author>
     <name><![CDATA[Handy.Wang]]></name>
@@ -2217,7 +2217,7 @@ RunLoop的挂起是通过_CFRunLoopServiceMachPort &mdash;call&mdash;> mach_msg 
 
 <p>如果断点到代码 NSLog(@&ldquo;GCD Timer&hellip;&rdquo;); 这一行的话，可以在调用栈里看到Main RunLoop是通过<strong>CFRUNLOOP_IS_SERVING_THE_MAIN_DISPATCH_QUEUE</strong>来回调的；而把dispatch_get_main_queue换成dispatch_get_global_queue，那么在调用栈里将不会看到RunLoop相关的调用，而是和pthread相关。同理，GCD的dispatch_after在dispatch到main_queue时的timer机制才与RunLoop相关。</p>
 
-<h3>总结</h3>
+<h1>总结</h1>
 
 <p>在本文开头时，我提了三个问题，结合上面讲到的内容，分别作答如下：</p>
 
