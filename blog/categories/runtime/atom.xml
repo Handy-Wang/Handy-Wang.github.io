@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Runtime | Handy's]]></title>
   <link href="http://blog.handy.wang/blog/categories/runtime/atom.xml" rel="self"/>
   <link href="http://blog.handy.wang/"/>
-  <updated>2016-05-22T17:18:52+08:00</updated>
+  <updated>2016-05-22T17:34:50+08:00</updated>
   <id>http://blog.handy.wang/</id>
   <author>
     <name><![CDATA[Handy.Wang]]></name>
@@ -288,13 +288,15 @@ All rights reserved. </em>/</p>
 
 <p>如图所示，RunLoop/CALayer/UIView之间的协作流程就非常清楚了。下面按图中步骤对流程作下讲解：</p>
 
-<ol>
-<li><p>目前，我通过代码跟踪总结了两种触发界面渲染的情况
-1.1 通过在loadView过程中debug子view的drawRect:方法得知：RunLoop处于kCFRunLoopBeforeWaiting状态时会回调CoreAnimation中监听kCFRunLoopBeforeWaiting状态的RunLoopObserver，从而通过RunLoopObserver来进一步调用CoreAnimation内部的CA::Transaction::commit() ();方法，进而一步一步地调用到drawRect方法。</p>
+<p>1 目前，我通过代码跟踪总结了两种触发界面渲染的情况</p>
 
-<pre><code>```objectivec
-调用流程是：由下至上
-Triggered by BeforeWaiting Observer Callback
+<pre><code>    1.1 通过在loadView过程中debug子view的drawRect:方法得知：RunLoop处于kCFRunLoopBeforeWaiting状态时会回调CoreAnimation中监听kCFRunLoopBeforeWaiting状态的RunLoopObserver，从而通过RunLoopObserver来进一步调用CoreAnimation内部的CA::Transaction::commit() ();方法，进而一步一步地调用到drawRect方法。
+</code></pre>
+
+<p>```objectivec
+调用流程是：由下至上</p>
+
+<pre><code>Triggered by BeforeWaiting Observer Callback
 
 #0  0x00000001055825d0 in -[DMQView drawRect:] at /Users/xiaoshan/Home/iOS/SoucesCode/DispatchMainQueue/DispatchMainQueue/DMQView.m:16
 #1  0x0000000106471f08 in -[UIView(CALayerDelegate) drawLayer:inContext:] ()
@@ -316,14 +318,17 @@ Triggered by BeforeWaiting Observer Callback
 #16 0x00000001063bb610 in UIApplicationMain ()
 #17 0x00000001055828ef in main at /Users/xiaoshan/Home/iOS/SoucesCode/DispatchMainQueue/DispatchMainQueue/main.m:14
 #18 0x000000010876192d in start ()
-```
 </code></pre>
 
-<p>1.2 通过在VC里给一个按钮添加点击事件，并在事件对应的selector中修改子view的背景色，debug子view的drawRect:方法得知：RunLoop被iOS系统传递来的点击事件唤醒并由source1处理(<em>_IOHIDEventSystemClientQueueCallback)，并且在下一个runloop里由source0转发给UIApplication(</em>UIApplicationHandleEventQueue)，从而能过source0里的事件队列来调用CoreAnimation内部的CA::Transaction::commit() ();方法，进而一步一步的调用drawRect方法。</p>
+<p>```</p>
 
-<pre><code>```objectivec
-调用流程是：由下至上
-Triggered by Source1 [Click Event] -&gt; Source0
+<pre><code>    1.2 通过在VC里给一个按钮添加点击事件，并在事件对应的selector中修改子view的背景色，debug子view的drawRect:方法得知：RunLoop被iOS系统传递来的点击事件唤醒并由source1处理(__IOHIDEventSystemClientQueueCallback)，并且在下一个runloop里由source0转发给UIApplication(_UIApplicationHandleEventQueue)，从而能过source0里的事件队列来调用CoreAnimation内部的CA::Transaction::commit() ();方法，进而一步一步的调用drawRect方法。
+</code></pre>
+
+<p>```objectivec
+调用流程是：由下至上</p>
+
+<pre><code>Triggered by Source1 [Click Event] -&gt; Source0
 
 #0  0x00000001055825d0 in -[DMQView drawRect:] at /Users/xiaoshan/Home/iOS/SoucesCode/DispatchMainQueue/DispatchMainQueue/DMQView.m:16
 #1  0x0000000106471f08 in -[UIView(CALayerDelegate) drawLayer:inContext:] ()
@@ -345,29 +350,38 @@ Triggered by Source1 [Click Event] -&gt; Source0
 #16 0x00000001063bb610 in UIApplicationMain ()
 #17 0x00000001055828ef in main at /Users/xiaoshan/Home/iOS/SoucesCode/DispatchMainQueue/DispatchMainQueue/main.m:14
 #18 0x000000010876192d in start ()
-```
+</code></pre>
 
-可见，上面两种情况都是触发CoreAnimation的CA::Transaction::commit() ();方法来达到触发CALayer/UIView的渲染，所以这个CA::Transaction机制很关键。
-</code></pre></li>
-<li><p>其实这一步已经进入到了Quarz Core的内部(Core Animation)，即调用CA::Transaction::commit() ();来创建CATrasaction，然后进一步调用-[CALayer drawInContext:] ()</p>
+<p>```</p>
 
-<p> <code>objectivec
- #2  0x0000000109f7c183 in -[CALayer drawInContext:] ()
- #3  0x0000000109e7133d in CABackingStoreUpdate_ ()
- #4  0x0000000109f7c002 in ___ZN2CA5Layer8display_Ev_block_invoke ()
- #5  0x0000000109f7be80 in CA::Layer::display_() ()
- #6  0x0000000109f70c69 in CA::Layer::display_if_needed(CA::Transaction*) ()
- #7  0x0000000109f70cf9 in CA::Layer::layout_and_display_if_needed(CA::Transaction*) ()
- #8  0x0000000109f65475 in CA::Context::commit_transaction(CA::Transaction*) ()
- #9  0x0000000109f92c0a in CA::Transaction::commit() ()
-</code></p></li>
-<li><p>回调CALayer的Delegate(UIView)，问UIView没有需要画的内容，即回调到drawRect:方法。</p></li>
-<li>在drawRect:方法里可以通过CoreGraphics函数或UIKit中对CoreGraphics封装的方法进行画图操作，这些画图的操作内容都是以Off-Screen离屏(广义的离屏，因为没有在GPU中进行)方式进行画图。<a href="http://objccn.io/issue-3-1/">在这里</a>可以了解离屏绘图及CPU/GPU的工作。 另，注意图中虚线部分的3|4步骤的情况：因为CALayer可以单独存在进行界面渲染，所以CALayer也可以直接与CoreGraphics产生联系。</li>
-<li>无论是有UIView参与的或是直接采用CALayer渲染的操作都会体现在CALayer上(在没有CoreGraphics参与的情况下，UIView或CALayer本身也有一些在业务层面需要显示的内容，所以这里说的“体现在CALayer上”，是泛指UIViewr的子视图或CALaye的子图层以及CoreGraphics参与的内容)。</li>
-<li>CoreAnimation(CALayer)把它的内容转成位图(纹理)，然后通过OpenGLES把位图内容传送到GPU的帧缓冲区。</li>
-<li>等到由iOS显示屏时钟信号驱动的VSync信号来临时，则把GPU帧缓冲区里的内容显示到iOS显示屏上。<a href="http://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&amp;mid=400417748&amp;idx=1&amp;sn=0c5f6747dd192c5a0eea32bb4650c160&amp;scene=4#wechat_redirect">在这里</a>的<strong>iOS 渲染过程</strong>一节可以了解得更详细。</li>
-</ol>
+<pre><code>    可见，上面两种情况都是触发CoreAnimation的CA::Transaction::commit() ();方法来达到触发CALayer/UIView的渲染，所以这个CA::Transaction机制很关键。
+</code></pre>
 
+<p>2 其实这一步已经进入到了Quarz Core的内部(Core Animation)，即调用CA::Transaction::commit() ();来创建CATrasaction，然后进一步调用-[CALayer drawInContext:] ()</p>
+
+<p>```objectivec</p>
+
+<pre><code>#2  0x0000000109f7c183 in -[CALayer drawInContext:] ()
+#3  0x0000000109e7133d in CABackingStoreUpdate_ ()
+#4  0x0000000109f7c002 in ___ZN2CA5Layer8display_Ev_block_invoke ()
+#5  0x0000000109f7be80 in CA::Layer::display_() ()
+#6  0x0000000109f70c69 in CA::Layer::display_if_needed(CA::Transaction*) ()
+#7  0x0000000109f70cf9 in CA::Layer::layout_and_display_if_needed(CA::Transaction*) ()
+#8  0x0000000109f65475 in CA::Context::commit_transaction(CA::Transaction*) ()
+#9  0x0000000109f92c0a in CA::Transaction::commit() ()
+</code></pre>
+
+<p>```</p>
+
+<p>3 回调CALayer的Delegate(UIView)，问UIView没有需要画的内容，即回调到drawRect:方法。</p>
+
+<p>4 在drawRect:方法里可以通过CoreGraphics函数或UIKit中对CoreGraphics封装的方法进行画图操作，这些画图的操作内容都是以Off-Screen离屏(广义的离屏，因为没有在GPU中进行)方式进行画图。<a href="http://objccn.io/issue-3-1/">在这里</a>可以了解离屏绘图及CPU/GPU的工作。 另，注意图中虚线部分的3|4步骤的情况：因为CALayer可以单独存在进行界面渲染，所以CALayer也可以直接与CoreGraphics产生联系。</p>
+
+<p>5 无论是有UIView参与的或是直接采用CALayer渲染的操作都会体现在CALayer上(在没有CoreGraphics参与的情况下，UIView或CALayer本身也有一些在业务层面需要显示的内容，所以这里说的“体现在CALayer上”，是泛指UIViewr的子视图或CALaye的子图层以及CoreGraphics参与的内容)。</p>
+
+<p>6 CoreAnimation(CALayer)把它的内容转成位图(纹理)，然后通过OpenGLES把位图内容传送到GPU的帧缓冲区。</p>
+
+<p>7 等到由iOS显示屏时钟信号驱动的VSync信号来临时，则把GPU帧缓冲区里的内容显示到iOS显示屏上。<a href="http://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&amp;mid=400417748&amp;idx=1&amp;sn=0c5f6747dd192c5a0eea32bb4650c160&amp;scene=4#wechat_redirect">在这里</a>的<strong>iOS 渲染过程</strong>一节可以了解得更详细。</p>
 
 <h1>参考</h1>
 
