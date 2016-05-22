@@ -285,7 +285,7 @@ dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), di
     
 如果断点到代码 NSLog(@"GCD Timer..."); 这一行的话，可以在调用栈里看到Main RunLoop是通过__CFRUNLOOP_IS_SERVING_THE_MAIN_DISPATCH_QUEUE__来回调的；而把dispatch_get_main_queue换成dispatch_get_global_queue，那么在调用栈里将不会看到RunLoop相关的调用，而是和pthread相关。同理，GCD的dispatch_after在dispatch到main_queue时的timer机制才与RunLoop相关。
 		
-###总结
+#总结
 在本文开头时，我提了三个问题，结合上面讲到的内容，分别作答如下：
 
 * 在一个子线程里启动一个timer，但是这个timer一次也不会被调用？
