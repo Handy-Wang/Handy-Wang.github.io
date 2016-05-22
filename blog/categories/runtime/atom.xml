@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Runtime | Handy's]]></title>
   <link href="http://blog.handy.wang/blog/categories/runtime/atom.xml" rel="self"/>
   <link href="http://blog.handy.wang/"/>
-  <updated>2016-05-22T16:48:33+08:00</updated>
+  <updated>2016-05-22T16:49:45+08:00</updated>
   <id>http://blog.handy.wang/</id>
   <author>
     <name><![CDATA[Handy.Wang]]></name>
@@ -222,7 +222,7 @@ _animView.layer.position = CGPointMake(_animView.layer.position.x, _animView.lay
 
 <p>以上内容就是本章的全部内容.</p>
 
-<h2>参考</h2>
+<h1>参考</h1>
 
 <ul>
 <li><a href="http://blog.handy.wang/blog/2014/05/26/runloopxue-xi-bi-ji-1/">RunLoop学习笔记(一) 基本原理介绍</a></li>
