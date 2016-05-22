@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Runtime | Handy's]]></title>
   <link href="http://blog.handy.wang/blog/categories/runtime/atom.xml" rel="self"/>
   <link href="http://blog.handy.wang/"/>
-  <updated>2016-05-22T16:06:03+08:00</updated>
+  <updated>2016-05-22T16:47:50+08:00</updated>
   <id>http://blog.handy.wang/</id>
   <author>
     <name><![CDATA[Handy.Wang]]></name>
@@ -21,163 +21,206 @@
     <content type="html"><![CDATA[<!--more-->
 
 
-<h2>写在最前面</h2>
+<h1>基本概念介绍</h1>
 
-<p>本文假设您已有RunLoop和CAAnimation的相关知识，所以这里不对<a href="http://blog.handy.wang/blog/2014/05/26/runloopxue-xi-bi-ji-1/">RunLoop</a>和CAAnimation的细节进行介绍。但是，这里仍然要提前提及几个知识点：CFRunLoopActivity、CAAction、CAAnimation、CATransaction</p>
+<p>本文假设您已有RunLoop和CAAnimation的相关知识，所以这里不对<a href="http://blog.handy.wang/blog/2014/05/26/runloopxue-xi-bi-ji-1/">RunLoop</a>和CAAnimation的细节进行介绍。但是，这里需要提及几个重要知识点：CFRunLoopActivity、CAAction、CAAnimation、CATransaction</p>
 
 <p><strong>RunLoop的6个CFRunLoopActivity</strong></p>
 
-<pre><code>typedef CF_OPTIONS(CFOptionFlags, CFRunLoopActivity) {
-    kCFRunLoopEntry = (1UL &lt;&lt; 0),//即将进入RunLoop
-    kCFRunLoopBeforeTimers = (1UL &lt;&lt; 1),//Timer即将触发
-    kCFRunLoopBeforeSources = (1UL &lt;&lt; 2),//Source0即将触发
-    kCFRunLoopBeforeWaiting = (1UL &lt;&lt; 5),//RunLoop即将休眠
-    kCFRunLoopAfterWaiting = (1UL &lt;&lt; 6),//RunLoop已被唤醒
-    kCFRunLoopExit = (1UL &lt;&lt; 7),//RunLoop已结束
-    kCFRunLoopAllActivities = 0x0FFFFFFFU
-};
+<p>```objectivec
+typedef CF_OPTIONS(CFOptionFlags, CFRunLoopActivity) {</p>
+
+<pre><code>kCFRunLoopEntry = (1UL &lt;&lt; 0),//即将进入RunLoop
+kCFRunLoopBeforeTimers = (1UL &lt;&lt; 1),//Timer即将触发
+kCFRunLoopBeforeSources = (1UL &lt;&lt; 2),//Source0即将触发
+kCFRunLoopBeforeWaiting = (1UL &lt;&lt; 5),//RunLoop即将休眠
+kCFRunLoopAfterWaiting = (1UL &lt;&lt; 6),//RunLoop已被唤醒
+kCFRunLoopExit = (1UL &lt;&lt; 7),//RunLoop已结束
+kCFRunLoopAllActivities = 0x0FFFFFFFU
 </code></pre>
 
-<p><strong>CAAction</strong>
-CAAction即动画行为，它是一个protocol(CAAnimation实现了此protocol)，即定义一个动画要做的事情。比如，我们平时无论是否在Animaiton block里修改View的属性时，都会触发Core Animation回调CALayer，再回调UIView来获取CAAction(如：CABasicAnimation)，如果不在Animaiton block里修改View的属性时获取到的是[NSNull null]，在Animaiton block里修改View的属性时获取到的是CABasicAnimation等(后面有图标这个过程)，也可以返回自定义的动画(实现了CAAction的动画)。</p>
+<p>};
+```</p>
 
 <p><strong>CAAnimation的继承结构</strong></p>
 
 <p><img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/uiview_calayer_animation_creation_caanimation_hierarchy.jpg" alt="CAAnimation.jpg" /></p>
 
-<p><strong>CATransaction</strong>
-CATransacton是一个与动画相关的概念，它负责把多个对Layer或View的可动画属性的修改集中在一起一次性提交并执行，所以Animation应该需要被包含在CATransaction中的。CATransaction分为<strong>隐式</strong>和<strong>显示</strong>。
-如下，这就是一个<strong>显示的CATransaction</strong>代码片断，即由开发人员来begin和commit。</p>
+<p><strong>CAAction</strong></p>
 
-<pre><code>[CATransaction begin];
+<p>CAAction即动画行为，它是一个protocol(CAAnimation实现了此protocol)，即定义一个动画要做的事情。无论是否在Animaiton block里修改View的属性时，都会触发Core Animation回调CALayer，CALayer再回调UIView来获取CAAction(如：CABasicAnimation)；如果不在Animaiton block里修改View的属性时，CALayer再回调UIView时获取到的是<a href="%E7%A9%BACAAction">NSNull null</a>；而在Animaiton block里修改View的属性时，CALayer再回调UIView时获取到的是CAAction的一个实现类(如CABasicAnimation等, 后面有流程图来说明这个过程).</p>
+
+<p><strong>CATransaction</strong></p>
+
+<p>CATransacton是一个与动画相关的概念，它负责把多个对Layer或View的可动画属性的修改集中在一起一次性提交并执行，所以Animation应该需要被包含在CATransaction中的。CATransaction分为<strong>隐式</strong>和<strong>显示</strong>.</p>
+
+<p>如下，这就是一个<strong>显示的CATransaction</strong>代码片断，即由开发人员来begin和commit。</p>
+
+<p><code>objectivec
+[CATransaction begin];
 [CATransaction setValue:@(NO) forKey:kCATransactionDisableActions];
 [CATransaction setValue:@(0.5) forKey:kCATransactionAnimationDuration];
 [CATransaction setValue:^() {NSLog(@"Completion...");} forKey:kCATransactionCompletionBlock];
 _animLayer.position = CGPointMake(_animLayer.position.x, _animLayer.position.y - 10);
 [CATransaction commit];
-</code></pre>
+</code></p>
 
-<p>从代码片断中可见虽然只是修改了layer的position，但是最终动画的duration、动画回调都可能通过CATransaction来提供。当不是简单的修改position，而是给layer加一个CAAnimation时，最终动画的duration等参数则是以CAAnimation的内容为主。同时，CATransaction支持嵌套，以最外层commit为准。这里还需要关注一下对kCATransactionDisableActions的修改，kCATransactionDisableActions表示是否禁用CAAction的检索：若为YES则禁用，即无论在动画代码块里的UI属性修改都不会有动画效果，actionForKey:方法不会回调；若为NO则开启CAAction的检索。</p>
+<p>从代码片断中可见，虽然只是修改了layer的position，但是最终动画的duration、动画回调都可能通过CATransaction来提供。当不是简单的修改position，而是给layer加一个CAAnimation时，最终动画的duration等参数则是以CAAnimation的内容为主。另外，CATransaction还支持嵌套，以最外层commit为准。这里还需要关注一下对kCATransactionDisableActions的修改，kCATransactionDisableActions表示是否禁用CAAction的检索：若为YES则禁用，即无论是否在Animation Block里对UI属性进行修改都不会有动画效果，因为此时actionForKey:方法不会回调；若为NO则开启CAAction的检索。</p>
 
 <p>关于<strong>隐式的CATransaction</strong>，有<a href="http://blog.csdn.net/yaozhuoyu/article/details/9533909">资料</a>说是</p>
 
-<pre><code>在大多数情况下，我们并不需要去创建自己的transaction。
-当我们给layer添加一个显式或者隐式的动画的时候，core animation会自动的为我们创建一个隐式的
+<p><code>objectivec
+在大多数情况下，我们并不需要去创建自己的transaction。
+当我们给layer添加一个显式或者隐式的Animation的时候，core animation会自动的为我们创建一个隐式的
 transaction。
-</code></pre>
+</code></p>
 
 <p>也有<a href="http://geeklu.com/2012/09/animation-in-ios/">资料</a>说是</p>
 
-<pre><code>CATransaction也分两类,显式的和隐式的,当在某次RunLoop中设置一个animatable属性的时候,
+<p><code>objectivec
+CATransaction也分两类,显式的和隐式的,当在某次RunLoop中设置一个animatable属性的时候,
 如果发现当前没有事务,则会自动创建一个CA事务
+</code></p>
+
+<p>但是，无论是在非Animation Block里修改Layer的position等属性就有隐式动画效果，还是在Animation Block里修改View的center等属性就有显式动画效果，在断点+[CATransaction begin]、CA::Transaction::create()方法时，这两个方法都没有被调用，说明没有新创建CATransaction.</p>
+
+<p>```objectivec
+//隐式动画 &ndash; 在非Animation Block里修改Layer的position等属性就有隐式动画效果
+<em>animLayer.position = CGPointMake(</em>animLayer.position.x, _animLayer.position.y &ndash; 10);</p>
+
+<p>//显式动画 &ndash; 在Animation Block里修改View的center等属性就有显式动画效果
+[UIView animateWithDuration:0.5 animations:^{</p>
+
+<pre><code>_animView.center = CGPointMake(_animView.center.x, _animView.center.y - 10);
 </code></pre>
 
-<p>但是，无论通过修改Layer的position属性来达到隐式动画效果时，还是通过修改View的center属性达到显式动画效果时断点+[CATransaction begin]、CA::Transaction::create()方法都没有被调用，说明没有新创建CATransaction.</p>
+<p>}];
+```</p>
 
-<pre><code>隐式动画
-_animLayer.position = CGPointMake(_animLayer.position.x, _animLayer.position.y - 10);
+<p>前面我们提到Animation是要依附于CATransaction的commit才得以执行的，而且我们在实验隐式动画和显式动画时，当CAAction被查找(后面会图示)完成后CA::Transaction:commit会被调用到，所以RunLoop回调CoreAnimation进行创建动画的过程时应该事先已创建了一个根Transaction，再次通过断点CA::Transaction::create方法也证明了Main RunLoop通过回调<strong><strong>CFRUNLOOP_IS_CALLING_OUT_TO_A_SOURCE0_PERFORM_FUNCTION</strong></strong>只调用了一次CA::Transaction::create方法来创建了一个根Transaction，所以这就能解释能为什么隐式动画和显式动画时Core Animation内部没有新创建CATransaction而只是在检索CAAction返回后调用CA::Transaction:commit就会有动画效果了。所以，我理解的隐式CATransaction是指这里我实验分析出来的根Transaction。</p>
 
-显式动画
-[UIView animateWithDuration:0.5 animations:^{
-    _animView.center = CGPointMake(_animView.center.x, _animView.center.y - 10);
-}];
-</code></pre>
+<h1>动画的创建、执行过程</h1>
 
-<p>但是前面我们提到Animation是要依附于CATransaction的commit才得以执行的，而且我们在实验隐式动画和显式动画时，当CAAction被查找(后面会图示)完成后CA::Transaction:commit会被调用到，所以RunLoop回调进行创建动画的过程时应该事先已创建了一个根Transaction，再次通过断点CA::Transaction::create方法也证明了Main RunLoop通过回调<strong><strong>CFRUNLOOP_IS_CALLING_OUT_TO_A_SOURCE0_PERFORM_FUNCTION</strong></strong>只调用了一次CA::Transaction::create方法来创建了一个根Transaction，所以这就能解释能为什么隐式动画和显式动画时Core Animation内部没有新创建CATransaction而只是在动画CAAction返回后调用CA::Transaction:commit就可以执行动画了。所以，我理解的隐式CATransaction是指前面提到的根Transaction。</p>
+<p>在了解了以上知识后，我们再来看UIView或CALayer中通过或不通过Animation Block来修改样式属性时的动画创建和执行过程。</p>
 
-<h2>正文</h2>
+<p>先看一段代码，如下：</p>
 
-<p>在了解了以上知识后，我才会告诉你，本文主要是介绍我们在UIView或CALayer中通过动画块或不通过动画块来修改其属性时的动画创建和执行过程。先看一段代码，如下：</p>
+<p>```objectivec
+代码一：隐式动画
+<em>animLayer = [IDCAAnimationTestLayer new];
+</em>animLayer.position = CGPointMake(<em>animLayer.position.x, </em>animLayer.position.y &ndash; 10);</p>
 
-<pre><code>代码一：隐式动画
-_animLayer = [IDCAAnimationTestLayer new];
-_animLayer.position = CGPointMake(_animLayer.position.x, _animLayer.position.y - 10);
+<p>代码二：无动画效果
+<em>animView.layer.position = CGPointMake(</em>animView.layer.position.x, _animView.layer.position.y &ndash; 10);</p>
 
-代码二：无动画效果
-_animView.layer.position = CGPointMake(_animView.layer.position.x, _animView.layer.position.y - 10);
-
-代码三：无动画效果
+<p>代码三：无动画效果
 [CATransaction begin];
 [CATransaction setValue:@(NO) forKey:kCATransactionDisableActions];
 [CATransaction setValue:@(0.5) forKey:kCATransactionAnimationDuration];
-_animView.layer.position = CGPointMake(_animView.layer.position.x, _animView.layer.position.y - 10);
-[CATransaction commit];
+<em>animView.layer.position = CGPointMake(</em>animView.layer.position.x, _animView.layer.position.y &ndash; 10);
+[CATransaction commit];</p>
 
-代码四：显式动画
-[UIView animateWithDuration:0.5 animations:^{
-    _animView.center = CGPointMake(_animView.center.x, _animView.center.y - 10);
-}];
+<p>代码四：显式动画
+[UIView animateWithDuration:0.5 animations:^{</p>
 
-代码五：无动画效果
-_animView.center = CGPointMake(_animView.center.x, _animView.center.y - 10);
+<pre><code>_animView.center = CGPointMake(_animView.center.x, _animView.center.y - 10);
 </code></pre>
 
-<p>从以上代码中可以看到：为什么同样是对CALayer或UIView的相同属性作修改，而有些有动画而有些没有动画呢？带着这个疑问，我们接下来看下面这张图。</p>
+<p>}];</p>
+
+<p>代码五：无动画效果
+<em>animView.center = CGPointMake(</em>animView.center.x, _animView.center.y &ndash; 10);
+```</p>
+
+<p>从以上代码中可以看到：为什么同样是对CALayer或UIView的相同属性作修改，而有些有动画而有些没有动画呢？这个疑问先放一下，我们接下来看下面这张图。</p>
 
 <p><img src="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/uiview_calayer_animation_creation_callprocess.jpg" alt="E_UIView:CALayer的动画创建及执行过程.jpg" />
 如上图，我来分别梳理一个修改CALayer和UIView属性时的动画创建过程(没错，其实不在动画块里修改属性也有动画创建过程存在的)。</p>
 
-<h5>CALayer的动画创建和执行过程(如图中黑实线箭头及序号)</h5>
+<h3>CALayer的动画创建和执行过程(如图中黑实线箭头及序号)</h3>
 
 <ol>
-<li>RunLoop触发两类回调事件：BeforeWaiting、点击事件、ExitRunLoop</li>
-<li>RunLoop回调事件回调到开发人员写的修改CALayer属性的代码</li>
+<li>RunLoop在两种情况下会触发与动画创建相关的回调：BeforeWaiting、点击事件. <del>(ExitRunLoop是否会触发待研究)</del> <strong>TODO:这里的细节还有待调研</strong></li>
+<li>RunLoop回调到开发人员写的修改CALayer属性的代码</li>
 <li>当修改CALayer的animatable属性时会触发CALayer自己的actionForKey:方法来查找相应的CAAction，CALayer的actionForKey方法的默认实现会返回一个实现了CAAction protocol的CAAnimation，如CABasicAnimation</li>
-<li>开发人员的修改CALayer属性的代码执行完毕后，在RunLoop的回调函数的后续逻辑会调用CA::Transaction:commit()来提交之前修改CALayer属性而生成的CAAction.</li>
-<li>最后相应的动画效果显示到屏幕上(TODO:这里的细节还有待调研)</li>
+<li>开发人员书写的修改CALayer属性的代码执行完毕后，在RunLoop的回调函数的后续逻辑会调用CA::Transaction:commit()来提交之前修改CALayer属性时而获取到的CAAction.</li>
+<li>最后相应的动画效果显示到屏幕上<strong>(TODO:这里的细节还有待调研)</strong></li>
 </ol>
 
 
-<h5>UIView的动画创建和执行过程(如图中虚线箭头及序号)</h5>
+<h3>UIView的动画创建和执行过程(如图中虚线箭头及序号)</h3>
 
 <ol>
-<li>RunLoop触发两类回调事件：BeforeWaiting、点击事件、ExitRunLoop</li>
-<li>RunLoop回调事件回调到开发人员写的修改UIView几何或透明度等UI属性的代码，这里修改有两种情况如下：
-2.1.1 不在动画代码块里修改UIView属性：修改UIView的几何、透明度等UI属性实际上最终是通过CALayer的对应属性修改来体现的，如修改UIView的center实际上最终是通过CALayer的position来体现的。
-2.1.2 在动画代码块里修改UIView属性
-2.2 如2.1.1所说，无论是否在动画代码块里修改UIView的几何、透明度等UI属性，实际上是通过CALayer修改对应属性来完成的，这是因为UIView与CALayer的关系是平行的，且UIView是CALayer的Delegate。</li>
-<li>与<strong>CALayer的动画创建和执行过程</strong>的流程一致。但是需要注意的是：如果是2.1.1触发这一步，那么返回的是[NSNull null]，即没有动画(表示停止对CAAction的检索)；如果是2.1.2触发这一步，那么返回的结果与<strong>CALayer的动画创建和执行过程</strong>第3步一样，即实现了CAAction protocol的CAAnimation子类。从这两种情况我们就不难明白，为什么不在动画代码块里修改UIView的UI属性没有动画，反之有动画，这都是由actionForKey:是否有确切的CAAction值决定的。顺带讲一下，actionForKey:有三种返回值情况：id<CAAction>、nil，nil表示没有没有任何动画行为。</li>
-<li>同<strong>CALayer的动画创建和执行过程</strong></li>
-<li>同<strong>CALayer的动画创建和执行过程</strong></li>
+<li>unLoop在两种情况下会触发与动画创建相关的回调：BeforeWaiting、点击事件.<del>(ExitRunLoop是否会触发待研究)</del> <strong>TODO:这里的细节还有待调研</strong></li>
+<li><p>RunLoop回调事件回调到开发人员写的修改UIView几何或透明度等UI属性的代码，这里修改有两种情况如下：</p>
+
+<p> ```objectivec</p>
+
+<ol type="a">
+<li>不在动画代码块里修改UIView属性（修改UIView的几何、透明度等UI属性是通过CALayer的对应属性修改来体现的，
+修改UIView的center是通过CALayer的position来体现的）</li>
+<li>在动画代码块里修改UIView属性</li>
 </ol>
 
 
-<p>讲到这里，我再来回顾前面的问题<strong>“为什么同样是对CALayer或UIView的相同属性作修改，而有些有动画而有些没有动画呢？”</strong>，再来看一下代码并作相应解释：</p>
+<p> 如A所说，无论是否在动画代码块里修改UIView的几何、透明度等UI属性，实际上是通过CALayer修改对应属性来完成的，
+ 这是因为UIView与CALayer的关系是平行的，且UIView是CALayer的Delegate。
+ ```</p></li>
+<li><p>与<strong>CALayer的动画创建和执行过程</strong>的第3步流程一致。但是需要注意的是：在2.A情况下，那么返回的是[NSNull null]，即后续不会有动画(表示停止对CAAction的检索)；在2.B情况下，那么返回的结果与<strong>CALayer的动画创建和执行过程</strong>第3步一样，即返回实现了CAAction protocol的CAAnimation子类。从这两种情况我们就不难明白，为什么不在Animation Block里修改UIView的UI属性后续就没有动画效果，反之有动画效果，这都是由actionForKey:是否有确切的CAAction值决定的。顺带讲一下，actionForKey:有三种返回值情况：id<CAAction> &ndash; 确切的动画、nil &ndash; 没有没有任何动画行为、[NSNull null] &ndash; 停止对CAAction的检索。</p></li>
+<li>同<strong>CALayer的动画创建和执行过程</strong>的第4步流程一致</li>
+<li>同<strong>CALayer的动画创建和执行过程</strong>的第5步流程一致</li>
+</ol>
 
-<pre><code>代码一：隐式动画
-_animLayer = [IDCAAnimationTestLayer new];
+
+<p>讲到这里，我们再来回顾前面的问题<strong>“为什么同样是对CALayer或UIView的相同属性作修改，而有些有动画而有些没有动画呢？”</strong>，我在下面作出了解释：</p>
+
+<p>```objectivec
+代码一：隐式动画</p>
+
+<pre><code>_animLayer = [IDCAAnimationTestLayer new];
 _animLayer.position = CGPointMake(_animLayer.position.x, _animLayer.position.y - 10);
 解释：这里首先解释一个名词叫Root Layer和非Root Layer。很简单，Root Layer就是指有对应UIView的Layer，
-非Root Layer就是指没有对应UIView的Layer，在CALayer里只有对非Root Layer的UI属性修改才会有隐式动画效果。
-其实，不难理解，因为Root Layer有UIView，且修改UI属性的代码没有写到动画代码块里，
+</code></pre>
+
+<p>非Root Layer就是指没有对应UIView的Layer，在CALayer里只有对非Root Layer的UI属性修改才会有隐式动画效果。
+其实，不难理解，因为Root Layer有UIView，且修改UI属性的代码没有写到Animation Block里，
 所以CAAction的返回被UIView的actionForLayer:forKey:方法返回为[Null null]，进一步回调到CALayer里actionForKey:的返回值为nil。
 但是，如果在动画代码块里修改Root Layer的UI属性是会有动画效果的。
-显然，_animLayer是一个非Root Layer，修改position属性后会按照上面的“CALayer的动画创建和执行过程”来执行，所以有动画效果。
+显然，_animLayer是一个非Root Layer，修改position属性后会按照上面的“CALayer的动画创建和执行过程”来执行，所以有动画效果。</p>
 
-代码二：无动画效果
-_animView.layer.position = CGPointMake(_animView.layer.position.x, _animView.layer.position.y - 10);
+<p>代码二：无动画效果</p>
+
+<pre><code>_animView.layer.position = CGPointMake(_animView.layer.position.x, _animView.layer.position.y - 10);
 解释：显然_animView.layer是一个Root Layer，而且没有写在动画代码块里，所以不会有隐式动画。
+</code></pre>
 
-代码三：无动画效果
-[CATransaction begin];
+<p>代码三：无动画效果</p>
+
+<pre><code>[CATransaction begin];
 [CATransaction setValue:@(NO) forKey:kCATransactionDisableActions];
 [CATransaction setValue:@(0.5) forKey:kCATransactionAnimationDuration];
 _animView.layer.position = CGPointMake(_animView.layer.position.x, _animView.layer.position.y - 10);
 [CATransaction commit];
 解释：同**代码二**
+</code></pre>
 
-代码四：显式动画
-[UIView animateWithDuration:0.5 animations:^{
+<p>代码四：显式动画</p>
+
+<pre><code>[UIView animateWithDuration:0.5 animations:^{
     _animView.center = CGPointMake(_animView.center.x, _animView.center.y - 10);
 }];
 解释：参见**UIView的动画创建和执行过程**及其中的2.1.2点，所以有动画效果。
+</code></pre>
 
-代码五：无动画效果
-_animView.center = CGPointMake(_animView.center.x, _animView.center.y - 10);
+<p>代码五：无动画效果</p>
+
+<pre><code>_animView.center = CGPointMake(_animView.center.x, _animView.center.y - 10);
 解释：参见**UIView的动画创建和执行过程**及其中的2.1.1点，所以没有动画效果。
 </code></pre>
 
-<p>以上内容就是本章的全部内容，欢迎邮件到nnnwjs@126.com讨论。</p>
+<p>```</p>
+
+<p>以上内容就是本章的全部内容.</p>
 
 <h2>参考</h2>
 
