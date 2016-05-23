@@ -381,39 +381,12 @@
   </header>
 
 
-  <div class="post-content"><h1>总结</h1>
-
-<ul>
-<li>研究CALayer的display流程。</li>
-</ul>
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='objectivec'><span class='line'><span class="mf">1.1</span> <span class="err">第一步：</span><span class="n">setNeedDisplay</span><span class="p">(</span><span class="n">UIView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">setNeedDisplay</span><span class="p">(</span><span class="n">CALayer</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="mf">1.2</span> <span class="err">第二步：</span><span class="n">View</span> <span class="n">Drawing</span> <span class="n">Cycle</span><span class="p">(</span><span class="n">Found</span> <span class="n">dirty</span> <span class="n">data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">display</span><span class="p">(</span><span class="n">CALayer</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nl">displayInContext:</span><span class="p">(</span><span class="n">CALayer</span><span class="p">)</span>
-</span><span class='line'><span class="o">-&gt;</span> <span class="nl">drawLayer:InContext:</span><span class="p">(</span><span class="n">CALayerDelegate</span><span class="o">&lt;</span><span class="n">UIView</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nl">drawRect:</span><span class="p">(</span><span class="n">CALayerDelegate</span><span class="o">&lt;</span><span class="n">UIView</span><span class="o">&gt;</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="mf">1.3</span> <span class="err">第三步：</span><span class="n">View</span> <span class="n">Drawing</span> <span class="n">Cycle</span><span class="p">(</span><span class="n">Get</span> <span class="n">layer</span> <span class="n">model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Compositing</span> <span class="n">Layers</span><span class="p">(</span><span class="n">OpenGLES</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Render</span> <span class="k">in</span> <span class="n">device</span> <span class="n">screen</span><span class="p">(</span><span class="n">GPU</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li><p>setNeedDisplay时，是有BackingStore的参与的，通过符号断点CABackingStoreUpdate_可知。注：只创建CALayer时，需要调用setNeedDisplay才会使drawing cycle发起display流程；而创建UIView时设置frame时就会在UIView的内部调用setNeedDisplay，但是如果不把创建的view添加到父View上的话，CALayer的display方法同样也不会被调用，因为没有父View与说明不需要显示，那么肯定不会有display流程。</p></li>
-<li><p>不setNeedDisplay时，即直接修改layer的content时，无BackingStore参与，不会走display流程，conten不经过BackingStore这个缓冲区而直接被OpenGLES合成后加载到了GPU，而被显示了。相当于少了一道工序。这个流程应该与1.3一致。</p></li>
-</ul>
-
-
-<h1>测试代码</h1>
-
-<p><a href="https://raw.githubusercontent.com/Handy-Wang/Handy-Wang.github.io/source/source/_posts/img/CALayer_testcode.zip">下载测试代码</a></p>
-</div>
+  <div class="post-content"></div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/10/06/jie-mian-xuan-ran-de-zheng-ti-liu-cheng-xu-calayerde-xian-shi-liu-cheng/"></a>
+    </footer>
   
 
 
