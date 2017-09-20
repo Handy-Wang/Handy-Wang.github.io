@@ -43,20 +43,32 @@ ASDK中UI渲染操作都是以block的形态抛给事务的(其实不只是UI渲
 3）在ASDK事务commit时，只需把之前暂存的结果刷新到界面显示即可。
 ```
 
-* _ASAsyncTransaction类簇
-	* ASAsyncTransactionOperation
-		* 别误会，block任务在transaction里至始至终都没有数据结构来封装它们。ASAsyncTransactionOperation是那个暂存执行结果的数据结构，它同时组合了一个回调`block<asyncdisplaykit_async_transaction_operation_completion_block_t>`，用于当transaction commit时，operation把暂存值回传给UI元素进行显示。
-	* ASAsyncTransactionGroup
-		* 负责在ASDK事务中调度block任务的调度器，它内部会包含一个真正承载block任务的队列。
-	* ASAsyncTransactionQueue::Group
-		* 调度器管理的的block任务队列，类似于dispatch_group_t
-	* ASAsyncTransactionQueue::Operation
-		* 
+* **_ASAsyncTransaction类簇**
 	* _ASAsyncTransaction
-		* 接收block任务并调度它们在子线程中执行，各个任务的执行结果存在operation数组中。
-* ASAsyncTransactionQueue::Group
-* ASAsyncTransactionQueue::GroupImpl
-* _ASAsyncTransactionContainer
+		* 接收block任务并调度它们在子线程中执行，各个任务的执行结果都暂存在对应的operation中，所以，_ASAsyncTransaction持有一个operations数组。
+		* 
+	* ASAsyncTransactionOperation
+		* 别误会！block任务在_ASAsyncTransaction里并没有数据结构来封装它们，所以，ASAsyncTransactionOperation不是用来封装block任务的。ASAsyncTransactionOperation是那个暂存执行结果的数据结构，它同时组合了一个回调`block<asyncdisplaykit_async_transaction_operation_completion_block_t>`，用于当transaction commit时，operation把暂存值回传给UI元素进行显示。
+		* 
+	* ASAsyncTransactionQueue
+		* 它是一个工厂类，负责在_ASAsyncTransaction中创建用于调度和管理block任务的任务队列(ASAsyncTransactionQueue::Group)。
+		* 
+	* ASAsyncTransactionQueue::Group
+		* 调度和管理block任务的任务队列，类似于`dispatch_group_t`
+		* 此类为抽象类，定义了队列管理、调度的纯虚函数接口，实现类为GroupImpl。
+		* 
+	* ASAsyncTransactionQueue::GroupImpl
+		* GroupImpl是Group的实现类，负责管理(入队、出队)、调度block任务(dispatch_asyc子线程中异步执行`Operation <block任务>`)。它管理着gcd_queue与block任务集合一对一的关系。
+		* GroupImpl包含一个`map<gcd_queue, DispatchEntry>`
+			* DispatchEntry里包含一个`std::list<Operation> OperationQueue`，OperationQueue里的Operation封装了block任务，以及block任务的优先级。
+			* DispatchEntry里还包含一个`std::map<NSInteger, OperationIteratorList> OperationPriorityMap`，OperationPriorityMap按优先级分组存储OperationQueue的游标，且std::map本身就支持按key由低到高排序，即按优先级由低到高排序。
+			* 
+	* ASAsyncTransactionQueue::Operation
+		* 封装了block任务，及它的优先级，同时关联ASAsyncTransactionQueue::Group。
+		* 
+* **_ASAsyncTransactionContainer**
+	* CALayer和UIView的category实现了它定义的ASAsyncTransactionContainer protocol。
+* **_ASAsyncTransactionGroup**
 
 ##### ASDK中事务管理的及时序图
 
